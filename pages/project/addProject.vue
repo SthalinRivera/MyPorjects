@@ -14,12 +14,13 @@ type Schema = InferType<typeof schema>
 const schema = object({
     title: string().required('Required').min(3, 'Must be at least 8 characters'),
     description: string().required('Required').min(3, 'Must be at least 8 characters'),
-  
+    project_url: string().required('Required').url(),
 })
 
 const state = reactive({
     title: undefined,
     description: undefined,
+    project_url: undefined,
 })
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
@@ -33,19 +34,20 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
             }
         })
         console.log("llegue hasta aqui");
-        console.log(files.value);
+        console.log(response[0]);
+
         if (response) {
             await $fetch("/api/v1/project",
                 {
                     method: "POST",
                     body: {
                         ...state,
-                        image_url: response,
+                        image_url: response[0],
                         userId: user.value?.usuarioId,
                     }
                 }
             )
-            router.push("/videos")
+            router.push("/project")
             $toast.success("Video agregado")
         }
 
@@ -68,10 +70,15 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         <UFormGroup label="Descripción" name="description">
             <UInput v-model="state.description" />
         </UFormGroup>
-        <input type="file" @input="handleFileInput" />
-
-        <UButton type="submit">
-            add video
+        <UFormGroup label="Imagen" name="image_url">
+            <input type="file" @input="handleFileInput" />
+        </UFormGroup>
+     
+        <UFormGroup label="URL" name="project_url">
+            <UInput v-model="state.project_url" />
+        </UFormGroup> 
+          <UButton type="submit">
+            Add Project
         </UButton>
     </UForm>
 </template>

@@ -26,6 +26,7 @@ export const projectById = async (event: H3Event) => {
     where: {
       id: +request.id,
     }
+   
   })
   return !user ? "Project not found" : user;
 };
@@ -43,10 +44,12 @@ export const addProject = async (event: H3Event): Promise<string> => {
     throw createError({
       statusCode: 500,
       name: "Error creating project",
-       message: error.message  
+      //  message: error.message  
     });
   }
 };
+
+
 
 export const actuliazar = async (event: H3Event): Promise<string> => {
   try {

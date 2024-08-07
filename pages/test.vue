@@ -17,7 +17,7 @@ const submit = async () => {
             files: files.value
         }
     })
-    console.log( response);
+    console.log(response);
     
 }
 </script>

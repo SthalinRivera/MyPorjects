@@ -3,6 +3,8 @@ export interface Project{
     title: string;
     description: string;
     image_url: string;
+    project_url: string;
     created:string;
+    likes: number;
     userId: number;
 }

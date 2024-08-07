@@ -12,9 +12,9 @@ export default defineNuxtConfig({
     '@/assets/css/main.css',
   ],
   modules: [// ...
-  '@pinia/nuxt', '@pinia-plugin-persistedstate/nuxt', ["@nuxtjs/i18n", {
-    vueI18n: "./i18n"
-  }], "@nuxt/ui", "nuxt-auth-utils",'nuxt-file-storage'],
+    '@pinia/nuxt', '@pinia-plugin-persistedstate/nuxt', ["@nuxtjs/i18n", {
+      vueI18n: "./i18n"
+    }], "@nuxt/ui", "nuxt-auth-utils", 'nuxt-file-storage'],
   pinia: {
     storesDirs: ['./stores/**']
   },
@@ -39,7 +39,10 @@ export default defineNuxtConfig({
     mount: 'C:/vue/myprojects/public',
 
     // {OR} use environment variables (recommended)
-   // mount: process.env.mount
+    // mount: process.env.mount
     // you need to set the mount in your .env file at the root of your project
-},
+  },
+  plugins: [
+    '~/plugins/vue3-toastify.ts',
+  ],
 })
