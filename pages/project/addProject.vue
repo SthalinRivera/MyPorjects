@@ -6,10 +6,10 @@ const { handleFileInput, files } = useFileStorage()
 const router = useRouter()
 const { $toast } = useNuxtApp();
 const { user } = useUserSession();
-definePageMeta({
-    middleware: ['auth'],
-    permiso: "ADMINISTRADOR",
-})
+// definePageMeta({
+//     middleware: ['auth'],
+//     permiso: "ADMINISTRADOR",
+// })
 type Schema = InferType<typeof schema>
 const schema = object({
     title: string().required('Required').min(3, 'Must be at least 8 characters'),
