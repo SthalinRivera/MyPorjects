@@ -54,9 +54,7 @@ import formatoData from '~/utils/formatoData';
 const { adicionarFavorito } = useVideoStore();
 const { data: projects, error } = await useFetch("/api/v1/project")
 
-definePageMeta({
-    middleware: ["auth"],
-});
+
 onMounted(() => {
     if (error.value) {
         $toast.error(error.value.statusMessage || "");

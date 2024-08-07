@@ -42,7 +42,5 @@ export default defineNuxtConfig({
     // mount: process.env.mount
     // you need to set the mount in your .env file at the root of your project
   },
-  plugins: [
-    '~/plugins/vue3-toastify.ts',
-  ],
+
 })

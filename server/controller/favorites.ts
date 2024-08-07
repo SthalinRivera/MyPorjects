@@ -11,7 +11,7 @@ export const allFavorites = async () => {
   });
 }
 
-export const addLike = async (event: H3Event): Promise<string> => {
+export const addLike = async (event: H3Event): Promise<{ data: string }> => {
   try {
     const { projectId, userId } = await readBody(event);
 
@@ -56,11 +56,11 @@ export const addLike = async (event: H3Event): Promise<string> => {
       data: { likes: { increment: 1 } },
     });
 
-    return "Like added successfully!";
-  } catch (error:unknown) {
-    throw createError({
-      statusCode: 500,
-      // message: error.message,
-    });
+    return { data: "Like added successfully!" }; // Return a success message
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return { data: `Error: ${error.message}` }; // Return an error message
+    }
+    return { data: "An unexpected error occurred" }; // Return a generic error message
   }
 };

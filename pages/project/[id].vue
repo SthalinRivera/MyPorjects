@@ -19,8 +19,12 @@
                     <div class="mt-4">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center">
-                                <button type="button" @click="handleLike"
-                                    class="text-slate-200 border border-slate-200 hover:bg-slate-200 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:focus:ring-blue-800 dark:hover:bg-blue-500">
+                                <button type="button" @click="handleLike" class="text-slate-800 border border-slate-800 
+                                    hover:bg-slate-900 hover:text-slate-600 
+                                    focus:ring-4 focus:outline-none focus:ring-blue-300 
+                                    font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center 
+                                    dark:bg-gray-800 dark:text-slate-100 dark:border-gray-700 dark:hover:bg-gray-900 
+                                    dark:focus:ring-blue-800 dark:hover:text-white">
                                     <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                         fill="currentColor" viewBox="0 0 18 18">
                                         <path
@@ -31,21 +35,18 @@
 
                                 <p class="ml-2">{{ project.likes }}</p>
                             </div>
-                            <div class="flex items-center">
-                                <span class="">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
-                                        fill="none" stroke="#f2f2f2" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round">
-                                        <circle cx="18" cy="5" r="3"></circle>
-                                        <circle cx="6" cy="12" r="3"></circle>
-                                        <circle cx="18" cy="19" r="3"></circle>
-                                        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
-                                        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
-                                    </svg>
-                                </span>
-                            </div>
-                            <div>
-                                <p class="text-gray-700 dark:text-gray-300">Ver proyecto</p>
+
+                            <div class="flex ">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                </svg>
+
+                                <p class="text-gray-700 dark:text-gray-300 ml-2"><a :href="`${project.project_url}`"
+                                        target="_blank" rel="noopener noreferrer">Ver projecto</a></p>
                             </div>
                         </div>
                     </div>
@@ -56,58 +57,123 @@
     </div>
 </template>
 <script setup lang="ts">
-import type { FormSubmitEvent } from '#ui/types'
-import { object, string, type InferType } from 'yup'
 
-// definePageMeta({
-//     layout: "exhibicion",
-//     middleware: ["video", "auth"],
-// })
+import { useUserStore } from '~/stores/userStore'; // Asegúrate de importar tu store
 
-const isOpen = ref(false)
 const route = useRoute();
 const { id } = route.params;
 
-const { data: project } = await useFetch(`/api/v1/project/${id}`)
-if (!project.value) {
+const userStore = useUserStore();
+const isOpen = ref(false);
+
+const { data: project, error } = await useFetch(`/api/v1/project/${id}`);
+if (error.value) {
     throw createError({
-        statusCode: 404,
-        statusMessage: "Video no encontrado"
-    })
+        status: 404,
+        statusText: "Video no encontrado"
+    });
 }
+
 onMounted(async () => {
-    const { data, error } = await useFetch(`/api/v1/project/${id}`);
-    if (error.value) {
-        $toast.error("Error loading project");
+    const { data: project, error: errorProject } = await useFetch(`/api/v1/project/${id}`);
+    if (errorProject.value) {
+        // $toast.error("Error loading project");
     } else {
-        project.value = data.value;
+        project.value = project.value;
     }
+
+    userStore.getUser(); // Load user from local storage if available
 });
 
-const state = reactive({
-    likes: 1,
-    projectId   : project.value.id,
-    userId : 1,
-})
-async function handleLike() {
+const ROLE_ID_VISITOR = 3;
 
+// Función para generar un nombre falso
+function generateFakeName() {
+    const names = ["usuario", "testuser", "demo", "example"];
+    return names[Math.floor(Math.random() * names.length)];
+}
+
+// Función para generar un correo electrónico falso
+function generateFakeEmail() {
+    const domains = ["example.com", "test.com", "demo.com"];
+    const randomString = Math.random().toString(36).substring(2, 15);
+    return `${randomString}@${domains[Math.floor(Math.random() * domains.length)]}`;
+}
+
+const name_fake = generateFakeName();
+const email_fake = generateFakeEmail();
+
+const addUser = reactive({
+    name: name_fake,
+    email: email_fake,
+    roleId: ROLE_ID_VISITOR,
+});
+
+async function createUser() {
     try {
-        const { data, error } = await $fetch(`/api/v1/addlike`, {
+        const user = await $fetch(`/api/v1/addUser`, {
+            method: 'POST',
+            body: addUser,
+        });
+        if (user && typeof user === 'object' && 'userId' in user) {
+            console.log((user as { userId: number }).userId);
+            userStore.setUser({
+                id: (user as { userId: number }).userId,
+                name: addUser.name,
+                email: addUser.email,
+                roleId: ROLE_ID_VISITOR
+            });
+        } else {
+            // $toast.error("Error al crear el usuario");
+            throw new Error("Unexpected user structure");
+        }
+
+    } catch (error) {
+        // $toast.error("Error inesperado al crear el usuario");
+        console.error("Error inesperado:", error);
+        throw error;
+    }
+}
+
+async function handleLike() {
+    try {
+        if (!userStore.user) {
+            await createUser();
+        }
+
+        const state = {
+            likes: 1,
+            projectId: project.value.id,
+            userId: userStore.user?.id || 1, // Usa el user ID del store
+        };
+        interface ApiResponse {
+            data?: string; // O el tipo específico que esperas
+            error?: string;
+        }
+        const response: ApiResponse = await $fetch(`/api/v1/addlike`, {
             method: "POST",
             body: {
                 ...state,
             }
         });
 
-        if (error) {
-            throw new Error(error.message);
-        }
+        const { data: liked, error: errorliked } = response;
 
-        project.value.likes += 1; // Actualiza el estado local
-        $toast.success("Like added successfully");
+        if (liked) {
+            console.log("Success:", liked);
+            if (project.value) {
+                project.value.likes += 1; // Ensure project.value is defined before updating
+            }
+        } else if (errorliked) {
+            console.error("Error:", errorliked);
+        } else {
+            console.error("Unexpected response format:", response);
+        }
     } catch (error) {
-        $toast.error("Error adding like");
+        // $toast.error("Error adding like");
+        console.error("Unexpected error:", error);
     }
 }
 </script>
+
 <style lang="scss" scoped></style>
