@@ -12,10 +12,7 @@
   </div>
 </template>
 
-<script lang="ts">
-// Aquí puedes agregar el código de TypeScript si es necesario
+<script setup lang="ts">
+
 </script>
 
-<style scoped>
-/* Puedes agregar estilos específicos aquí si es necesario */
-</style>
