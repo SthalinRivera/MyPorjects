@@ -6,7 +6,7 @@ interface Rutas{
 export default()=>{
     const rutas: Rutas[]=[
         { name:"Home", path:"/" },
-        { name:"project", path:"/project" },
+        { name:"Portafolio", path:"/project" },
         { name:"Agregar project", path:"/project/addProject", permiso:'ADMINISTRADOR' },
         { name:"Favoritos", path:"/project/favoritos" },   
     ]

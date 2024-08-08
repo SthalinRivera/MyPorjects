@@ -1,51 +1,26 @@
 <template>
-    <div >
-      <footer class="w-full ">
-        <div class="flex flex-col mx-3  rounded-lg">
-          <div class="w-full draggable">
-            <div class="container flex flex-col mx-auto">
-              <div class="flex flex-col items-center w-full my-20">
-                <div class="flex items-center justify-between">
-                  <span class="font-semibold text-xl tracking-tight mr-2 text-slate-900 dark:text-slate-200">Sthalin Rivera</span>
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 text-blue-400 dark:text-blue-300">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z" />
-                  </svg>
-                </div>
-                <div class="flex flex-col items-center gap-6 mb-4">
-                  <div class="flex items-center gap-8">
-                    <a href="javascript:void(0)" class="text-grey-700 hover:text-grey-900">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24" fill="none">
-                                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                                d="M13.6348 20.7273V12.766H16.3582L16.7668 9.66246H13.6348V7.68128C13.6348 6.78301 13.8881 6.17085 15.2029 6.17085L16.877 6.17017V3.39424C16.5875 3.35733 15.5937 3.27273 14.437 3.27273C12.0216 3.27273 10.368 4.71881 10.368 7.37391V9.66246H7.63636V12.766H10.368V20.7273H13.6348Z"
-                                                fill="currentColor" />
-                                            <mask id="mask0_3320_6483" style="mask-type:luminance"
-                                                maskUnits="userSpaceOnUse" x="7" y="3" width="10" height="18">
-                                                <path fill-rule="evenodd" clip-rule="evenodd"
-                                                    d="M13.6348 20.7273V12.766H16.3582L16.7668 9.66246H13.6348V7.68128C13.6348 6.78301 13.8881 6.17085 15.2029 6.17085L16.877 6.17017V3.39424C16.5875 3.35733 15.5937 3.27273 14.437 3.27273C12.0216 3.27273 10.368 4.71881 10.368 7.37391V9.66246H7.63636V12.766H10.368V20.7273H13.6348Z"
-                                                    fill="white" />
-                                            </mask>
-                                            <g mask="url(#mask0_3320_6483)">
-                                            </g>
-                                        </svg>
-                                    </a>
-                                    <a href="javascript:void(0)" class="text-grey-700 hover:text-grey-900">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24" fill="none">
-                                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                                d="M21.8182 6.14597C21.1356 6.44842 20.4032 6.65355 19.6337 6.74512C20.4194 6.27461 21.0208 5.5283 21.3059 4.64176C20.5689 5.07748 19.7553 5.39388 18.8885 5.56539C18.1943 4.82488 17.207 4.36364 16.1118 4.36364C14.0108 4.36364 12.3072 6.06718 12.3072 8.16706C12.3072 8.46488 12.3408 8.75576 12.4058 9.03391C9.24436 8.87512 6.44106 7.36048 4.56485 5.05894C4.23688 5.61985 4.0503 6.27342 4.0503 6.97109C4.0503 8.29106 4.72246 9.45573 5.74227 10.1371C5.11879 10.1163 4.53239 9.94476 4.01903 9.65967V9.70718C4.01903 11.5498 5.33088 13.0876 7.07033 13.4376C6.75164 13.5234 6.41558 13.5709 6.06791 13.5709C5.82224 13.5709 5.58467 13.5465 5.35173 13.5002C5.83612 15.0125 7.2407 16.1123 8.90485 16.1424C7.60343 17.1622 5.96246 17.7683 4.18012 17.7683C3.87303 17.7683 3.57055 17.7498 3.27273 17.7162C4.95658 18.7974 6.95564 19.4278 9.10418 19.4278C16.1026 19.4278 19.9281 13.6312 19.9281 8.60397L19.9153 8.11145C20.6628 7.57833 21.3094 6.90851 21.8182 6.14597Z"
-                                                fill="currentColor" />
-                                            <mask id="mask0_3320_6484" style="mask-type:luminance"
-                                                maskUnits="userSpaceOnUse" x="3" y="4" width="19" height="16">
-                                                <path fill-rule="evenodd" clip-rule="evenodd"
-                                                    d="M21.8182 6.14597C21.1356 6.44842 20.4032 6.65355 19.6337 6.74512C20.4194 6.27461 21.0208 5.5283 21.3059 4.64176C20.5689 5.07748 19.7553 5.39388 18.8885 5.56539C18.1943 4.82488 17.207 4.36364 16.1118 4.36364C14.0108 4.36364 12.3072 6.06718 12.3072 8.16706C12.3072 8.46488 12.3408 8.75576 12.4058 9.03391C9.24436 8.87512 6.44106 7.36048 4.56485 5.05894C4.23688 5.61985 4.0503 6.27342 4.0503 6.97109C4.0503 8.29106 4.72246 9.45573 5.74227 10.1371C5.11879 10.1163 4.53239 9.94476 4.01903 9.65967V9.70718C4.01903 11.5498 5.33088 13.0876 7.07033 13.4376C6.75164 13.5234 6.41558 13.5709 6.06791 13.5709C5.82224 13.5709 5.58467 13.5465 5.35173 13.5002C5.83612 15.0125 7.2407 16.1123 8.90485 16.1424C7.60343 17.1622 5.96246 17.7683 4.18012 17.7683C3.87303 17.7683 3.57055 17.7498 3.27273 17.7162C4.95658 18.7974 6.95564 19.4278 9.10418 19.4278C16.1026 19.4278 19.9281 13.6312 19.9281 8.60397L19.9153 8.11145C20.6628 7.57833 21.3094 6.90851 21.8182 6.14597Z"
-                                                    fill="white" />
-                                            </mask>
-                                            <g mask="url(#mask0_3320_6484)">
-                                            </g>
-                                        </svg>
-                                    </a>
-                                    <a href="javascript:void(0)" class="text-grey-700 hover:text-grey-900">
+    <div>
+        <footer class="w-full ">
+            <div class="flex flex-col mx-3  rounded-lg">
+                <div class="w-full draggable">
+                    <div class="container flex flex-col mx-auto">
+                        <div class="flex flex-col items-center w-full my-20">
+                            <div class="flex items-center justify-between">
+                                <span
+                                    class="font-semibold text-xl tracking-tight mr-2 text-slate-900 dark:text-slate-200">Sthalin
+                                    Rivera</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor"
+                                    class="size-6 text-blue-400 dark:text-blue-300">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z" />
+                                </svg>
+                            </div>
+                            <div class="flex flex-col items-center gap-6 mb-4">
+                                <div class="flex items-center gap-8">
+
+                                    <a href="https://www.linkedin.com/in/adler-stalin-rivera-centeno-43a9792a0/"
+                                        class="text-grey-700 hover:text-grey-900">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                             viewBox="0 0 24 24" fill="none">
                                             <path
@@ -61,7 +36,8 @@
                                                 fill="currentColor" />
                                         </svg>
                                     </a>
-                                    <a href="javascript:void(0)" class="text-grey-700 hover:text-grey-900">
+                                    <a href="https://www.instagram.com/sthalin.11/"
+                                        class="text-grey-700 hover:text-grey-900">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                             viewBox="0 0 24 24" fill="none">
                                             <path fill-rule="evenodd" clip-rule="evenodd"
@@ -77,20 +53,44 @@
                                             </g>
                                         </svg>
                                     </a>
-                  </div>
+                                </div>
+                            </div>
+                            <div class="md:flex  items-center justify-center text-center content-center">
+                                <div>
+                                    <p
+                                        class="text-base font-normal leading-7 text-center text-grey-700 dark:text-gray-400 mr-4">
+                                        @2024 Sthalin Rivera. All rights reserved.
+                                    </p>
+                                </div>
+                                <div class="flex">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor" class="size-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
+                                    </svg>
+                                    <p
+                                        class="text-base font-normal leading-7 text-center text-grey-700 dark:text-gray-400 mr-4">
+                                        +51 910985938</p>
+                                </div>
+                                <div class="flex">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor" class="size-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+                                    </svg>
+                                    <p
+                                        class="text-base font-normal leading-7 text-center text-grey-700 dark:text-gray-400 ml-2">
+                                        sthalin.11@gmail.com</p>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="flex items-center">
-                  <p class="text-base font-normal leading-7 text-center text-grey-700 dark:text-gray-400">
-                    2023 Motion Tailwind CSS Library. All rights reserved.
-                  </p>
-                </div>
-              </div>
             </div>
-          </div>
-        </div>
-      </footer>
+        </footer>
     </div>
-  </template>
+</template>
 
 <script setup lang="ts">
 
