@@ -162,7 +162,7 @@ async function handleLike() {
         if (liked) {
             console.log("Success:", liked);
             if (project.value) {
-                project.value.likes += 1; // Ensure project.value is defined before updating
+                project.value.likes += 1;
             }
         } else if (errorliked) {
             console.error("Error:", errorliked);
@@ -170,7 +170,6 @@ async function handleLike() {
             console.error("Unexpected response format:", response);
         }
     } catch (error) {
-        // $toast.error("Error adding like");
         console.error("Unexpected error:", error);
     }
 }

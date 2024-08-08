@@ -36,10 +36,10 @@ export default defineNuxtConfig({
   },
   fileStorage: {
     // enter the absolute path to the location of your storage
-    mount: 'C:/vue/myprojects/public',
+    //mount: 'C:/vue/myprojects/public',
 
     // {OR} use environment variables (recommended)
-    // mount: process.env.mount
+    mount: process.env.DIRECTORY_MOUNT_STORAGE
     // you need to set the mount in your .env file at the root of your project
   },
 
