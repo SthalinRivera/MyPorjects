@@ -1,6 +1,6 @@
 <template>
     <div class="p-6 ">
-      <h3 class="text-center text-2xl font-bold dark:text-white mb-4">A passionate frontend developer from India</h3>
+      <h3 class="text-center text-2xl font-bold dark:text-white mb-4">A passionate frontend and backend developer</h3>
       
       <p class="text-left mt-2 flex flex-wrap gap-4">
         <a

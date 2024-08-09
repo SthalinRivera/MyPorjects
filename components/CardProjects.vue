@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    <h1 class="text-slate-900  dark:text-slate-200 font-bold text-center text-2xl mb-2">Mis poryectos </h1>
+    <h1 class="text-slate-900  dark:text-slate-200 font-bold text-center text-2xl mb-4">Mis poryectos </h1>
     <div class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       <div v-for="record in records" :key="record.id"
         class="max-w-md bg-white dark:bg-gray-800 rounded-xl overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl hover:scale-105 transform transition-all duration-500">

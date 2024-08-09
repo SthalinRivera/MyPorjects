@@ -5,7 +5,7 @@
                 <div class="w-full draggable">
                     <div class="container flex flex-col mx-auto">
                         <div class="flex flex-col items-center w-full my-20">
-                            <div class="flex items-center justify-between">
+                            <div class="flex items-center justify-between mb-2">
                                 <span
                                     class="font-semibold text-xl tracking-tight mr-2 text-slate-900 dark:text-slate-200">Sthalin
                                     Rivera</span>

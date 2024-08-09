@@ -73,11 +73,10 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         <UFormGroup label="Imagen" name="image_url">
             <input type="file" @input="handleFileInput" />
         </UFormGroup>
-     
         <UFormGroup label="URL" name="project_url">
             <UInput v-model="state.project_url" />
-        </UFormGroup> 
-          <UButton type="submit">
+        </UFormGroup>
+        <UButton type="submit">
             Add Project
         </UButton>
     </UForm>

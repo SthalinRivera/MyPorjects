@@ -22,9 +22,11 @@
                     <button
                         class="flex items-center px-3 py-2 border rounded text-teal-200 border-teal-400 hover:text-white hover:border-white"
                         @click="toggleMenu">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="size-6">
                             <!-- Icono de hamburguesa -->
-                            <path stroke-linecap="round" stroke-linejoin="round" :class="{ 'hidden': isOpen, 'block': !isOpen }"
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                :class="{ 'hidden': isOpen, 'block': !isOpen }"
                                 d="M3.75 5.25h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5" />
                             <!-- Icono de X -->
                             <path :class="{ 'block': isOpen, 'hidden': !isOpen }" fill="currentColor"
@@ -48,10 +50,9 @@
                     </div>
                     <div class="flex items-center justify-between ">
                         <ClientOnly class="mr-4">
-                            <div class="block w-auto  md:w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 
+                            <div class="block w-auto  md:w-full text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 
                             focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 
-                            dark:placeholder-gray-400 dark:text-white 
-                            sm:p-2 md:p-2 lg:p-2">
+                            dark:placeholder-gray-400 dark:text-white p-0.5 mr-2">
                                 <UButton :icon="isDark
                                     ? 'i-heroicons-moon-20-solid'
                                     : 'i-heroicons-sun-20-solid'
@@ -61,10 +62,9 @@
                                 <div class="w-8 h-8"></div>
                             </template>
                         </ClientOnly>
-                        <select v-model="locale" class="block w-auto  md:w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 
+                        <select v-model="locale" class="block w-auto py-2 md:w-34  text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 
                             focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 
-                            dark:placeholder-gray-400 dark:text-white  
-                            sm:p-2 md:p-2 lg:p-2">
+                            dark:placeholder-gray-400 dark:text-white md:p-2 ">
                             <option value="es">es</option>
                             <option value="en">en</option>
                         </select>
