@@ -21,7 +21,13 @@ const state = reactive({
     title: undefined,
     description: undefined,
     project_url: undefined,
+    code_url: undefined,
 })
+
+
+const { data: category, error } = await useFetch("/api/v1/allCategory")
+
+
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
     // Do something with event.data
@@ -73,9 +79,16 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         <UFormGroup label="Imagen" name="image_url">
             <input type="file" @input="handleFileInput" />
         </UFormGroup>
-        <UFormGroup label="URL" name="project_url">
+        <UFormGroup label="Page" name="project_url">
             <UInput v-model="state.project_url" />
         </UFormGroup>
+        <UFormGroup label="Codigo" name="code_url">
+            <UInput v-model="state.code_url" />
+        </UFormGroup>
+        <UFormGroup label="Category" name="categoryId">
+            <USelect v-model="categoryId" :options="category" />
+        </UFormGroup>
+       
         <UButton type="submit">
             Add Project
         </UButton>

@@ -2,10 +2,10 @@
   <div class="">
     <h1 class="text-slate-900  dark:text-slate-200 font-bold text-center text-2xl mb-4">Mis poryectos </h1>
     <div class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-      <div v-for="record in records" :key="record.id"
+      <div v-for="record in projects" :key="record.id"
         class="max-w-md bg-white dark:bg-gray-800 rounded-xl overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl hover:scale-105 transform transition-all duration-500">
         <div class="p-4">
-          <img class="rounded-xl" :src="record.imageUrl" :alt="record.title" />
+          <img class="rounded-xl" :src="`/upload/${record.image_url}`" :alt="record.title" />
           <div class="items-center mt-2">
             <h1 class="text-lg text-gray-900 dark:text-gray-100 font-bold">{{ record.title }}</h1>
             <p class="text-gray-900 dark:text-gray-100">{{ record.description }}</p>
@@ -46,40 +46,42 @@
 
 <script setup lang="ts">
 import type { Record } from '~/interfaces/Record';
+const id=1;
+const { data: projects, error } = await useFetch(`/api/v1/projectsByCategoryId/${id}`)
 
 // Sample data
-const records = ref<Record[]>([
-  {
-    id: 1,
-    title: 'React + OpenAI',
-    description: 'Implementación con Tailwind CSS',
-    imageUrl: 'https://images.unsplash.com/photo-1599839575945-a9e5af0c3fa5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1049&q=80',
-    demoUrl: 'https://reat-openai-tailwindcss.vercel.app/',
-    codigoUrl: 'https://github.com/SthalinRivera/Chat---React---API---OpenAI---Tailwind-CSS',
-  },
-  {
-    id: 2,
-    title: 'Vue.js + Tailwind CSS',
-    description: 'Integration with Tailwind CSS',
-    imageUrl: 'https://images.unsplash.com/photo-1599839575945-a9e5af0c3fa5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1049&q=80',
-    demoUrl: 'Implementación con Tailwinsdd CSS',
-    codigoUrl: 'Implementación con Tailwidsnd CSS',
-  },
-  {
-    id: 3,
-    title: 'Angular + Firebase',
-    description: 'Building real-time applications with Firebase',
-    imageUrl: 'https://images.unsplash.com/photo-1599839575945-a9e5af0c3fa5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1049&q=80',
-    demoUrl: 'Implementación con Tailwinsdd CSS',
-    codigoUrl: 'Implementación con Tailwidsnd CSS',
-  },
-  {
-    id: 4,
-    title: 'Node.js + Express',
-    description: 'Backend development with Node.js and Express',
-    imageUrl: 'https://images.unsplash.com/photo-1599839575945-a9e5af0c3fa5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1049&q=80',
-    demoUrl: 'Implementación con Tailwinsdd CSS',
-    codigoUrl: 'Implementación con Tailwidsnd CSS',
-  }
-]);
+// const records = ref<Record[]>([
+//   {
+//     id: 1,
+//     title: 'React + OpenAI',
+//     description: 'Implementación con Tailwind CSS',
+//     imageUrl: 'https://images.unsplash.com/photo-1599839575945-a9e5af0c3fa5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1049&q=80',
+//     demoUrl: 'https://reat-openai-tailwindcss.vercel.app/',
+//     codigoUrl: 'https://github.com/SthalinRivera/Chat---React---API---OpenAI---Tailwind-CSS',
+//   },
+//   {
+//     id: 2,
+//     title: 'Vue.js + Tailwind CSS',
+//     description: 'Integration with Tailwind CSS',
+//     imageUrl: 'https://images.unsplash.com/photo-1599839575945-a9e5af0c3fa5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1049&q=80',
+//     demoUrl: 'Implementación con Tailwinsdd CSS',
+//     codigoUrl: 'Implementación con Tailwidsnd CSS',
+//   },
+//   {
+//     id: 3,
+//     title: 'Angular + Firebase',
+//     description: 'Building real-time applications with Firebase',
+//     imageUrl: 'https://images.unsplash.com/photo-1599839575945-a9e5af0c3fa5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1049&q=80',
+//     demoUrl: 'Implementación con Tailwinsdd CSS',
+//     codigoUrl: 'Implementación con Tailwidsnd CSS',
+//   },
+//   {
+//     id: 4,
+//     title: 'Node.js + Express',
+//     description: 'Backend development with Node.js and Express',
+//     imageUrl: 'https://images.unsplash.com/photo-1599839575945-a9e5af0c3fa5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1049&q=80',
+//     demoUrl: 'Implementación con Tailwinsdd CSS',
+//     codigoUrl: 'Implementación con Tailwidsnd CSS',
+//   }
+// ]);
 </script>

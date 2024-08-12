@@ -30,25 +30,41 @@ export const projectById = async (event: H3Event) => {
   })
   return !user ? "Project not found" : user;
 };
-
 export const addProject = async (event: H3Event): Promise<string> => {
   try {
     const request = await readBody<Project>(event);
+
+    console.log("Received data:", request); // Para depuración
+
+    // Verifica que todos los campos necesarios están presentes
+    if (!request.title || !request.description || !request.project_url || !request.image_url || !request.userId || !request.categoryId) {
+      throw new Error("Missing required fields");
+    }
+
+    // Creación del proyecto en la base de datos
     await prisma.project.create({
       data: {
-        ...request,
+        title: request.title,
+        description: request.description,
+        image_url: request.image_url,
+        project_url: request.project_url,
+        code_url: request.code_url || null, // Asegúrate de manejar el caso opcional
+        userId: request.userId,
+        categoryId: request.categoryId,
+        likes: 0, // Valor predeterminado para 'likes'
       },
     });
-    return "Project  added!";
+
+    return "Project added!";
   } catch (error) {
+    console.error("Error adding project:", error); // Para depuración
     throw createError({
       statusCode: 500,
       name: "Error creating project",
-      //  message: error.message  
+      message: error.message || "Unknown error",
     });
   }
 };
-
 
 
 export const actuliazar = async (event: H3Event): Promise<string> => {

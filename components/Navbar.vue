@@ -20,7 +20,7 @@
                 </div>
                 <div class="block lg:hidden">
                     <button
-                        class="flex items-center px-3 py-2 border rounded text-teal-200 border-teal-400 hover:text-white hover:border-white"
+                        class="flex items-center px-3 py-2 border rounded dark:text-white dark:border-slate-100 dark:hover:text-gray-300 dark:hover:border-gray-300 text-slate-900 border-slate-900  hover:text-stale-900 hover:border-slate-900"
                         @click="toggleMenu">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="size-6">
