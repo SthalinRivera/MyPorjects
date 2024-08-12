@@ -1,20 +1,22 @@
 <script setup lang="ts">
 import type { FormSubmitEvent } from '#ui/types'
 import { object, string, type InferType } from 'yup'
-
+import type { Category } from '~/interfaces/category';
+definePageMeta({
+    middleware:['auth'],
+    permiso: "ADMINISTRADOR",
+})
 const { handleFileInput, files } = useFileStorage()
 const router = useRouter()
 const { $toast } = useNuxtApp();
 const { user } = useUserSession();
-// definePageMeta({
-//     middleware: ['auth'],
-//     permiso: "ADMINISTRADOR",
-// })
+
 type Schema = InferType<typeof schema>
 const schema = object({
-    title: string().required('Required').min(3, 'Must be at least 8 characters'),
-    description: string().required('Required').min(3, 'Must be at least 8 characters'),
+    title: string().required('Required').min(3, 'Must be at least 3 characters'),
+    description: string().required('Required').min(3, 'Must be at least 3 characters'),
     project_url: string().required('Required').url(),
+    categoryId: string().required('Category ID is required'), // Agregado
 })
 
 const state = reactive({
@@ -22,73 +24,94 @@ const state = reactive({
     description: undefined,
     project_url: undefined,
     code_url: undefined,
+    categoryId: undefined,
+
+})
+
+const categoryData = ref<Category[]>([])
+const { data } = await useFetch<Category[]>("/api/v1/category")
+if (data.value) {
+    console.log("data.value", data.value);
+
+    categoryData.value = data.value
+} else {
+    categoryData.value = []
+}
+
+const categories = computed(() => {
+    return categoryData.value.map((cat: Category) => ({
+        value: cat.id,
+        label: cat.name
+    }))
 })
 
 
-const { data: category, error } = await useFetch("/api/v1/allCategory")
-
-
-
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-    // Do something with event.data
     try {
+        await schema.validate(state, { abortEarly: false });
 
-        const response = await $fetch('/api/files', {
-            method: 'POST',
-            body: {
-                files: files.value
-            }
-        })
-        console.log("llegue hasta aqui");
-        console.log(response[0]);
-
-        if (response) {
-            await $fetch("/api/v1/project",
-                {
-                    method: "POST",
-                    body: {
-                        ...state,
-                        image_url: response[0],
-                        userId: user.value?.usuarioId,
-                    }
-                }
-            )
-            router.push("/project")
-            $toast.success("Video agregado")
+        if (!state.title || !state.description || !state.project_url || !user.value?.usuarioId || !state.categoryId) {
+            throw new Error("Missing required fields");
         }
 
+        const fileResponse = await $fetch('/api/files', {
+            method: 'POST',
+            body: { files: files.value },
+        });
+
+        if (fileResponse && fileResponse[0]) {
+            const projectData = {
+                title: state.title,
+                description: state.description,
+                project_url: state.project_url,
+                image_url: fileResponse[0], 
+                code_url: state.code_url || null, 
+                userId: user.value?.usuarioId,
+                categoryId: Number(state.categoryId), // Convertir a número
+            };
+
+            const projectResponse = await $fetch("/api/v1/project", {
+                method: "POST",
+                body: projectData,
+            });
+
+            router.push("/project");
+            $toast.success("Project added successfully");
+        } else {
+            throw new Error("File upload failed");
+        }
     } catch (error) {
-        $toast.error("Error al agregar video")
+        console.error("Error caught:", error);
+        if (error.name === 'ValidationError') {
+            $toast.error("Validation Error: " + error.errors.join(", "));
+        } else {
+            $toast.error("Error adding project: " + error.message);
+        }
     }
-    console.log(event.data)
 }
-
-
-
 
 </script>
 
 <template>
     <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
-        <UFormGroup label="Titulo" name="title">
+        <UFormGroup label="Title" name="title">
             <UInput v-model="state.title" />
         </UFormGroup>
-        <UFormGroup label="Descripción" name="description">
+        <UFormGroup label="Description" name="description">
             <UInput v-model="state.description" />
         </UFormGroup>
-        <UFormGroup label="Imagen" name="image_url">
+        <UFormGroup label="Image" name="image_url">
             <input type="file" @input="handleFileInput" />
         </UFormGroup>
-        <UFormGroup label="Page" name="project_url">
+        <UFormGroup label="Project URL" name="project_url">
             <UInput v-model="state.project_url" />
         </UFormGroup>
-        <UFormGroup label="Codigo" name="code_url">
+        <UFormGroup label="Code URL" name="code_url">
             <UInput v-model="state.code_url" />
         </UFormGroup>
         <UFormGroup label="Category" name="categoryId">
-            <USelect v-model="categoryId" :options="category" />
+            <USelect v-model="state.categoryId" :options="categories" />
         </UFormGroup>
-       
         <UButton type="submit">
             Add Project
         </UButton>

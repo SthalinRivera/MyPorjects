@@ -48,7 +48,8 @@
 import type { Record } from '~/interfaces/Record';
 const id=1;
 const { data: projects, error } = await useFetch(`/api/v1/projectsByCategoryId/${id}`)
-
+console.log("projets ",projects );
+  
 // Sample data
 // const records = ref<Record[]>([
 //   {

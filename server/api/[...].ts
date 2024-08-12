@@ -19,6 +19,7 @@ router.get('/projectsByCategoryId/:id',defineEventHandler(projectsByCategoryIdCo
 router.get('/allProjetsCategory',defineEventHandler(projectsByCategoryIdController.allProjets));
 
 router.get('/category',defineEventHandler(categoryController.allCategory));
+router.post('/addCategory',defineEventHandler(categoryController.addCategory));
 
 router.post('/addUser',defineEventHandler(userController.addUser));
 

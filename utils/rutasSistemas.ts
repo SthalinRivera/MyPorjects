@@ -8,6 +8,8 @@ export default()=>{
         { name:"Home", path:"/" },
         { name:"Portafolio", path:"/project" },
         { name:"Agregar project", path:"/project/addProject", permiso:'ADMINISTRADOR' },
+        { name:"category", path:"/category", permiso:'ADMINISTRADOR' },
+        { name:"category", path:"/category/addCategory", permiso:'ADMINISTRADOR' },
         { name:"Favoritos", path:"/project/favoritos" },   
     ]
     return rutas;
