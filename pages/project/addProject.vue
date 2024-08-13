@@ -2,13 +2,15 @@
 import type { FormSubmitEvent } from '#ui/types'
 import { object, string, type InferType } from 'yup'
 import type { Category } from '~/interfaces/category';
+import { useNuxtApp } from '#app'; // Importa el hook para acceder a los métodos del app
+const { $toast } = useNuxtApp();
 definePageMeta({
     middleware: ['auth'],
     permiso: "ADMINISTRADOR",
 })
 
 const router = useRouter()
-const { $toast } = useNuxtApp();
+
 const { user } = useUserSession();
 
 type Schema = InferType<typeof schema>
@@ -41,8 +43,6 @@ const handleFileUpload = async (event: Event) => {
 };
 
 
-
-
 const categoryData = ref<Category[]>([])
 const { data } = await useFetch<Category[]>("/api/v1/category")
 if (data.value) {
@@ -52,7 +52,6 @@ if (data.value) {
 } else {
     categoryData.value = []
 }
-
 
 const categories = computed(() => {
     return categoryData.value.map((cat: Category) => ({

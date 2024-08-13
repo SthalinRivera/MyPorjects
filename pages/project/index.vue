@@ -4,16 +4,17 @@
         <!-- <h1 class="text-4xl text-center mb-2">{{ $t("titulo") }}</h1> -->
         <h1 class="text-4xl text-center mb-2">My Portfolio</h1>
 
-
         <div class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             <div v-for="project in projects" :key="project.id"
                 class="max-w-md bg-white dark:bg-gray-800 rounded-xl overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl hover:scale-105 transform transition-all duration-500">
                 <div class="p-4">
+
                     <img class="rounded-xl" :src="`${project.image_url}`" :alt="project.title" />
 
                     <div class="flex justify-between mt-3 items-center">
                         <div class="items-center mt-2">
-                            <h1 class="text-lg text-gray-900 dark:text-gray-400 font-semibold">  {{ project.Category ? project.Category.name : 'No category' }}</h1>
+                            <h1 class="text-lg text-gray-900 dark:text-gray-400 font-semibold"> {{ project.Category ?
+                                project.Category.name : 'No category' }}</h1>
                         </div>
                         <div class="flex">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -29,7 +30,7 @@
                 </div>
                 <div class="flex p-6  justify-center ">
                     <div class="flex  justify-between w-full max-w-lg">
-                        <a  :href="project.project_url" target="_blank" rel="noopener noreferrer">
+                        <a :href="project.project_url" target="_blank" rel="noopener noreferrer">
                             <div class="flex space-x-2 items-center">
                                 <span>
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -62,27 +63,17 @@
 
 
 <script setup lang="ts">
+import { useNuxtApp } from '#app'; // Importa el hook para acceder a los métodos del app
+const { $toast } = useNuxtApp();
 
-import { useVideoStore } from '~/stores/video';
-import formatoData from '~/utils/formatoData';
-const { adicionarFavorito } = useVideoStore();
 const { data: projects, error } = await useFetch("/api/v1/project")
-const { data: category, error:errorCategory } = await useFetch("/api/v1/category")
-
-
-
 onMounted(() => {
     if (error.value) {
         $toast.error(error.value.statusMessage || "");
-        // videos.value = await $fetch("/api/v1/videos")
     }
 
 })
 
-const { $toast } = useNuxtApp()
-const favortitos = (video: Video) => {
-    adicionarFavorito(video);
-    $toast.success("Video agregado a favoritos");
-}
+
 </script>
 <style lang="css" scoped></style>

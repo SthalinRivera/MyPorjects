@@ -5,10 +5,10 @@ import { useNuxtApp } from '#app';
 export function useFirebaseUpload() {
   const uploadProgress = ref(0);
   const { $storage } = useNuxtApp();
- // Aserción de tipo para asegurar que $storage es de tipo FirebaseStorage
- const storage = $storage as FirebaseStorage;
+
+
   const uploadImage = async (file: File) => {
-    const fileRef = storageRef(storage, `images/${file.name}`);
+    const fileRef = storageRef($storage, `images/${file.name}`);
     const uploadTask = uploadBytesResumable(fileRef, file);
 
     return new Promise<string>((resolve, reject) => {
