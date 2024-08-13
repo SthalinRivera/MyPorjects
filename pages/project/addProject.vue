@@ -3,10 +3,10 @@ import type { FormSubmitEvent } from '#ui/types'
 import { object, string, type InferType } from 'yup'
 import type { Category } from '~/interfaces/category';
 definePageMeta({
-    middleware:['auth'],
+    middleware: ['auth'],
     permiso: "ADMINISTRADOR",
 })
-const { handleFileInput, files } = useFileStorage()
+
 const router = useRouter()
 const { $toast } = useNuxtApp();
 const { user } = useUserSession();
@@ -27,6 +27,21 @@ const state = reactive({
     categoryId: undefined,
 
 })
+import { useFirebaseUpload } from '~/composables/useFirebaseUpload';
+
+const imageUrl = ref<string | null>(null);
+const { uploadProgress, uploadImage } = useFirebaseUpload();
+
+const handleFileUpload = async (event: Event) => {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (file) {
+        imageUrl.value = await uploadImage(file);
+
+    }
+};
+
+
+
 
 const categoryData = ref<Category[]>([])
 const { data } = await useFetch<Category[]>("/api/v1/category")
@@ -55,21 +70,19 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
             throw new Error("Missing required fields");
         }
 
-        const fileResponse = await $fetch('/api/files', {
-            method: 'POST',
-            body: { files: files.value },
-        });
 
-        if (fileResponse && fileResponse[0]) {
+        if (imageUrl) {
             const projectData = {
                 title: state.title,
                 description: state.description,
                 project_url: state.project_url,
-                image_url: fileResponse[0], 
-                code_url: state.code_url || null, 
+                image_url: imageUrl.value,
+                code_url: state.code_url || null,
                 userId: user.value?.usuarioId,
                 categoryId: Number(state.categoryId), // Convertir a número
             };
+
+            console.log(projectData);
 
             const projectResponse = await $fetch("/api/v1/project", {
                 method: "POST",
@@ -102,7 +115,13 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
             <UInput v-model="state.description" />
         </UFormGroup>
         <UFormGroup label="Image" name="image_url">
-            <input type="file" @input="handleFileInput" />
+            <input type="file" @change="handleFileUpload" />
+            <div v-if="uploadProgress > 0" class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
+                <div class="bg-blue-600 h-2.5 rounded-full" :style="{ width: `${uploadProgress}%` }"></div>
+            </div>
+            <p v-if="uploadProgress > 0 && uploadProgress < 100" class="text-gray-600 mt-2 mb-2">Upload progress: {{
+                uploadProgress }}%</p>
+            <img class="w-20 h-auto rounded-md mt-2" v-if="imageUrl" :src="imageUrl" alt="Uploaded Image" />
         </UFormGroup>
         <UFormGroup label="Project URL" name="project_url">
             <UInput v-model="state.project_url" />
@@ -113,7 +132,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         <UFormGroup label="Category" name="categoryId">
             <USelect v-model="state.categoryId" :options="categories" />
         </UFormGroup>
-        <UButton type="submit">
+        <UButton type="submit" :disabled="uploadProgress !== 100">
             Add Project
         </UButton>
     </UForm>

@@ -9,11 +9,11 @@
             <div v-for="project in projects" :key="project.id"
                 class="max-w-md bg-white dark:bg-gray-800 rounded-xl overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl hover:scale-105 transform transition-all duration-500">
                 <div class="p-4">
-                    <img class="rounded-xl" :src="`/upload/${project.image_url}`" :alt="project.title" />
+                    <img class="rounded-xl" :src="`${project.image_url}`" :alt="project.title" />
 
                     <div class="flex justify-between mt-3 items-center">
                         <div class="items-center mt-2">
-                            <h1 class="text-lg text-gray-900 dark:text-gray-100 font-bold">{{ project.categoryId }}</h1>
+                            <h1 class="text-lg text-gray-900 dark:text-gray-100 font-bold">  {{ project.Category ? project.Category.name : 'No category' }}</h1>
                         </div>
                         <div class="flex">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -67,6 +67,8 @@ import { useVideoStore } from '~/stores/video';
 import formatoData from '~/utils/formatoData';
 const { adicionarFavorito } = useVideoStore();
 const { data: projects, error } = await useFetch("/api/v1/project")
+const { data: category, error:errorCategory } = await useFetch("/api/v1/category")
+
 
 
 onMounted(() => {

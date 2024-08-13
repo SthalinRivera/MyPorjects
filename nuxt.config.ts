@@ -25,6 +25,16 @@ export default defineNuxtConfig({
         clientSecret: process.env.NUXT_OAUTH_GOOGLE_CLIENT_SECRET,
       },
     },
+
+    public: {
+      FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
+      FIREBASE_AUTH_DOMAIN: process.env.FIREBASE_AUTH_DOMAIN,
+      FIREBASE_DATABASE_URL: process.env.FIREBASE_DATABASE_URL,
+      FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
+      FIREBASE_STORAGE_BUCKET: process.env.FIREBASE_STORAGE_BUCKET,
+      FIREBASE_MESSAGING_SENDER_ID: process.env.FIREBASE_MESSAGING_SENDER_ID,
+      FIREBASE_APP_ID: process.env.FIREBASE_APP_ID,
+    },
   },
   app: {
     pageTransition: { name: "page", mode: "out-in" },
@@ -34,13 +44,8 @@ export default defineNuxtConfig({
       viewport: "width=device-width, initial-scale=1",
     },
   },
-  fileStorage: {
-    // enter the absolute path to the location of your storage
-    //mount: 'C:/vue/myprojects/public',
-
-    // {OR} use environment variables (recommended)
-    mount: process.env.DIRECTORY_MOUNT_STORAGE
-    // you need to set the mount in your .env file at the root of your project
-  },
-
+  plugins: [
+    '~/plugins/firebase.ts'
+  ],
+ 
 })

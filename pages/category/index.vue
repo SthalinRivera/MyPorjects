@@ -52,6 +52,7 @@
     </div>
 </template>
 
+
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import type { FormSubmitEvent } from '#ui/types'
@@ -64,14 +65,23 @@ const isOpen = ref(false)
 const router = useRouter()
 const { $toast } = useNuxtApp()
 
-const { data: categories } = await useFetch<Category[]>("/api/v1/category")
+// Define categories as a ref that can hold either an array of Category or null
+const categories = ref<Category[] | null>(null)
 
-if (!categories.value) {
-    throw createError({
-        statusCode: 404,
-        statusMessage: "Categorías no encontradas"
-    })
+// Function to fetch categories
+const fetchCategories = async () => {
+    const { data } = await useFetch<Category[]>("/api/v1/category")
+    if (!data.value) {
+        throw createError({
+            statusCode: 404,
+            statusMessage: "Categorías no encontradas"
+        })
+    }
+    categories.value = data.value
 }
+
+// Fetch categories initially
+await fetchCategories()
 
 type Schema = InferType<typeof schema>
 const schema = object({
@@ -88,35 +98,38 @@ const abrirModal = (category: Category) => {
     isOpen.value = true
 }
 
-
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-    // Do something with event.data
     try {
-        await $fetch(`/api/v1/updateCategory/${state.id}`,
-            {
-                method: "PUT",
-                body: state,
-            }
-        )
-        router.push("/category")
-        $toast.success("video actulizado")
-        isOpen.value = false;
+        await $fetch(`/api/v1/updateCategory/${state.id}`, {
+            method: "PUT",
+            body: state,
+        })
+        $toast.success("Categoría actualizada")
+        isOpen.value = false
+
+        // Update categories list by fetching again
+        await fetchCategories()
     } catch (error) {
-        $toast.error("Error al actualizar video")
+        $toast.error("Error al actualizar la categoría")
     }
-    console.log(event.data)
 }
+
 const deleteCategory = async (id: number) => {
     try {
         await fetch(`/api/v1/deleteCategory/${id}`, {
             method: 'DELETE'
         })
         $toast.success('Categoría eliminada con éxito')
-        // Optionally refetch categories or remove the deleted category from state
+        
+        // Update categories list by fetching again
+        await fetchCategories()
     } catch (error) {
         $toast.error('Error al eliminar la categoría')
     }
 }
 </script>
+
+
+
 
 <style lang="css" scoped></style>

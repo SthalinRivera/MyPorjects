@@ -8,7 +8,10 @@ export const allProjets = async () => {
   return await prisma.project.findMany({
     orderBy: {
       id: "asc"
-    }
+    },
+    include: {
+      Category: true,
+  },
   });
 }
 
