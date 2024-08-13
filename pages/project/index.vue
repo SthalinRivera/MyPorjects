@@ -13,7 +13,7 @@
 
                     <div class="flex justify-between mt-3 items-center">
                         <div class="items-center mt-2">
-                            <h1 class="text-lg text-gray-900 dark:text-gray-100 font-bold">  {{ project.Category ? project.Category.name : 'No category' }}</h1>
+                            <h1 class="text-lg text-gray-900 dark:text-gray-400 font-semibold">  {{ project.Category ? project.Category.name : 'No category' }}</h1>
                         </div>
                         <div class="flex">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -29,7 +29,7 @@
                 </div>
                 <div class="flex p-6  justify-center ">
                     <div class="flex  justify-between w-full max-w-lg">
-                        <NuxtLink :to="project.demoUrl">
+                        <a  :href="project.project_url" target="_blank" rel="noopener noreferrer">
                             <div class="flex space-x-2 items-center">
                                 <span>
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -40,7 +40,7 @@
                                 </span>
                                 <span class="text-gray-700 dark:text-gray-300 font-semibold">Demo</span>
                             </div>
-                        </NuxtLink>
+                        </a>
                         <NuxtLink :to="{
                             name: 'project-id',
                             params: { id: project.id.toString() }

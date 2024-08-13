@@ -5,15 +5,15 @@
       <div v-for="record in projects" :key="record.id"
         class="max-w-md bg-white dark:bg-gray-800 rounded-xl overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl hover:scale-105 transform transition-all duration-500">
         <div class="p-4">
-          <img class="rounded-xl" :src="`/upload/${record.image_url}`" :alt="record.title" />
+          <img class="rounded-xl" :src="`${record.image_url}`" :alt="record.title" />
           <div class="items-center mt-2">
             <h1 class="text-lg text-gray-900 dark:text-gray-100 font-bold">{{ record.title }}</h1>
-            <p class="text-gray-900 dark:text-gray-100">{{ record.description }}</p>
+            <!-- <p class="text-gray-900 dark:text-gray-100">{{ record.description }}</p> -->
           </div>
         </div>
         <div class="flex p-6  justify-center ">
           <div class="flex  justify-between w-full max-w-lg">
-            <NuxtLink :to="record.demoUrl">
+            <a :href="record.project_url" target="_blank" rel="noopener noreferrer">
               <div class="flex space-x-2 items-center">
                 <span>
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -24,8 +24,8 @@
                 </span>
                 <span class="text-gray-700 dark:text-gray-300 font-semibold">Demo</span>
               </div>
-            </NuxtLink>
-            <NuxtLink :to="record.codigoUrl">
+            </a>
+            <a :href="record.code_url" target="_blank" rel="noopener noreferrer">
               <div class="flex space-x-2 items-center pr-4">
                 <span>
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -36,7 +36,7 @@
                 </span>
                 <span class="text-gray-700 dark:text-gray-300 font-semibold">Codigo</span>
               </div>
-            </NuxtLink>
+            </a>
           </div>
         </div>
       </div>
@@ -48,41 +48,5 @@
 import type { Record } from '~/interfaces/Record';
 const id=1;
 const { data: projects, error } = await useFetch(`/api/v1/projectsByCategoryId/${id}`)
-console.log("projets ",projects );
-  
-// Sample data
-// const records = ref<Record[]>([
-//   {
-//     id: 1,
-//     title: 'React + OpenAI',
-//     description: 'Implementación con Tailwind CSS',
-//     imageUrl: 'https://images.unsplash.com/photo-1599839575945-a9e5af0c3fa5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1049&q=80',
-//     demoUrl: 'https://reat-openai-tailwindcss.vercel.app/',
-//     codigoUrl: 'https://github.com/SthalinRivera/Chat---React---API---OpenAI---Tailwind-CSS',
-//   },
-//   {
-//     id: 2,
-//     title: 'Vue.js + Tailwind CSS',
-//     description: 'Integration with Tailwind CSS',
-//     imageUrl: 'https://images.unsplash.com/photo-1599839575945-a9e5af0c3fa5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1049&q=80',
-//     demoUrl: 'Implementación con Tailwinsdd CSS',
-//     codigoUrl: 'Implementación con Tailwidsnd CSS',
-//   },
-//   {
-//     id: 3,
-//     title: 'Angular + Firebase',
-//     description: 'Building real-time applications with Firebase',
-//     imageUrl: 'https://images.unsplash.com/photo-1599839575945-a9e5af0c3fa5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1049&q=80',
-//     demoUrl: 'Implementación con Tailwinsdd CSS',
-//     codigoUrl: 'Implementación con Tailwidsnd CSS',
-//   },
-//   {
-//     id: 4,
-//     title: 'Node.js + Express',
-//     description: 'Backend development with Node.js and Express',
-//     imageUrl: 'https://images.unsplash.com/photo-1599839575945-a9e5af0c3fa5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1049&q=80',
-//     demoUrl: 'Implementación con Tailwinsdd CSS',
-//     codigoUrl: 'Implementación con Tailwidsnd CSS',
-//   }
-// ]);
+
 </script>

@@ -2,10 +2,12 @@
     <div>
         <NuxtLink to="/videos/favoritos">Favoritos</NuxtLink>
         <!-- <h1 class="text-4xl text-center mb-2">{{ $t("titulo") }}</h1> -->
-        <h1 class="text-4xl text-center mb-2">Category</h1>
+        <h1 class="text-4xl text-center mb-2">Categoría</h1>
 
         <!-- component -->
         <div class="container mx-auto p-4">
+
+        
             <table
                 class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
                 <thead class="bg-gray-50 dark:bg-gray-700 text-left text-gray-600 dark:text-gray-300">
@@ -22,9 +24,9 @@
                         </td>
                         <td class="px-6 py-4 text-sm font-medium text-gray-500 dark:text-gray-400">
                             <UButton icon="i-heroicons-pencil-square" size="sm" color="primary" variant="solid"
-                                label="Editar" @click="abrirModal(category)" :trailing="false" />
+                                 @click="abrirModal(category)" :trailing="false"  class="mr-2"/>
                             <UButton icon="i-heroicons-trash" size="sm" color="red" variant="solid"
-                                label="Eliminar" @click="deleteCategory(category.id)" :trailing="false" />
+                                @click="deleteCategory(category.id)" :trailing="false" />
                         </td>
                     </tr>
                 </tbody>
@@ -34,14 +36,14 @@
         <UModal v-model="isOpen">
             <UCard :ui="{ ring: '', divide: 'divide-y divide-gray-100 dark:divide-gray-800' }">
                 <template #header>
-                    <h1 class="text-4xl text-center mb-2">{{ $t("actualizar_categoria") }}</h1>
+                    <h1 class="text-4xl text-center mb-2">Actualizar categoría</h1>
                 </template>
                 <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
                     <UFormGroup label="Nombre" name="name">
                         <UInput v-model="state.name" />
                     </UFormGroup>
                     <UButton type="submit">
-                        Submit
+                        Actualizar
                     </UButton>
                 </UForm>
                 <template #footer>

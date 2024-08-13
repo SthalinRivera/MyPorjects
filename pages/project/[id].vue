@@ -1,11 +1,12 @@
 <template>
     <div>
         <div class="">
-            <h1 class="text-4xl text-center mb-2">{{ $t("titulo") }}</h1>
+            <!-- <h1 class="text-4xl text-center mb-2">{{ $t("titulo") }}</h1> -->
+            <h1 class="text-4xl text-center mb-2">Mi portafolio</h1>
             <div
-                class="flex flex-col sm:flex-row sm:max-w-2xl max-w-xs mx-auto overflow-hidden bg-slate-50 dark:bg-gray-700 rounded-lg shadow-lg p-2">
+                class="flex flex-col sm:flex-row  mx-auto overflow-hidden bg-slate-50 dark:bg-gray-700 rounded-lg shadow-lg p-2">
                 <div class="p-2 sm:w-1/2">
-                    <img class="rounded object-cover w-full sm:h-80 h-60" :src="`/upload/${project.image_url}`"
+                    <img class="rounded object-cover w-full sm:h-80 h-60" :src="`${project.image_url}`"
                         alt="Article" />
                 </div>
                 <div class="sm:p-4 p-2 sm:w-1/2 flex flex-col justify-between">
