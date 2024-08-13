@@ -38,6 +38,7 @@ if (data.value) {
     categoryData.value = []
 }
 
+
 const categories = computed(() => {
     return categoryData.value.map((cat: Category) => ({
         value: cat.id,
