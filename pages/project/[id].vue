@@ -49,7 +49,12 @@
                                 <p class="text-gray-700 dark:text-gray-300 ml-2"><a :href="`${project.project_url}`"
                                         target="_blank" rel="noopener noreferrer">Ver projecto</a></p>
                             </div>
+
+                            
                         </div>
+                        
+                        
+                        hola
                     </div>
                 </div>
             </div>

@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    <h1 class="text-slate-900  dark:text-slate-200 font-bold text-center text-2xl mb-4">Mis pasatiempos</h1>
+    <h1 class="text-slate-900  dark:text-slate-200 font-bold text-center text-2xl mb-4">Mis Apps Free </h1>
 
     <div class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       <div v-for="record in projects" :key="record.id"
@@ -25,7 +25,7 @@
               </span>
               <span class="text-gray-700 dark:text-gray-300 font-semibold">Demo</span>
             </a>
-            <a :href="record.code_url" target="_blank" rel="noopener noreferrer"
+            <!-- <a :href="record.code_url" target="_blank" rel="noopener noreferrer"
               class="flex space-x-2 items-center p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors duration-300">
               <span>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -35,7 +35,7 @@
                 </svg>
               </span>
               <span class="text-gray-700 dark:text-gray-300 font-semibold">Código</span>
-            </a>
+            </a> -->
           </div>
         </div>
       </div>
@@ -45,7 +45,7 @@
 
 <script setup lang="ts">
 import type { Record } from '~/interfaces/Record';
-const id = 1;
+const id = 2;
 const { data: projects, error } = await useFetch(`/api/v1/projectsByCategoryId/${id}`)
 
 </script>
