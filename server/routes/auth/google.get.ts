@@ -23,6 +23,7 @@ export default oauth.googleEventHandler({
           email: user.email,
           name: user.name,
           roleId: PERMISO_USUARIO,
+          password: null,  // Indica explícitamente que no estás proporcionando una contraseña
         },
         include: {
           role: true,

@@ -1,7 +1,7 @@
 
 import { H3Event } from "h3";
 import { PrismaClient } from "@prisma/client";
-import { Project } from "~/interfaces/project";
+import { Project } from "~/interfaces/product";
 const prisma = new PrismaClient();
 const { client } = postgresClient();
 
@@ -15,7 +15,7 @@ export const allProjets = async () => {
 
 export const projectsByCategoryId = async (event: H3Event) => {
   const request = getRouterParams(event);  // Extracts parameters from the event object
-  
+
   const categoryId = Number(request.id); // Ensure categoryId is a number
 
   if (isNaN(categoryId)) {

@@ -7,8 +7,7 @@
                         <div class="flex flex-col items-center w-full my-20">
                             <div class="flex items-center justify-between mb-2">
                                 <span
-                                    class="font-semibold text-xl tracking-tight mr2 text-slate-900 dark:text-slate-200">Sthalin
-                                    Rivera</span>
+                                    class="font-semibold text-xl tracking-tight mr2 text-slate-900 dark:text-slate-200">Stravi</span>
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke-width="1.5" stroke="currentColor"
                                     class="size-6 text-blue-400 dark:text-blue-300">

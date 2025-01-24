@@ -1,5 +1,7 @@
 <script setup lang="ts">
 const { user, clear } = useUserSession();
+
+
 const router = useRouter();
 
 const items = [
@@ -16,23 +18,10 @@ const items = [
       icon: "i-heroicons-cog-8-tooth",
     },
   ],
+
   [
     {
-      label: "Documentation",
-      icon: "i-heroicons-book-open",
-    },
-    {
-      label: "Changelog",
-      icon: "i-heroicons-megaphone",
-    },
-    {
-      label: "Status",
-      icon: "i-heroicons-signal",
-    },
-  ],
-  [
-    {
-      label: "Sair",
+      label: "Salir",
       icon: "i-heroicons-arrow-left-on-rectangle",
       click: () => {
         clear();
@@ -41,15 +30,14 @@ const items = [
     },
   ],
 ];
+
 </script>
 
 <template>
-  <UDropdown
-    :items="items"
-    :ui="{ item: { disabled: 'cursor-text select-text' } }"
-    :popper="{ placement: 'bottom-start' }"
-  >
-    <UAvatar :src="user?.urlFoto" />
+  <UDropdown :items="items" :ui="{ item: { disabled: 'cursor-text select-text' } }"
+    :popper="{ placement: 'bottom-start' }">
+    <UAvatar
+      :src="user?.urlFoto ? user.urlFoto : 'https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg'" />
 
     <template #account="{ item }">
       <div class="text-left">
@@ -63,10 +51,7 @@ const items = [
     <template #item="{ item }">
       <span class="truncate">{{ item.label }}</span>
 
-      <UIcon
-        :name="item.icon"
-        class="flex-shrink-0 h-4 w-4 text-gray-400 dark:text-gray-500 ms-auto"
-      />
+      <UIcon :name="item.icon" class="flex-shrink-0 h-4 w-4 text-gray-400 dark:text-gray-500 ms-auto" />
     </template>
   </UDropdown>
 </template>

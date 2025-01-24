@@ -58,6 +58,7 @@
 </template>
 <script setup lang="ts">
 
+import type { Product } from '~/interfaces/product';
 import { useUserStore } from '~/stores/userStore'; // Asegúrate de importar tu store
 
 const route = useRoute();
