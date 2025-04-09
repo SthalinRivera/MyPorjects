@@ -86,7 +86,7 @@
                   class="bg-gradient-to-r from-amber-200 to-yellow-500 rounded-xl dark:from-amber-600 dark:to-yellow-600 h-full p-5 flex flex-col relative">
                   <!-- Imagen flotante -->
                   <div class="absolute -top-5 right-2 w-24 h-24 z-10">
-                    <img src="@/assets/img/pulsera.png" alt="Servicio Técnico"
+                    <img src="@/assets/img/Pulsera.png" alt="Servicio Técnico"
                       class="w-full h-full object-contain drop-shadow-lg transition-transform duration-500 hover:scale-110">
                     <div class="absolute inset-0 rounded-full bg-amber-200/30 dark:bg-amber-800/30 blur-md -z-10"></div>
                   </div>
