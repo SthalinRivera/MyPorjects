@@ -102,7 +102,7 @@ export const productByCategoryId = async (event: H3Event) => {
 };
 
 
-export const actuliazar = async (event: H3Event): Promise<string> => {
+export const updateProduct = async (event: H3Event): Promise<string> => {
   try {
     const request = await readBody<Product>(event);
 

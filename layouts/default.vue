@@ -5,6 +5,7 @@
         <UContainer class="my-4">
             <slot></slot>
         </UContainer>
+        <FloatingCartButton />
         <Footer></Footer>
     </div>
 </template>

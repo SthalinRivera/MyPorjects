@@ -15,6 +15,6 @@ useHead({
   bodyAttrs: {
     class: 'test'
   },
-  script: [{ innerHTML: 'console.log(\'Hello world\')' }]
+  script: [{ innerHTML: 'console.log(\'Si has llegado hasta aqui no eres normal jajaj xd:\')' }]
 })
 </script>

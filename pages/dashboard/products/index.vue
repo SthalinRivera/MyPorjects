@@ -78,7 +78,7 @@
                                         <div class="text-sm font-medium text-gray-900 dark:text-white">{{ product.name
                                         }}</div>
                                         <div class="text-sm text-gray-500 dark:text-gray-400 line-clamp-1">{{
-                                            product.description }}</div>
+                                            truncateText(product.description, 50) }}</div>
                                     </div>
                                 </div>
                             </td>
@@ -102,6 +102,10 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <div class="flex justify-end gap-2">
+                                    <button @click="openViewModal(product)"
+                                        class="text-green-600 dark:text-green-400 hover:text-green-900 dark:hover:text-green-300 transition-colors">
+                                        <i class="ri-eye-line"></i>
+                                    </button>
                                     <button @click="openModal(product)"
                                         class="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 transition-colors">
                                         <i class="ri-pencil-line"></i>
@@ -219,13 +223,67 @@
             </div>
         </div>
     </div>
+    <!-- View User Details Modal -->
+    <div v-if="showViewProductModal"
+        class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50 backdrop-blur-sm">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-md p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold text-gray-800 dark:text-white">Product Details</h2>
+                <button @click="showViewProductModal = false"
+                    class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
+                    <i class="ri-close-line text-2xl"></i>
+                </button>
+            </div>
+
+            <div v-if="selectedProduct" class="space-y-6">
+                <div class="flex flex-col items-center mb-6">
+                    <img :src="selectedProduct.imageUrl || 'https://via.placeholder.com/200'"
+                        class="h-40 w-40 rounded-lg object-cover border-2 border-gray-200 dark:border-gray-700 mb-3">
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ selectedProduct.name }}</h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">ID: {{ selectedProduct.id }}</p>
+                </div>
+
+                <div class="grid grid-cols-1 gap-4">
+                    <div class="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg">
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Description</p>
+                        <p class="text-sm text-gray-900 dark:text-white">{{ selectedProduct.description }}</p>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg">
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Price</p>
+                            <p class="text-sm text-gray-900 dark:text-white">S/. {{ selectedProduct.price }}
+                            </p>
+                        </div>
+                        <div class="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg">
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Stock</p>
+                            <p class="text-sm text-gray-900 dark:text-white">{{ selectedProduct.stock }}</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg">
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Category</p>
+                        <p class="text-sm text-gray-900 dark:text-white">{{ getCategoryName(selectedProduct.categoryId)
+                        }}</p>
+                    </div>
+
+                    <div v-if="selectedProduct.createdAt" class="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg">
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Created At</p>
+                        <p class="text-sm text-gray-900 dark:text-white">{{ selectedProduct.createdAt }}</p>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, watchEffect, nextTick } from "vue";
 import { useNuxtApp } from "#app";
 import { useFirebaseUpload } from '~/composables/useFirebaseUpload';
-
+const showViewModal = ref(false);
 const { $toast } = useNuxtApp();
 const products = ref<any[]>([]);
 const categories = ref<any[]>([]);
@@ -258,7 +316,26 @@ const formState = reactive({
     imageUrl: "",
     categoryId: "",
 });
+const showViewProductModal = ref<boolean>(false);
+const selectedProduct = ref<Product | null>(null);
 
+// Define Product interface (add this at the top of your script)
+interface Product {
+    id: number;
+    name: string;
+    description: string;
+    price: number;
+    stock: number;
+    imageUrl: string;
+    categoryId: number;
+    createdAt?: string;
+}
+
+// Add this method to open the view modal
+const openViewModal = (product: Product) => {
+    selectedProduct.value = product;
+    showViewProductModal.value = true;
+};
 // Obtener productos
 const fetchProducts = async () => {
     loading.value = true;
@@ -313,7 +390,7 @@ const saveProduct = async () => {
         };
 
         if (editingProduct.value) {
-            await useFetch(`/api/v1/product/${editingProduct.value.id}`, {
+            await useFetch(`/api/v1/updateProduct/${editingProduct.value.id}`, {
                 method: "PUT",
                 body: productData
             });
@@ -351,12 +428,17 @@ const getCategoryName = (categoryId: number) => {
     return category ? category.name : "Uncategorized";
 };
 
+const truncateText = (text: string, maxLength: number): string => {
+    if (!text) return '';
+    return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
+};
 // Cargar datos
 watchEffect(async () => {
     await nextTick();
     fetchProducts();
     fetchCategories();
 });
+
 </script>
 
 <style scoped>

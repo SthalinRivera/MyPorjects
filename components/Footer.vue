@@ -42,8 +42,8 @@
                         <div class="flex">
                             <p class="mr-1 text-slate-600 dark:text-slate-300">Dirección:</p>
                             <a href="https://www.google.com/maps" target="_blank" rel="noopener noreferrer"
-                                class="transition-colors duration-300 hover:text-pink-600 dark:hover:text-pink-400">Av.
-                                Lima 451 - Quilmana - Cañete - Lima</a>
+                                class="transition-colors duration-300 hover:text-pink-600 dark:hover:text-pink-400">
+                                Quilmana - Cañete - Lima</a>
                         </div>
                     </div>
                     <div>
@@ -71,16 +71,16 @@
                     </p>
                     <ul class="flex flex-col mb-3 space-y-2 lg:mb-0 sm:space-y-0 sm:space-x-5 sm:flex-row">
                         <li>
-                            <a href="/"
+                            <a href="/faq"
                                 class="text-sm text-slate-600 dark:text-slate-300 transition-colors duration-300 hover:text-pink-600 dark:hover:text-pink-400">F.A.Q</a>
                         </li>
                         <li>
-                            <a href="/"
+                            <a href="/politica-privacidad"
                                 class="text-sm text-slate-600 dark:text-slate-300 transition-colors duration-300 hover:text-pink-600 dark:hover:text-pink-400">Política
                                 de privacidad</a>
                         </li>
                         <li>
-                            <a href="/"
+                            <a href="/terminos-condiciones"
                                 class="text-sm text-slate-600 dark:text-slate-300 transition-colors duration-300 hover:text-pink-600 dark:hover:text-pink-400">Términos
                                 y condiciones</a>
                         </li>

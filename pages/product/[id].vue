@@ -268,6 +268,7 @@ const currentImage = ref('');
 
 // Obtener datos del producto
 const { data: productData, error } = await useFetch<Product>(`/api/v1/product/${id}`);
+console.log("viendo el producudo unico por el id",productData)
 
 if (error.value) {
     throw createError({
@@ -296,8 +297,7 @@ productImages.value = [
 const currentDisplayImage = computed(() => productImages.value[currentImageIndex.value]);
 
 // Obtener productos relacionados
-const { data: relatedProductsData } = await useFetch<Product[]>(
-    `/api/v1/productByCategoryId/${product.value.categoryId}`,
+const { data: relatedProductsData } = await useFetch<Product[]>( `/api/v1/productByCategoryId/${product.value.categoryId}`,
     { default: () => [] }
 );
 

@@ -154,7 +154,7 @@ const menuItems = [
         icon: 'heroicons:chart-bar'
     },
     {
-        to: '/dashboard/orders',
+        to: '/dashboard/order-history',
         title: 'Historial de Pedidos',
         shortTitle: 'Pedidos',
         icon: 'heroicons:shopping-bag',
@@ -171,6 +171,12 @@ const menuItems = [
         title: 'Administrar Productos',
         shortTitle: 'Productos',
         icon: 'heroicons:archive-box'
+    },
+    {
+        to: '/dashboard/users',
+        title: 'Administrar Usuarios',
+        shortTitle: 'Usuarios',
+        icon: 'heroicons:users'
     },
     {
         to: '/dashboard/sales',

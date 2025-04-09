@@ -1,5 +1,4 @@
 <template>
-
     <transition name="slide-fade">
         <div v-if="isOpen" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="slide-over-title" role="dialog"
             aria-modal="true">
@@ -10,13 +9,14 @@
             <!-- Panel del carrito -->
             <div class="fixed inset-0 overflow-hidden">
                 <div class="absolute inset-0 overflow-hidden">
-                    <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 " @click.stop>
+                    <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10" @click.stop>
                         <div class="pointer-events-auto w-screen max-w-md">
                             <div class="flex h-full flex-col bg-white dark:bg-gray-800 shadow-xl">
                                 <!-- Encabezado -->
                                 <div
                                     class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-                                    <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Shopping Cart</h2>
+                                    <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Carrito de compras
+                                    </h2>
                                     <button @click="closeModal"
                                         class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                                         <svg class="h-6 w-6 text-gray-500 dark:text-gray-400" fill="none"
@@ -39,14 +39,13 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                                 d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                                         </svg>
-                                        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-200 mb-2">Your cart
-                                            is
-                                            empty</h3>
-                                        <p class="text-gray-500 dark:text-gray-400 mb-6">Add some products to continue
-                                            shopping</p>
+                                        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-200 mb-2">Tu carrito
+                                            está vacío</h3>
+                                        <p class="text-gray-500 dark:text-gray-400 mb-6">Agrega algunos productos para
+                                            continuar comprando</p>
                                         <NuxtLink to="/product" @click.native="closeModal"
                                             class="px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-medium rounded-lg shadow-md transition-all duration-300">
-                                            Continue Shopping
+                                            Seguir comprando
                                         </NuxtLink>
                                     </div>
 
@@ -118,20 +117,30 @@
                                         <p>Subtotal</p>
                                         <p>S/. {{ totalPrice }}</p>
                                     </div>
-                                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Shipping and taxes
-                                        calculated
-                                        at checkout.</p>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Envíos e impuestos
+                                        calculados al momento de la compra.</p>
 
                                     <div class="space-y-3">
+                                        <!-- Botón de WhatsApp -->
+                                        <button @click="initiateWhatsAppOrder"
+                                            class="flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 px-6 py-3 text-white font-medium shadow-lg transition-all duration-300 transform hover:scale-[1.01] w-full">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24"
+                                                fill="currentColor">
+                                                <path
+                                                    d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.515 5.392 1.521 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
+                                            </svg>
+                                            Pedir por WhatsApp
+                                        </button>
+
                                         <NuxtLink :to="checkoutRoute"
                                             @click.native="productShoppingCart.length === 0 ? $toast.error('Your cart is empty!') : closeModal()"
                                             class="flex items-center justify-center rounded-lg bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 px-6 py-3 text-white font-medium shadow-lg transition-all duration-300 transform hover:scale-[1.01]">
-                                            Checkout
+                                            Finalizar compra
                                         </NuxtLink>
 
                                         <NuxtLink to="/product" @click.native="closeModal"
                                             class="flex items-center justify-center rounded-lg border border-transparent px-6 py-3 text-indigo-600 dark:text-indigo-400 font-medium hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors">
-                                            Continue Shopping
+                                            Seguir comprando
                                             <svg xmlns="http://www.w3.org/2000/svg" class="ml-1 h-5 w-5" fill="none"
                                                 viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -147,6 +156,59 @@
             </div>
         </div>
     </transition>
+
+    <!-- Modal para datos del cliente (cuando no está logueado) -->
+    <transition name="fade">
+        <div v-if="showCustomerModal" class="fixed inset-0 z-50 overflow-y-auto">
+            <div class="fixed inset-0 bg-black/50 transition-opacity" @click="showCustomerModal = false"></div>
+
+            <div class="flex min-h-full items-center justify-center p-4">
+                <div class="relative w-full max-w-md bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6">
+                    <button @click="showCustomerModal = false"
+                        class="absolute top-4 right-4 p-1 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Complete sus datos</h3>
+
+                    <form @submit.prevent="sendWhatsAppOrder" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nombre
+                                completo</label>
+                            <input v-model="customerData.name" type="text" required
+                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
+                        </div>
+
+                        <div>
+                            <label
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Teléfono</label>
+                            <input v-model="customerData.phone" type="tel" required
+                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
+                        </div>
+
+                        <div class="flex justify-end gap-3 pt-2">
+                            <button type="button" @click="showCustomerModal = false"
+                                class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
+                                Cancelar
+                            </button>
+                            <button type="submit"
+                                class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md flex items-center gap-2 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24"
+                                    fill="currentColor">
+                                    <path
+                                        d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.515 5.392 1.521 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
+                                </svg>
+                                Enviar pedido
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </transition>
 </template>
 
 <script setup lang="ts">
@@ -156,21 +218,27 @@ import { useProductShoppingCartStore } from '~/stores/productShoppingCart';
 const { user } = useUserSession();
 const { $toast } = useNuxtApp();
 const emit = defineEmits(["update:isOpen"]);
-const checkoutRoute = computed(() => {
-    if (productShoppingCart.value.length === 0) {
-        return '#';
-    }
-    return user.value ? '/orderSummary' : '/login';
-});
 
-defineProps({
+const props = defineProps({
     isOpen: {
         type: Boolean,
         required: true
     }
 });
 
+// Estados para el modal de datos del cliente
+const showCustomerModal = ref(false);
+const customerData = reactive({
+    name: '',
+    phone: ''
+});
 
+const checkoutRoute = computed(() => {
+    if (productShoppingCart.value.length === 0) {
+        return '#';
+    }
+    return user.value ? '/orderSummary' : '/login';
+});
 
 const closeModal = () => {
     emit("update:isOpen", false);
@@ -183,10 +251,6 @@ const removeProductShoppingCart = (id: number) => {
     productStore.deleteProductShoppingCart(id);
     $toast.error('Product removed!');
 };
-
-
-
-
 
 const increaseQuantity = (product: Product) => {
     if (product.quantity < product.stock) {
@@ -201,52 +265,57 @@ const decreaseQuantity = (product: Product) => {
         productStore.updateProductQuantity(product.id, product.quantity);
     }
 };
+
+// Iniciar proceso de pedido por WhatsApp
+const initiateWhatsAppOrder = () => {
+    if (productShoppingCart.value.length === 0) {
+        $toast.error('Your cart is empty!');
+        return;
+    }
+
+    if (user.value) {
+        // Usuario logueado - enviar directamente
+        sendWhatsAppOrder();
+    } else {
+        // Mostrar modal para capturar datos
+        showCustomerModal.value = true;
+    }
+};
+
+// Enviar pedido por WhatsApp
+const sendWhatsAppOrder = () => {
+    // Configuración del número de WhatsApp (reemplaza con tu número)
+    const phoneNumber = '51987654321'; // Ejemplo: 51 (Perú) + 987654321
+    const whatsappBaseUrl = 'https://wa.me';
+
+    // Determinar datos del cliente
+    const clientName = user.value?.name || customerData.name;
+    const clientPhone = user.value?.phoneNumber || customerData.phone;
+
+    // Crear mensaje con los productos del carrito
+    let message = `¡Hola! Quiero hacer un pedido:\n\n`;
+
+    productShoppingCart.value.forEach((product, index) => {
+        message += `${index + 1}. ${product.name} - ${product.quantity} x S/.${product.price}\n`;
+    });
+
+    message += `\n*Total: S/.${totalPrice.value}*\n\n`;
+    message += `Mis datos:\nNombre: ${clientName}\nTeléfono: ${clientPhone}`;
+
+    // Codificar el mensaje para URL
+    const encodedMessage = encodeURIComponent(message);
+
+    // Redireccionar a WhatsApp
+    window.open(`${whatsappBaseUrl}/${phoneNumber}?text=${encodedMessage}`, '_blank');
+
+    // Cerrar modales
+    showCustomerModal.value = false;
+    closeModal();
+};
 </script>
 
 <style scoped>
-/* Transiciones suaves para el modo oscuro */
-.bg-white {
-    transition: background-color 0.3s ease;
-}
-
-.bg-gray-800 {
-    transition: background-color 0.3s ease;
-}
-
-.text-gray-900 {
-    transition: color 0.3s ease;
-}
-
-.text-white {
-    transition: color 0.3s ease;
-}
-
-.border-gray-200 {
-    transition: border-color 0.3s ease;
-}
-
-.border-gray-700 {
-    transition: border-color 0.3s ease;
-}
-
-/* Efecto hover para los botones de cantidad */
-button:not(:disabled):hover {
-    transform: translateY(-1px);
-}
-
-/* Efecto de escala suave para el botón de checkout */
-.hover\:scale-\[1\.01\]:hover {
-    transform: scale(1.01);
-}
-
-/* Limitar texto a una línea con puntos suspensivos */
-.line-clamp-1 {
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
+/* Transiciones */
 .slide-fade-enter-active,
 .slide-fade-leave-active {
     transition: all 0.3s ease;
@@ -256,5 +325,42 @@ button:not(:disabled):hover {
 .slide-fade-leave-to {
     opacity: 0;
     transform: translateX(20px);
+}
+
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+}
+
+/* Efectos hover */
+button:not(:disabled):hover {
+    transform: translateY(-1px);
+}
+
+.hover\:scale-\[1\.01\]:hover {
+    transform: scale(1.01);
+}
+
+/* Limitar texto a una línea */
+.line-clamp-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Transiciones para el modo oscuro */
+.bg-white,
+.bg-gray-800,
+.text-gray-900,
+.text-white,
+.border-gray-200,
+.border-gray-700 {
+    transition: all 0.3s ease;
 }
 </style>

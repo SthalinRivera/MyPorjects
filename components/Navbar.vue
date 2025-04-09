@@ -5,9 +5,13 @@
             <div class="max-w-screen-xl flex items-center justify-between mx-auto px-4 py-3">
                 <!-- Logo -->
                 <NuxtLink to="/" class="flex items-center gap-2">
-                    <span class="font-medium text-lg text-gray-800 dark:text-white transition-colors">
-                        SunShineMadeForYou
-                    </span>
+                    <!-- Logo claro -->
+                    <img src="/logo-ligh.png" alt="Logo Claro" class="h-8 block dark:hidden" />
+
+                    <!-- Logo oscuro -->
+                    <img src="/logo-dark.png" alt="Logo Oscuro" class="h-8 hidden dark:block" />
+
+
 
                 </NuxtLink>
 

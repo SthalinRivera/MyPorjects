@@ -1,5 +1,14 @@
 <template>
     <div>
+
+        <div class="text-center py-12 px-4 bg-pink-50 dark:bg-pink-900/20 rounded-xl mb-6 shadow">
+            <h1 class="text-4xl font-extrabold text-pink-600 dark:text-pink-300 mb-3">
+                🎁 Colección exclusiva
+            </h1>
+            <p class="text-lg text-gray-700 dark:text-gray-200">
+                Descubre productos únicos hechos especialmente para ti.
+            </p>
+        </div>
         <div class="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 z-10">
             <div v-for="product in products" :key="product.id"
                 class="bg-white dark:bg-slate-800 rounded-xl overflow-hidden cursor-pointer shadow-md hover:shadow-xl border border-gray-100 dark:border-slate-700 transition-all duration-300 flex flex-col">
