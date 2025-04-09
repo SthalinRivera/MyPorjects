@@ -8,9 +8,9 @@
 
 <script setup lang="ts">
 useHead({
-  title: 'Stravi',
+  title: '𝗦𝘂𝗻𝘀𝗵𝗶𝗻𝗲 | 𝗔𝗰𝗰𝗲𝘀𝗼𝗿𝗶𝗼𝘀, 𝗝𝗼𝘆𝗮𝘀 𝘆 𝗺𝗮́𝘀',
   meta: [
-    { name: 'description', content: 'Donde  encontrarás lo que buscas.' }
+    { name: 'description', content: '𝗦𝘂𝗻𝘀𝗵𝗶𝗻𝗲 | 𝗔𝗰𝗰𝗲𝘀𝗼𝗿𝗶𝗼𝘀, 𝗝𝗼𝘆𝗮𝘀 𝘆 𝗺𝗮́𝘀' }
   ],
   bodyAttrs: {
     class: 'test'

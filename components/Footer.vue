@@ -15,7 +15,7 @@
                                 <rect x="14" y="11" width="7" height="12"></rect>
                             </svg>
                             <span
-                                class="ml-2 text-xl font-bold tracking-wide text-slate-800 dark:text-white uppercase">SunShineForYou</span>
+                                class="ml-2 text-xl font-bold tracking-wide text-slate-800 dark:text-white uppercase">SunShineMADEForYou</span>
                         </a>
                         <div class="mt-6 lg:max-w-sm">
                             <p class="text-sm text-slate-600 dark:text-slate-300">
@@ -31,46 +31,32 @@
                         <div class="flex">
                             <p class="mr-1 text-slate-600 dark:text-slate-300">Teléfono:</p>
                             <a href="tel:850-123-5021"
-                                class="transition-colors duration-300 hover:text-pink-600 dark:hover:text-pink-400">850-123-5021</a>
+                                class="transition-colors duration-300 hover:text-pink-600 dark:hover:text-pink-400">+51
+                                919753974 - +51 922869225</a>
                         </div>
                         <div class="flex">
                             <p class="mr-1 text-slate-600 dark:text-slate-300">Email:</p>
                             <a href="mailto:info@lorem.mail"
-                                class="transition-colors duration-300 hover:text-pink-600 dark:hover:text-pink-400">info@lorem.mail</a>
+                                class="transition-colors duration-300 hover:text-pink-600 dark:hover:text-pink-400">sunshine@gmail.com</a>
                         </div>
                         <div class="flex">
                             <p class="mr-1 text-slate-600 dark:text-slate-300">Dirección:</p>
                             <a href="https://www.google.com/maps" target="_blank" rel="noopener noreferrer"
-                                class="transition-colors duration-300 hover:text-pink-600 dark:hover:text-pink-400">312
-                                Lovely
-                                Street, NY</a>
+                                class="transition-colors duration-300 hover:text-pink-600 dark:hover:text-pink-400">Av.
+                                Lima 451 - Quilmana - Cañete - Lima</a>
                         </div>
                     </div>
                     <div>
                         <span class="text-base font-bold tracking-wide text-slate-800 dark:text-white">Síguenos</span>
                         <div class="flex items-center mt-2 space-x-4">
-                            <a href="/"
+
+                            <a href="https://www.instagram.com/sunshinemadeforyou?igsh=a2FrdHdhbTZiYng1" target="_blank"
                                 class="text-slate-600 dark:text-slate-300 hover:text-pink-500 dark:hover:text-pink-400 transition-transform transform hover:scale-110">
-                                <svg viewBox="0 0 24 24" fill="currentColor" class="h-6">
-                                    <path
-                                        d="M24,4.6c-0.9,0.4-1.8,0.7-2.8,0.8c1-0.6,1.8-1.6,2.2-2.7c-1,0.6-2,1-3.1,1.2c-0.9-1-2.2-1.6-3.6-1.6...">
-                                    </path>
-                                </svg>
+                                <i class="ri-instagram-fill ri-xl"></i>
                             </a>
-                            <a href="/"
+                            <a href="https://www.facebook.com/share/18p364PybW/" target="_blank"
                                 class="text-slate-600 dark:text-slate-300 hover:text-pink-500 dark:hover:text-pink-400 transition-transform transform hover:scale-110">
-                                <svg viewBox="0 0 30 30" fill="currentColor" class="h-7">
-                                    <circle cx="15" cy="15" r="4"></circle>
-                                    <path
-                                        d="M19.999,3h-10C6.14,3,3,6.141,3,10.001v10C3,23.86,6.141,27,10.001,27h10C23.86,27,27,23.859,27,19.999v-10..." />
-                                </svg>
-                            </a>
-                            <a href="/"
-                                class="text-slate-600 dark:text-slate-300 hover:text-pink-500 dark:hover:text-pink-400 transition-transform transform hover:scale-110">
-                                <svg viewBox="0 0 24 24" fill="currentColor" class="h-6">
-                                    <path
-                                        d="M22,0H2C0.895,0,0,0.895,0,2v20c0,1.105,0.895,2,2,2h11v-9h-3v-4h3V8.413c0-3.1,1.893-4.788,4.659-4.788..." />
-                                </svg>
+                                <i class="ri-facebook-fill ri-xl"></i>
                             </a>
                         </div>
                         <p class="mt-4 text-sm text-slate-600 dark:text-slate-300">
@@ -81,7 +67,7 @@
                 <div
                     class="flex flex-col-reverse justify-between pt-5 pb-10 border-t border-gray-200 dark:border-slate-700 lg:flex-row">
                     <p class="text-sm text-slate-600 dark:text-slate-400">
-                        © 2025 Lovely Co. Todos los derechos reservados.
+                        © 2025 Sunshine. Todos los derechos reservados.
                     </p>
                     <ul class="flex flex-col mb-3 space-y-2 lg:mb-0 sm:space-y-0 sm:space-x-5 sm:flex-row">
                         <li>
