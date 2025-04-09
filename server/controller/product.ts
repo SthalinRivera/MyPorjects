@@ -28,7 +28,8 @@ export const productById = async (event: H3Event) => {
   const project = await prisma.product.findFirst({
     where: {
       id: +request.id,
-    }
+    },
+
   });
 
   return project || createError({
@@ -81,9 +82,13 @@ export const productByCategoryId = async (event: H3Event) => {
       where: {
         categoryId: categoryId,
       },
+      include: {
+        category: true,
+      },
       orderBy: {
         id: "asc",
       },
+
     });
 
     return products;
@@ -134,31 +139,40 @@ export const actuliazar = async (event: H3Event): Promise<string> => {
   }
 };
 
-export const eliminar = async (event: H3Event) => {
+export const deleteProduct = async (event: H3Event) => {
   try {
-    const request = await readBody<{ id: number }>(event);
+    const request = getRouterParams(event);
+    const productId = Number(request.id);
 
-    if (!request.id) {
+    if (isNaN(productId)) {
       throw createError({
         statusCode: 400,
-        name: "Invalid request",
-        message: "Project ID is required",
+        name: "Invalid Product ID",
+        message: "El ID del producto debe ser un número válido.",
       });
     }
 
     await prisma.product.delete({
-      where: {
-        id: +request.id,
-      },
+      where: { id: productId },
     });
 
-    return "Project deleted!";
-  } catch (error) {
-    console.error("Error deleting project:", error);
+    return { success: true, message: "Producto eliminado correctamente" };
+  } catch (error: any) {
+    console.error("Error al eliminar producto:", error);
+
+    // ⚠️ Verificar si el error es una restricción de clave foránea
+    if (error.code === "P2003") { // Código de error de Prisma para claves foráneas
+      throw createError({
+        statusCode: 400,
+        name: "Foreign Key Constraint",
+        message: "No se puede eliminar este producto porque está relacionado con otras entidades.",
+      });
+    }
+
     throw createError({
       statusCode: 500,
-      name: "Error deleting project",
-      message: error instanceof Error ? error.message : "Unknown error",
+      name: "Error al eliminar",
+      message: error.message,
     });
   }
 };

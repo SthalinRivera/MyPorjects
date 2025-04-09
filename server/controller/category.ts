@@ -1,7 +1,7 @@
 
 import { H3Event } from "h3";
 import { PrismaClient } from "@prisma/client";
-import { Project } from "~/interfaces/product";
+
 import { Category } from "~/interfaces/category";
 const prisma = new PrismaClient();
 const { client } = postgresClient();

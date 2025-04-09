@@ -8,7 +8,9 @@ definePageMeta({
     middleware: ['auth'],
     permiso: "ADMINISTRADOR",
 })
-
+definePageMeta({
+    layout: 'dashboard', // Aplica el layout de dashboard a esta página
+});
 const router = useRouter()
 
 const { user } = useUserSession();
@@ -72,7 +74,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
                 imageUrl: imageUrl.value,
                 categoryId: Number(state.categoryId), // Convertir a número
             };
-            const productResponse = await $fetch("/api/v1/product", {
+            const productResponse = await $fetch("/api/v1/addProduct", {
                 method: "POST",
                 body: productData,
             });

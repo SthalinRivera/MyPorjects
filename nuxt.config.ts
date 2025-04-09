@@ -10,11 +10,12 @@ export default defineNuxtConfig({
   components: [{ path: "~/shared/icons", prefix: "Icon" }, "~/components"],
   css: [
     '@/assets/css/main.css',
+    'remixicon/fonts/remixicon.css' // Añadido aquí
   ],
   modules: [// ...
     '@pinia/nuxt', '@pinia-plugin-persistedstate/nuxt', ["@nuxtjs/i18n", {
       vueI18n: "./i18n"
-    }], "@nuxt/ui", "nuxt-auth-utils", 'nuxt-file-storage'],
+    }], "@nuxt/ui", "nuxt-auth-utils", 'nuxt-file-storage', "nuxt-icon"],
   pinia: {
     storesDirs: ['./stores/**']
   },

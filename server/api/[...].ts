@@ -7,9 +7,10 @@ import * as categoryController from "../controller/category"
 import * as orderController from "../controller/order"
 
 const router = createRouter()
-router.post('/product', defineEventHandler(productController.addProduct))
+router.post('/addProduct', defineEventHandler(productController.addProduct))
 router.get('/product', defineEventHandler(productController.allProduct))
 router.get('/product/:id', defineEventHandler(productController.productById));
+router.delete('/deleteProduct/:id', defineEventHandler(productController.deleteProduct));
 router.get('/productByCategoryId/:id', defineEventHandler(productController.productByCategoryId));
 
 router.post('/addOrder', defineEventHandler(orderController.addOrder));
@@ -28,8 +29,13 @@ router.post('/addCategory', defineEventHandler(categoryController.addCategory));
 router.put('/updateCategory/:id', defineEventHandler(categoryController.updateCategory));
 router.delete('/deleteCategory/:id', defineEventHandler(categoryController.deleteCategory));
 
+router.get('/allUser', defineEventHandler(userController.allUser));
+router.get('/userById/:id', defineEventHandler(userController.userById));
 router.post('/addUser', defineEventHandler(userController.addUser));
+router.put('/updateUserPhone/:id', defineEventHandler(userController.updateUserPhone));
+
+
 
 router.put('/project/:id', defineEventHandler(productController.actuliazar));
-router.delete('/project/:id', defineEventHandler(productController.eliminar));
+
 export default useBase("/api/v1/", router.handler)
