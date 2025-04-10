@@ -1,23 +1,18 @@
 <template>
-    <div>
-        <nav
-            class="bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 shadow-sm transition-colors duration-200">
+    <div class="relative">
+        <!-- Barra de navegación principal -->
+        <nav class="bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 shadow-sm">
             <div class="max-w-screen-xl flex items-center justify-between mx-auto px-4 py-3">
                 <!-- Logo -->
-                <NuxtLink to="/" class="flex items-center gap-2">
-                    <!-- Logo claro -->
-                    <img src="/logo-ligh.png" alt="Logo Claro" class="h-8 block dark:hidden" />
-
-                    <!-- Logo oscuro -->
-                    <img src="/logo-dark.png" alt="Logo Oscuro" class="h-8 hidden dark:block" />
-
-
+                <NuxtLink to="/" class="flex items-center gap-2" @click="isMobileMenuOpen = false">
+                    <img src="/logo-ligh.png" alt="Logo Claro" class="h-8 block dark:hidden">
+                    <img src="/logo-dark.png" alt="Logo Oscuro" class="h-8 hidden dark:block">
                 </NuxtLink>
 
-                <!-- Mobile Menu Button -->
+                <!-- Botón para menú móvil -->
                 <button
                     class="lg:hidden rounded-md p-2 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none transition-colors"
-                    @click="toggleMobileMenu">
+                    @click.stop="toggleMobileMenu" aria-label="Toggle menu" aria-expanded="isMobileMenuOpen">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="w-6 h-6">
                         <path v-if="!isMobileMenuOpen" stroke-linecap="round" stroke-linejoin="round"
@@ -26,26 +21,42 @@
                     </svg>
                 </button>
 
-                <!-- Navigation Items -->
-                <div :class="[isMobileMenuOpen ? 'flex' : 'hidden lg:flex']"
-                    class="absolute lg:relative top-16 lg:top-0 left-0 right-0 flex-col lg:flex-row items-center bg-white dark:bg-gray-900 lg:bg-transparent lg:dark:bg-transparent w-full lg:w-auto py-4 lg:py-0 shadow-md lg:shadow-none z-50 transition-all">
+                <!-- Menú desplegable (se muestra en móvil y desktop) -->
+                <div v-click-outside="closeMobileMenu" :class="[
+                    'lg:flex',
+                    'absolute lg:relative',
+                    'left-0 right-0',
+                    'flex-col lg:flex-row',
+                    'bg-white dark:bg-gray-900 lg:bg-transparent lg:dark:bg-transparent',
+                    'w-full lg:w-auto',
+                    'py-4 lg:py-0',
+                    'shadow-lg lg:shadow-none',
+                    'z-50',
+                    'transition-all duration-300 ease-in-out',
+                    'transform origin-top',
+                    isMobileMenuOpen
+                        ? 'translate-y-0 opacity-100 visible scale-y-100'
+                        : '-translate-y-4 opacity-0 invisible scale-y-95 lg:opacity-100 lg:visible lg:translate-y-0 lg:scale-y-100'
+                ]" style="top: 100%">
 
-                    <!-- Nav Links -->
+                    <!-- Enlaces de navegación -->
                     <div
-                        class="flex flex-col lg:flex-row items-center lg:items-stretch w-full lg:w-auto space-y-3 lg:space-y-0 lg:space-x-6">
+                        class="flex flex-col lg:flex-row items-center lg:items-stretch w-full lg:w-auto space-y-3 lg:space-y-0 lg:space-x-6 px-4 lg:px-0">
                         <div v-for="ruta in rutasSistemas()" :key="ruta.name" class="w-full lg:w-auto">
                             <template v-if="ruta && (!ruta.permiso || ruta.permiso === user?.permiso)">
                                 <NuxtLink :to="ruta.path"
-                                    class="block py-2 px-4 w-full text-center lg:text-left text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors lg:hover:bg-transparent">
+                                    class="block py-2 px-4 w-full text-center lg:text-left text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors lg:hover:bg-transparent"
+                                    @click="isMobileMenuOpen = false">
                                     {{ ruta.name }}
                                 </NuxtLink>
                             </template>
                         </div>
                     </div>
 
-                    <!-- Actions -->
-                    <div class="flex items-center mt-4 lg:mt-0 lg:ml-6 space-x-4">
-                        <!-- Dark Mode Toggle -->
+                    <!-- Elementos de acción (modo oscuro, idioma, etc.) -->
+                    <div
+                        class="flex items-center justify-center lg:justify-normal mt-4 lg:mt-0 lg:ml-6 space-x-4 px-4 lg:px-0">
+                        <!-- Botón modo oscuro/claro -->
                         <ClientOnly>
                             <button @click="isDark = !isDark"
                                 class="p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors focus:outline-none"
@@ -66,21 +77,22 @@
                             </template>
                         </ClientOnly>
 
-                        <!-- Language Selector -->
+                        <!-- Selector de idioma -->
                         <select v-model="locale"
                             class="px-3 py-2 bg-gray-100 dark:bg-gray-800 border-0 rounded-md text-sm text-gray-700 dark:text-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none cursor-pointer transition-colors">
                             <option value="es">ES</option>
                             <option value="en">EN</option>
                         </select>
 
-                        <!-- User Menu -->
+                        <!-- Menú de usuario (si está logueado) -->
                         <ClientOnly v-if="loggedIn">
                             <LayoutUsuario />
                         </ClientOnly>
 
-                        <!-- Favorites -->
+                        <!-- Favoritos -->
                         <NuxtLink to="/product/favorites"
-                            class="relative p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                            class="relative p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                            @click="isMobileMenuOpen = false">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -92,8 +104,8 @@
                             </span>
                         </NuxtLink>
 
-                        <!-- Cart -->
-                        <button type="button" @click="isCartOpen = true"
+                        <!-- Carrito -->
+                        <button type="button" @click="openCart"
                             class="relative p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor">
@@ -110,7 +122,7 @@
             </div>
         </nav>
 
-        <!-- Shopping Cart Modal -->
+        <!-- Modal del carrito -->
         <ShoppingCart :isOpen="isCartOpen" @update:isOpen="isCartOpen = $event" />
     </div>
 </template>
@@ -119,20 +131,35 @@
 import rutasSistemas from '~/utils/rutasSistemas';
 
 const { locale } = useI18n();
-const isCartOpen = ref(false); // Estado separado para el carrito
-const isMobileMenuOpen = ref(false); // Estado separado para el menú móvil
+const isCartOpen = ref(false);
+const isMobileMenuOpen = ref(false);
 const { loggedIn, user } = useUserSession();
 
+// Alternar menú móvil
 const toggleMobileMenu = () => {
     isMobileMenuOpen.value = !isMobileMenuOpen.value;
 };
 
+// Cerrar menú móvil
+const closeMobileMenu = () => {
+    isMobileMenuOpen.value = false;
+};
+
+// Abrir carrito y cerrar menú móvil
+const openCart = () => {
+    isCartOpen.value = true;
+    isMobileMenuOpen.value = false;
+};
+
+// Store del carrito
 const productStore = useProductShoppingCartStore();
 const { totalItems } = storeToRefs(productStore);
 
+// Store de favoritos
 const favoriteProductStore = useProductStore();
 const { totalItemsFavorite } = storeToRefs(favoriteProductStore);
 
+// Modo oscuro/claro
 const colorMode = useColorMode();
 const isDark = computed({
     get() {
@@ -142,11 +169,37 @@ const isDark = computed({
         colorMode.preference = colorMode.value === 'dark' ? 'light' : 'dark';
     }
 });
+
+// Directiva para cerrar al hacer clic fuera del menú
+const vClickOutside = {
+    mounted(el: HTMLElement, binding: any) {
+        el.clickOutsideEvent = function (event: Event) {
+            if (!(el === event.target || el.contains(event.target as Node))) {
+                binding.value();
+            }
+        };
+        document.body.addEventListener('click', el.clickOutsideEvent);
+    },
+    unmounted(el: HTMLElement) {
+        document.body.removeEventListener('click', el.clickOutsideEvent);
+    }
+};
 </script>
 
 <style scoped>
-/* Transitions for mobile menu */
-.lg\:flex {
-    transition: all 0.3s ease;
+/* Transición suave para el navbar */
+nav {
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Asegurar que el menú móvil tenga el z-index correcto */
+.absolute {
+    z-index: 50;
+}
+
+/* Efecto de despliegue para el menú móvil */
+.transform {
+    transition-property: transform, opacity, visibility;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 </style>
