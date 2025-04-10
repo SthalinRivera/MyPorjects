@@ -11,13 +11,13 @@
         </div>
 
         <!-- Loading State -->
-        <div v-if="loading" class="flex flex-col items-center justify-center py-16">
+        <div v-if="pending" class="flex flex-col items-center justify-center py-16">
             <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
             <p class="text-gray-600 dark:text-gray-400">Cargando categorías...</p>
         </div>
 
         <!-- Empty State -->
-        <div v-else-if="categories.length === 0"
+        <div v-else-if="!data || data.length === 0"
             class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-8 text-center">
             <div
                 class="mx-auto w-20 h-20 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mb-4">
@@ -29,8 +29,7 @@
 
         <!-- Categories Grid -->
         <div v-else class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
-            <NuxtLink v-for="category in categories" :key="category.id"
-                :to="`/category/${category.slug || category.id}`"
+            <NuxtLink v-for="category in data" :key="category.id" :to="`/category/${category.slug || category.id}`"
                 class="category-card bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-lg transition-all duration-300 group">
                 <div class="p-5 flex flex-col items-center text-center h-full">
                     <!-- Icono/Imagen de categoría -->
@@ -56,31 +55,30 @@
 </template>
 
 <script setup lang="ts">
-const categories = ref<any[]>([]);
-const loading = ref(true);
+const { data, pending } = await useAsyncData(
+    'categories',
+    async () => {
+        try {
+            const { data: apiData } = await useFetch('/api/v1/category');
 
-// Función para obtener categorías
-const fetchCategories = async () => {
-    loading.value = true;
-    try {
-        const { data } = await useFetch(`/api/v1/category`);
-
-        // Extraemos la cantidad de productos desde _count
-        categories.value = (data.value || [])
-            .map((cat: any) => ({
-                ...cat,
-                productCount: cat._count?.products || 0
-            }))
-            .filter((cat: any) => cat.productCount > 0); // Mostrar solo si tiene productos
-    } catch (error) {
-        console.error("Error fetching categories:", error);
-    } finally {
-        loading.value = false;
+            return (apiData.value || [])
+                .map((cat: any) => ({
+                    ...cat,
+                    productCount: cat._count?.products || 0
+                }))
+                .filter((cat: any) => cat.productCount > 0);
+        } catch (error) {
+            console.error("Error fetching categories:", error);
+            return [];
+        }
+    },
+    {
+        // Opciones adicionales (opcional)
+        server: true,  // Se ejecuta en el servidor
+        lazy: false,   // No carga perezosamente (mejor para SEO)
+        transform: (data) => data // Transformación adicional si es necesaria
     }
-};
-
-// Obtener categorías al montar el componente
-onMounted(fetchCategories);
+);
 </script>
 
 <style scoped>
