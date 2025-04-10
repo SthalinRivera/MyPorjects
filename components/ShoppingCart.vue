@@ -285,7 +285,7 @@ const initiateWhatsAppOrder = () => {
 // Enviar pedido por WhatsApp
 const sendWhatsAppOrder = () => {
     // Configuración del número de WhatsApp (reemplaza con tu número)
-    const phoneNumber = '51987654321'; // Ejemplo: 51 (Perú) + 987654321
+    const phoneNumber = '51919753974'; // Ejemplo: 51 (Perú) + 987654321
     const whatsappBaseUrl = 'https://wa.me';
 
     // Determinar datos del cliente

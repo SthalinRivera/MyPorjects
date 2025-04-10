@@ -1,7 +1,7 @@
 <template>
     <div>
 
-        <div class="text-center py-12 px-4 bg-pink-50 dark:bg-pink-900/20 rounded-xl mb-6 shadow">
+        <div class="text-center py-12 px-4">
             <h1 class="text-4xl font-extrabold text-pink-600 dark:text-pink-300 mb-3">
                 🎁 Colección exclusiva
             </h1>
