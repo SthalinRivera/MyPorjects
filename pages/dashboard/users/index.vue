@@ -21,25 +21,31 @@
         <!-- Users Table -->
         <div v-else-if="users.length > 0"
             class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
-            <div class="overflow-x-auto">
+            <!-- Desktop Table (hidden on mobile) -->
+            <div class="hidden md:block overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                     <thead class="bg-gray-50 dark:bg-gray-700">
                         <tr>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                Usuario</th>
+                                Usuario
+                            </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                Email</th>
+                                Email
+                            </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                Rol</th>
+                                Rol
+                            </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                Teléfono</th>
+                                Teléfono
+                            </th>
                             <th scope="col"
                                 class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                Acciones</th>
+                                Acciones
+                            </th>
                         </tr>
                     </thead>
                     <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -93,6 +99,59 @@
                         </tr>
                     </tbody>
                 </table>
+            </div>
+
+            <!-- Mobile Cards (shown on mobile) -->
+            <div class="md:hidden space-y-3 p-4">
+                <div v-for="user in users" :key="user.id"
+                    class="border dark:border-gray-700 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                    <div class="flex items-start justify-between">
+                        <div class="flex items-center space-x-3">
+                            <img class="h-10 w-10 rounded-full object-cover" :src="getUserAvatar(user)"
+                                alt="User avatar">
+                            <div>
+                                <h3 class="font-medium text-gray-900 dark:text-white">{{ user.name }}</h3>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">ID: {{ user.id }}</p>
+                            </div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button @click="viewUserDetails(user)" class="text-blue-600 dark:text-blue-400">
+                                <i class="ri-eye-line"></i>
+                            </button>
+                            <button @click="openModal(user)" class="text-yellow-600 dark:text-yellow-400">
+                                <i class="ri-pencil-line"></i>
+                            </button>
+                            <button @click="confirmDelete(user.id)" class="text-red-600 dark:text-red-400">
+                                <i class="ri-delete-bin-line"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="mt-3 grid grid-cols-1 gap-2">
+                        <div>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Email</p>
+                            <p class="text-sm text-gray-900 dark:text-white break-all">{{ user.email }}</p>
+                        </div>
+
+                        <div class="flex justify-between">
+                            <div>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">Rol</p>
+                                <span :class="{
+                                    'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200': user.roleId === 1,
+                                    'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200': user.roleId === 2,
+                                    'bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200': user.roleId === 3,
+                                    'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200': !user.roleId
+                                }" class="text-xs font-medium rounded-full px-2 py-1">
+                                    {{ getRoleName(user.roleId) }}
+                                </span>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">Teléfono</p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">{{ user.phoneNumber || 'N/A' }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -217,7 +276,7 @@
                         <p class="text-sm text-gray-500 dark:text-gray-400">ID: {{ selectedUser.id }}</p>
                     </div>
 
-                    <div class="grid grid-cols-1 gap-4">
+                    <div class="grid grid-cols-1 gap-1 md:gap-4">
                         <div class="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg">
                             <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Email</p>
                             <p class="text-sm text-gray-900 dark:text-white">{{ selectedUser.email }}</p>
@@ -239,10 +298,7 @@
                     </div>
 
                     <div class="flex justify-end gap-3 pt-4">
-                        <button @click="openModal(selectedUser)"
-                            class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
-                            Editar
-                        </button>
+
                         <button @click="showViewModal = false"
                             class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
                             Cerrar

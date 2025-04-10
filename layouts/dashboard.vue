@@ -1,22 +1,26 @@
 <template>
-    <div class="min-h-screen flex ">
+    <div class="min-h-screen flex" :class="{ 'sidebar-open': isMobileSidebarOpen }">
         <!-- Sidebar -->
-        <Sidebar />
+        <Sidebar @sidebar-toggle="handleSidebarToggle" />
 
         <!-- Main content -->
-        <div class="flex-1 p-6 bg-white dark:bg-gray-900 dark:text-white">
-            <!-- Aquí se cargará el contenido de la página -->
-            <Navbar></Navbar>
+        <div class="flex-1 p-6 bg-white dark:bg-gray-900 dark:text-white transition-all duration-300" ">
+            <Navbar />
             <NuxtPage />
-            <Footer></Footer>
+            <Footer />
         </div>
     </div>
 </template>
 
 <script setup>
-import Sidebar from '~/components/Sidebar.vue';
+import { ref } from 'vue';
+
+const isExpanded = ref(true);
+const isMobileSidebarOpen = ref(false);
+
+const handleSidebarToggle = (expanded) => {
+    isExpanded.value = expanded;
+};
 </script>
 
-<style scoped>
-/* Aquí puedes agregar más estilos personalizados si lo necesitas */
-</style>
+<style></style>

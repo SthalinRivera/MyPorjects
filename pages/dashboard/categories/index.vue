@@ -1,25 +1,25 @@
 <template>
-    <div class="max-w-4xl mx-auto p-6">
-        <!-- Header -->
-        <div class="flex items-center justify-between mb-8">
+    <div class="max-w-4xl mx-auto p-4 sm:p-6">
+        <!-- Encabezado -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
             <div>
-                <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Category Management</h1>
-                <p class="text-gray-500 dark:text-gray-400 mt-1">Organize your products with categories</p>
+                <h1 class="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white">Gestión de Categorías</h1>
+                <p class="text-sm sm:text-base text-gray-500 dark:text-gray-400 mt-1">Organiza tus productos con
+                    categorías</p>
             </div>
             <button @click="openCreateModal"
-                class="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-lg hover:from-blue-700 hover:to-blue-600 transition-all shadow-md hover:shadow-lg">
+                class="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-lg hover:from-blue-700 hover:to-blue-600 transition-all shadow-md hover:shadow-lg w-full sm:w-auto justify-center">
                 <i class="ri-add-line"></i>
-                <span>New Category</span>
+                <span>Nueva Categoría</span>
             </button>
         </div>
-
         <!-- Create Category Modal -->
         <div v-if="showCreateModal"
             class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-30 backdrop-blur-sm">
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-md animate-fade-in">
                 <div class="p-6">
                     <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-xl font-bold text-gray-800 dark:text-white">Add New Category</h2>
+                        <h2 class="text-xl font-bold text-gray-800 dark:text-white">Agregar Nueva Categoría</h2>
                         <button @click="showCreateModal = false"
                             class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
                             <i class="ri-close-line text-2xl"></i>
@@ -27,20 +27,19 @@
                     </div>
                     <form @submit.prevent="createCategory" class="space-y-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Category
-                                Name</label>
-                            <input v-model="newCategory.name" type="text" placeholder="e.g. Electronics, Clothing"
-                                required
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nombre de
+                                Categoría</label>
+                            <input v-model="newCategory.name" type="text" placeholder="e.g. Collar, Aretes ..." required
                                 class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
                         </div>
                         <div class="flex justify-end gap-3 pt-4">
                             <button type="button" @click="showCreateModal = false"
                                 class="px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
-                                Cancel
+                                Cancela
                             </button>
                             <button type="submit"
                                 class="px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
-                                Create Category
+                                Crear Categoría
                             </button>
                         </div>
                     </form>
@@ -76,8 +75,8 @@
                 <div class="flex items-start justify-between">
                     <div>
                         <h3 class="font-semibold text-gray-800 dark:text-white">{{ category.name }}</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Last updated: {{
-                            formatDate(category.updatedAt) }}</p>
+                        <!-- <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Last updated: {{
+                            formatDate(category.updatedAt) }}</p> -->
                     </div>
                     <div class="flex gap-2">
                         <button @click="editCategory(category)"
@@ -90,23 +89,53 @@
                         </button>
                     </div>
                 </div>
-                <div class="mt-4 flex items-center justify-between">
+                <!-- <div class="mt-4 flex items-center justify-between">
                     <span
                         class="text-xs px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full">
                         {{ countProducts(category.id) }} products
                     </span>
                     <span class="text-xs text-gray-500">{{ category.id }}</span>
+                </div> -->
+            </div>
+        </div>
+        <!-- Lista de Categorías - Versión Móvil -->
+        <div v-else class="space-y-3 sm:grid sm:grid-cols-2 sm:gap-4 sm:space-y-0">
+            <div v-for="category in categories" :key="category.id"
+                class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 hover:shadow-md transition-shadow">
+                <div class="flex items-center justify-between">
+                    <h3 class="font-semibold text-gray-800 dark:text-white text-base truncate flex-1">{{ category.name
+                        }}</h3>
+                    <div class="flex gap-1 ml-2">
+                        <button @click="editCategory(category)"
+                            class="p-2 text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
+                            <i class="ri-pencil-line text-sm"></i>
+                        </button>
+                        <button @click="deleteCategory(category.id)"
+                            class="p-2 text-gray-500 hover:text-red-600 dark:hover:text-red-400 transition-colors rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
+                            <i class="ri-delete-bin-line text-sm"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Información adicional en móvil -->
+                <div class="mt-2 flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+                    <!-- <span v-if="category.productCount" class="flex items-center gap-1">
+                        <i class="ri-box-line"></i>
+                        {{ category.productCount }} productos
+                    </span>
+                    <span v-if="category.updatedAt" class="text-right">
+                        {{ formatShortDate(category.updatedAt) }}
+                    </span> -->
                 </div>
             </div>
         </div>
-
         <!-- Edit Modal -->
         <div v-if="editingCategory"
             class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-30 backdrop-blur-sm">
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-md animate-fade-in">
                 <div class="p-6">
                     <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-xl font-bold text-gray-800 dark:text-white">Edit Category</h2>
+                        <h2 class="text-xl font-bold text-gray-800 dark:text-white">Editar Categoría</h2>
                         <button @click="editingCategory = null"
                             class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
                             <i class="ri-close-line text-2xl"></i>
@@ -114,19 +143,19 @@
                     </div>
                     <form @submit.prevent="updateCategory" class="space-y-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Category
-                                Name</label>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nombre de
+                                Categoría</label>
                             <input v-model="editingCategory.name" type="text" required
                                 class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
                         </div>
                         <div class="flex justify-end gap-3 pt-4">
                             <button type="button" @click="editingCategory = null"
                                 class="px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
-                                Cancel
+                                Cancelar
                             </button>
                             <button type="submit"
                                 class="px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
-                                Save Changes
+                                Actualizar Categoría
                             </button>
                         </div>
                     </form>

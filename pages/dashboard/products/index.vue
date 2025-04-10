@@ -3,20 +3,20 @@
         <!-- Header Section -->
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
             <div>
-                <h1 class="text-3xl font-bold text-gray-800 dark:text-white">Product Management</h1>
-                <p class="text-gray-500 dark:text-gray-400 mt-1">Manage your product inventory and details</p>
+                <h1 class="text-3xl font-bold text-gray-800 dark:text-white">Gestión de Productos</h1>
+                <p class="text-gray-500 dark:text-gray-400 mt-1">**Gestiona tu inventario de productos y detalles**.</p>
             </div>
             <button @click="openModal()"
                 class="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-lg hover:from-blue-700 hover:to-blue-600 transition-all shadow-md hover:shadow-lg">
                 <i class="ri-add-line"></i>
-                <span>Add Product</span>
+                <span>Agregar Producto</span>
             </button>
         </div>
 
         <!-- Loading State -->
         <div v-if="loading" class="flex flex-col items-center justify-center py-12">
             <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
-            <p class="text-gray-600 dark:text-gray-400">Loading products...</p>
+            <p class="text-gray-600 dark:text-gray-400">Cargando productos...</p>
         </div>
 
         <!-- Error State -->
@@ -32,16 +32,153 @@
                 class="mx-auto w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mb-4">
                 <i class="ri-box-2-line text-3xl text-gray-400 dark:text-gray-500"></i>
             </div>
-            <h3 class="text-lg font-medium text-gray-800 dark:text-white mb-2">No products found</h3>
-            <p class="text-gray-500 dark:text-gray-400 mb-4">Get started by adding your first product</p>
+            <h3 class="text-lg font-medium text-gray-800 dark:text-white mb-2">No se encontraron productos.</h3>
+            <p class="text-gray-500 dark:text-gray-400 mb-4">Comienza agregando tu primer producto.</p>
             <button @click="openModal()"
                 class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                Add Product
+                Agregar Producto.
             </button>
         </div>
-
-        <!-- Products Table -->
         <div v-else
+            class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
+            <!-- Desktop Table (hidden on mobile) -->
+            <div class="hidden md:block overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <thead class="bg-gray-50 dark:bg-gray-700">
+                            <tr>
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    Producto</th>
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    Categoría</th>
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    Precio</th>
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    Stock</th>
+                                <th scope="col"
+                                    class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                            <tr v-for="product in products" :key="product.id"
+                                class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-10 w-10">
+                                            <img class="h-10 w-10 rounded-md object-cover"
+                                                :src="product.imageUrl || 'https://via.placeholder.com/40'"
+                                                alt="Product image">
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium text-gray-900 dark:text-white">{{
+                                                product.name
+                                            }}</div>
+                                            <div class="text-sm text-gray-500 dark:text-gray-400 line-clamp-1">{{
+                                                truncateText(product.description, 50) }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span
+                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
+                                        {{ getCategoryName(product.categoryId) }}
+                                    </span>
+                                </td>
+                                <td
+                                    class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                                    S/. {{ product.price }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span :class="{
+                                        'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200': product.stock > 10,
+                                        'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200': product.stock > 0 && product.stock <= 10,
+                                        'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200': product.stock === 0
+                                    }" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
+                                        {{ product.stock }} en stock
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <div class="flex justify-end gap-2">
+                                        <button @click="openViewModal(product)"
+                                            class="text-green-600 dark:text-green-400 hover:text-green-900 dark:hover:text-green-300 transition-colors">
+                                            <i class="ri-eye-line"></i>
+                                        </button>
+                                        <button @click="openModal(product)"
+                                            class="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 transition-colors">
+                                            <i class="ri-pencil-line"></i>
+                                        </button>
+                                        <button @click="deleteProduct(product.id)"
+                                            class="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300 transition-colors">
+                                            <i class="ri-delete-bin-line"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </table>
+            </div>
+
+            <!-- Mobile Cards (shown on mobile) -->
+            <div class="md:hidden space-y-4 p-4">
+                <div v-for="product in products" :key="product.id"
+                    class="border dark:border-gray-700 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                    <div class="flex items-start justify-between">
+                        <div class="flex items-center space-x-3">
+                            <img class="h-12 w-12 rounded-md object-cover"
+                                :src="product.imageUrl || 'https://via.placeholder.com/40'" alt="Product image">
+                            <div>
+                                <h3 class="font-medium text-gray-900 dark:text-white">{{ product.name }}</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">{{ truncateText(product.description,
+                                    30) }}</p>
+                            </div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button @click="openViewModal(product)" class="text-green-600 dark:text-green-400">
+                                <i class="ri-eye-line"></i>
+                            </button>
+                            <button @click="openModal(product)" class="text-blue-600 dark:text-blue-400">
+                                <i class="ri-pencil-line"></i>
+                            </button>
+                            <button @click="deleteProduct(product.id)" class="text-red-600 dark:text-red-400">
+                                <i class="ri-delete-bin-line"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="mt-3 grid grid-cols-2 gap-2">
+                        <div>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Categoría</p>
+                            <span
+                                class="text-xs font-medium rounded-full bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1">
+                                {{ getCategoryName(product.categoryId) }}
+                            </span>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Precio</p>
+                            <p class="text-sm font-medium">S/. {{ product.price }}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Stock</p>
+                            <span :class="{
+                                'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200': product.stock > 10,
+                                'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200': product.stock > 0 && product.stock <= 10,
+                                'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200': product.stock === 0
+                            }" class="text-xs font-medium rounded-full px-2 py-1">
+                                {{ product.stock }} en stock
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Products Table -->
+        <!-- <div v-else
             class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
@@ -76,7 +213,7 @@
                                     </div>
                                     <div class="ml-4">
                                         <div class="text-sm font-medium text-gray-900 dark:text-white">{{ product.name
-                                        }}</div>
+                                            }}</div>
                                         <div class="text-sm text-gray-500 dark:text-gray-400 line-clamp-1">{{
                                             truncateText(product.description, 50) }}</div>
                                     </div>
@@ -120,7 +257,7 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        </div> -->
 
         <!-- Modal -->
         <div v-if="showModal"
@@ -139,14 +276,15 @@
 
                     <form @submit.prevent="saveProduct" class="space-y-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Name</label>
+                            <label
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nombre</label>
                             <input v-model="formState.name" type="text" required
                                 class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
                         </div>
 
                         <div>
                             <label
-                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description</label>
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Descripción</label>
                             <textarea v-model="formState.description" rows="3"
                                 class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"></textarea>
                         </div>
@@ -154,7 +292,7 @@
                         <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <label
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Price</label>
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Precio</label>
                                 <div class="relative">
                                     <span
                                         class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500 dark:text-gray-400">S/.</span>
@@ -173,7 +311,7 @@
 
                         <div>
                             <label
-                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Category</label>
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Categoría</label>
                             <select v-model="formState.categoryId" required
                                 class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
                                 <option value="">Select Category</option>
@@ -184,14 +322,14 @@
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Product
-                                Image</label>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Imagen de
+                                producto</label>
                             <div class="mt-1 flex items-center gap-4">
                                 <label class="cursor-pointer">
                                     <span
                                         class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
                                         <i class="ri-upload-line mr-2"></i>
-                                        Upload Image
+                                        Subir Imagen
                                     </span>
                                     <input type="file" @change="handleFileUpload" class="hidden">
                                 </label>
@@ -200,7 +338,7 @@
                                         <div class="bg-blue-600 h-2 rounded-full"
                                             :style="{ width: uploadProgress + '%' }"></div>
                                     </div>
-                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Uploading: {{
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Subiendo : {{
                                         uploadProgress }}%</p>
                                 </div>
                             </div>
@@ -223,12 +361,12 @@
             </div>
         </div>
     </div>
-    <!-- View User Details Modal -->
+    <!-- View pRODUCT Details Modal -->
     <div v-if="showViewProductModal"
         class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50 backdrop-blur-sm">
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-md p-6">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-xl font-bold text-gray-800 dark:text-white">Product Details</h2>
+                <h2 class="text-xl font-bold text-gray-800 dark:text-white">Detalles del Producto.</h2>
                 <button @click="showViewProductModal = false"
                     class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
                     <i class="ri-close-line text-2xl"></i>
@@ -243,15 +381,15 @@
                     <p class="text-sm text-gray-500 dark:text-gray-400">ID: {{ selectedProduct.id }}</p>
                 </div>
 
-                <div class="grid grid-cols-1 gap-4">
+                <div class="grid grid-cols-1 gap-1   md:gap-4">
                     <div class="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg">
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Description</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Descripción.</p>
                         <p class="text-sm text-gray-900 dark:text-white">{{ selectedProduct.description }}</p>
                     </div>
 
                     <div class="grid grid-cols-2 gap-4">
                         <div class="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg">
-                            <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Price</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Priecio</p>
                             <p class="text-sm text-gray-900 dark:text-white">S/. {{ selectedProduct.price }}
                             </p>
                         </div>
@@ -262,13 +400,13 @@
                     </div>
 
                     <div class="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg">
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Category</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Categoría</p>
                         <p class="text-sm text-gray-900 dark:text-white">{{ getCategoryName(selectedProduct.categoryId)
                         }}</p>
                     </div>
 
                     <div v-if="selectedProduct.createdAt" class="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg">
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Created At</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Creado En.</p>
                         <p class="text-sm text-gray-900 dark:text-white">{{ selectedProduct.createdAt }}</p>
                     </div>
                 </div>

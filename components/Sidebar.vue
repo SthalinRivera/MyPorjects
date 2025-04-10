@@ -1,15 +1,14 @@
 <template>
     <div>
-        <!-- Mobile Toggle Button -->
-        <button @click="toggleMobileSidebar"
-            class="md:hidden fixed top-4 left-4 z-40 p-2 rounded-lg bg-white dark:bg-gray-800 shadow-md border border-gray-200 dark:border-gray-700 transition-all hover:scale-105">
-            <Icon :name="isMobileSidebarOpen ? 'heroicons:x-mark' : 'heroicons:bars-3-bottom-left'"
-                class="w-5 h-5 text-gray-600 dark:text-gray-300" />
+        <!-- Mobile Toggle Button - Solo visible cuando el sidebar está cerrado -->
+        <button v-if="!isMobileSidebarOpen" @click="toggleMobileSidebar"
+            class="md:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-white dark:bg-gray-800 shadow-md border border-gray-200 dark:border-gray-700 transition-all hover:scale-105">
+            <Icon name="heroicons:bars-3-bottom-left" class="w-5 h-5 text-gray-600 dark:text-gray-300" />
         </button>
 
         <!-- Sidebar -->
         <div ref="sidebar" :class="[
-            'fixed md:relative z-30 h-screen transition-all duration-300 flex flex-col justify-between',
+            'fixed md:relative z-40 h-screen transition-all duration-300 flex flex-col justify-between',
             'bg-gradient-to-b from-white to-gray-50 dark:from-gray-800 dark:to-gray-900',
             'border-r border-gray-200 dark:border-gray-700',
             'shadow-xl dark:shadow-gray-900/40',
@@ -17,6 +16,13 @@
             isHovered && !isExpanded ? 'w-32' : '',
             isMobileSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
         ]" @mouseenter="isHovered = true" @mouseleave="isHovered = false">
+
+            <!-- Botón de cerrar dentro del sidebar (solo móvil) -->
+            <button v-if="isMobileSidebarOpen" @click="toggleMobileSidebar"
+                class="md:hidden absolute top-4 right-4 p-2 rounded-lg bg-white dark:bg-gray-800 shadow-md border border-gray-200 dark:border-gray-700 transition-all hover:scale-105">
+                <Icon name="heroicons:x-mark" class="w-5 h-5 text-gray-600 dark:text-gray-300" />
+            </button>
+
             <!-- Header -->
             <div
                 class="px-4 py-5 flex items-center justify-between backdrop-blur-sm bg-white/80 dark:bg-gray-800/80 border-b border-gray-100 dark:border-gray-700">
@@ -90,7 +96,8 @@
                             <div class="min-w-0 flex items-center">
                                 <transition name="slide-fade">
                                     <span v-if="showMenuText" class="ml-3 font-medium truncate">
-                                        {{ isMobile ? item.shortTitle || item.title : item.title }}
+                                        {{ isMobileSidebarOpen ? item.title : (isMobile ? item.shortTitle || item.title
+                                            : item.title) }}
                                     </span>
                                 </transition>
                                 <transition name="fade">
@@ -110,14 +117,14 @@
             </nav>
 
             <!-- Logout Button -->
-            <div class="px-3 mb-5">
+            <div class=" min-w-0 px-3 mb-5">
                 <button @click="salir"
                     class="flex items-center w-full p-3 rounded-xl transition-all group hover:bg-red-50/70 dark:hover:bg-red-900/10 hover:text-red-600 dark:hover:text-red-400">
                     <Icon name="heroicons:arrow-left-on-rectangle"
                         class="w-5 h-5 transition-transform group-hover:scale-110 flex-shrink-0" />
                     <transition name="slide-fade">
-                        <span v-if="showMenuText" class="ml-3 font-medium">
-                            Cerrar sesión
+                        <span v-if="showMenuText" class="ml-1 font-medium">
+                            Salir
                         </span>
                     </transition>
                 </button>
@@ -126,7 +133,7 @@
 
         <!-- Mobile Overlay -->
         <div v-if="isMobileSidebarOpen" @click="isMobileSidebarOpen = false"
-            class="fixed inset-0 z-20 bg-black bg-opacity-50 md:hidden transition-opacity duration-300"></div>
+            class="fixed inset-0 z-30 bg-black bg-opacity-50 md:hidden transition-opacity duration-300"></div>
     </div>
 </template>
 
@@ -188,9 +195,9 @@ const menuItems = [
 ];
 
 // Computed properties
-const showTitle = computed(() => isExpanded.value || isHovered.value);
-const showMenuText = computed(() => isExpanded.value || isHovered.value);
-const showUserInfo = computed(() => isExpanded.value || isHovered.value);
+const showTitle = computed(() => isExpanded.value || isHovered.value || isMobileSidebarOpen.value);
+const showUserInfo = computed(() => isExpanded.value || isHovered.value || isMobileSidebarOpen.value);
+const showMenuText = computed(() => isExpanded.value || isHovered.value || isMobileSidebarOpen.value);
 
 // Toggle sidebar
 const toggleSidebar = () => {
@@ -297,27 +304,6 @@ nav::-webkit-scrollbar-thumb {
 .backdrop-blur-sm {
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-}
-
-/* Responsive adjustments */
-@media (max-width: 767px) {
-    .fixed {
-        width: 85vw !important;
-        min-width: 260px;
-        max-width: 300px;
-    }
-
-    nav ul li a {
-        padding: 12px 10px;
-    }
-
-    .truncate {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        display: block;
-        max-width: 160px;
-    }
 }
 
 /* iOS viewport fix */
