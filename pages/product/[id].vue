@@ -1,8 +1,8 @@
 <template>
-    <div class="my-8 px-4 sm:px-6 lg:px-8">
+    <div class=" my-2 md:my-8 px-4 sm:px-6 lg:px-8">
         <!-- Encabezado -->
-        <div class="text-center mb-12">
-            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">Detalles del Producto</h1>
+        <div class="text-center mb-2 md:mb-12">
+            <h1 class="text-lg md:text-5xl font-bold text-gray-900 dark:text-white mb-1 md:mb-4">Detalles del Producto</h1>
             <div class="w-24 h-1 bg-pink-500 mx-auto rounded-full"></div>
         </div>
 
@@ -10,7 +10,7 @@
         <div class="max-w-6xl mx-auto overflow-hidden rounded-2xl shadow-xl dark:shadow-pink-900/30">
             <div class="flex flex-col lg:flex-row bg-white dark:bg-gray-800">
                 <!-- Galería de imágenes -->
-                <div class="lg:w-1/2 p-6 bg-gray-50 dark:bg-gray-700">
+                <div class="lg:w-1/2 p-2 md:p-6 bg-gray-50 dark:bg-gray-700">
                     <div class="relative h-96 rounded-xl overflow-hidden">
                         <img class="w-full h-full object-contain transition-all duration-300 hover:scale-105 cursor-zoom-in"
                             :src="currentDisplayImage" :alt="product.name"
@@ -20,7 +20,7 @@
                             ¡Últimas unidades!
                         </span>
                     </div>
-                    <div class="flex mt-4 space-x-2 overflow-x-auto py-2">
+                    <div class="flex mt-0 md:mt-4 space-x-2 overflow-x-auto py-1 md:py-2">
                         <div v-for="(img, index) in productImages" :key="index"
                             class="w-16 h-16 rounded-lg border-2 overflow-hidden cursor-pointer flex-shrink-0"
                             :class="{ 'border-pink-400': currentImageIndex === index, 'border-transparent': currentImageIndex !== index }"
@@ -31,18 +31,18 @@
                 </div>
 
                 <!-- Detalles del producto -->
-                <div class="lg:w-1/2 p-8 flex flex-col justify-between">
+                <div class="lg:w-1/2  p-2 md:p-8 flex flex-col justify-between">
                     <div>
                         <div class="flex items-center mb-2">
                             <span class="text-pink-500 dark:text-pink-400 text-sm font-medium">
                                 {{ product.category ? product.category.name : 'Sin categoría' }}
                             </span>
                         </div>
-                        <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-3">{{ product.name }}</h2>
+                        <h2 class="text-lg md:text-s3xl font-bold text-gray-900 dark:text-white mb-3">{{ product.name }}</h2>
 
                         <div class="flex items-center justify-between mb-6">
                             <div>
-                                <p class="text-2xl font-bold text-pink-500 dark:text-pink-400">
+                                <p class="text-lg md:text-2xl font-bold text-pink-500 dark:text-pink-400">
                                     S/ {{ product.price }}
                                 </p>
                                 <p v-if="product.originalPrice"
@@ -180,7 +180,7 @@
         <div class="max-w-6xl mx-auto mt-16">
             <div class="flex items-center justify-between mb-8">
                 <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Productos relacionados</h2>
-                <NuxtLink to="/products" class="text-pink-500 dark:text-pink-400 hover:underline flex items-center">
+                <NuxtLink to="/product" class="text-pink-500 dark:text-pink-400 hover:underline flex items-center">
                     Ver todos
                     <UIcon name="i-heroicons-arrow-right" class="w-4 h-4 ml-1" />
                 </NuxtLink>
@@ -300,7 +300,7 @@ const currentDisplayImage = computed(() => productImages.value[currentImageIndex
 const { data: relatedProductsData } = await useFetch<Product[]>( `/api/v1/productByCategoryId/${product.value.categoryId}`,
     { default: () => [] }
 );
-
+console.log( "haber que sale", relatedProductsData)
 const relatedProducts = computed(() => relatedProductsData.value || []);
 
 // Funciones de la galería

@@ -27,6 +27,8 @@ router.get('/projectsByCategoryId/:id', defineEventHandler(projectsByCategoryIdC
 router.get('/allProjetsCategory', defineEventHandler(projectsByCategoryIdController.allProjets));
 
 router.get('/category', defineEventHandler(categoryController.allCategory));
+router.get('/categoryById/:id', defineEventHandler(categoryController.categoryById));
+router.get('/productByCategoryIdCount/:id', defineEventHandler(categoryController.productByCategoryIdCount));
 router.post('/addCategory', defineEventHandler(categoryController.addCategory));
 router.put('/updateCategory/:id', defineEventHandler(categoryController.updateCategory));
 router.delete('/deleteCategory/:id', defineEventHandler(categoryController.deleteCategory));

@@ -161,6 +161,12 @@ const menuItems = [
         icon: 'heroicons:chart-bar'
     },
     {
+        to: '/product',
+        title: 'Ver Tienda',
+        shortTitle: 'Ver Tienda',
+        icon: 'heroicons:building-storefront'
+    },
+    {
         to: '/dashboard/order-history',
         title: 'Historial de Pedidos',
         shortTitle: 'Pedidos',

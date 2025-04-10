@@ -12,7 +12,6 @@
                     <img src="/logo-dark.png" alt="Logo Oscuro" class="h-8 hidden dark:block" />
 
 
-
                 </NuxtLink>
 
                 <!-- Mobile Menu Button -->

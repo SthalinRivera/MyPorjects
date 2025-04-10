@@ -106,12 +106,16 @@
 
     </div>
 
+
+    <Categories></Categories>
     <!-- Carrusel de imágenes -->
 
     <CardProducts></CardProducts>
 
 
     <ParallaxSection></ParallaxSection>
+
+    <Faq></Faq>
 
   </div>
 </template>

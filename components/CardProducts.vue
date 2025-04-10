@@ -12,15 +12,25 @@
             <img class="w-full h-60 object-cover rounded-xl transition-transform duration-500 group-hover:scale-110"
               :src="`${product.imageUrl}`" :alt="product.name" />
             <div class="absolute top-2 right-2">
-              <UButton @click="favorites(product)"
-                class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm rounded-full p-2 hover:bg-pink-500 dark:hover:bg-pink-500 transition-all duration-300 shadow-md">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                  stroke="currentColor"
-                  class="size-5 text-pink-500 dark:text-pink-400 hover:text-white dark:hover:text-white">
-                  <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
-                </svg>
-              </UButton>
+              <UButton 
+  @click="toggleFavorite(product)"
+  :class="[
+    'absolute top-2 right-2 backdrop-blur-sm rounded-full p-2 transition-all duration-300 shadow-md',
+    isFavorite(product.id)
+      ? 'bg-pink-500 hover:bg-pink-600 text-white'
+      : 'bg-white/80 dark:bg-slate-900/80 hover:bg-pink-500 dark:hover:bg-pink-500'
+  ]"
+>
+  <UIcon 
+    name="i-heroicons-heart" 
+    class="w-5 h-5"
+    :class="{
+      'text-pink-500 dark:text-pink-400 hover:text-white dark:hover:text-white': !isFavorite(product.id),
+      'text-slate-100': isFavorite(product.id)
+    }"
+    dynamic
+  />
+</UButton>
             </div>
           </div>
 
@@ -65,14 +75,25 @@
 <script setup lang="ts">
 import type { Product } from '~/interfaces/product';
 import type { Record } from '~/interfaces/Record';
-
+const productStore = useProductStore();
 const id = 1;
 const { data: products, error } = await useFetch('/api/v1/product/');
 const { $toast } = useNuxtApp();
 const { addToFavorites } = useProductStore();
 
-const favorites = (product: Product) => {
-  addToFavorites(product);
-  $toast.success("Added to favorites!");
-};
+  // Verificar si un producto está en favoritos
+  const isFavorite = (productId: number) => {
+    return productStore.favorites.some(item => item.id === productId);
+  };
+  
+  // Manejar favoritos
+  const toggleFavorite = (product: Product) => {
+    if (isFavorite(product.id)) {
+      productStore.deleteFavorites(product.id);
+      $toast.success("Eliminado de favoritos");
+    } else {
+      productStore.addToFavorites(product);
+      $toast.success("Agregado a favoritos");
+    }
+  };
 </script>

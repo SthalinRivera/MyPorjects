@@ -20,23 +20,33 @@ export const productById = async (event: H3Event) => {
   if (!request.id) {
     throw createError({
       statusCode: 400,
-      name: "Project invalid",
-      message: "Project ID is required",
+      name: "Product invalid",
+      message: "Product ID is required",
     });
   }
 
-  const project = await prisma.product.findFirst({
+  const product = await prisma.product.findFirst({
     where: {
       id: +request.id,
     },
-
+    include: {
+      category: {
+        select: {
+          name: true,
+        },
+      },
+    },
   });
 
-  return project || createError({
-    statusCode: 404,
-    name: "Project not found",
-    message: "No project found with the given ID",
-  });
+  if (!product) {
+    throw createError({
+      statusCode: 404,
+      name: "Product not found",
+      message: "No product found with the given ID",
+    });
+  }
+
+  return product;
 };
 
 export const addProduct = async (event: H3Event): Promise<string> => {
