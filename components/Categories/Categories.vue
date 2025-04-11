@@ -30,22 +30,23 @@
         <!-- Categories Grid -->
         <div v-else class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
             <NuxtLink v-for="category in data" :key="category.id" :to="`/category/${category.slug || category.id}`"
-                class="category-card bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-lg transition-all duration-300 group">
+                class="category-card bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 overflow-hidden hover:shadow-lg transition-all duration-300 group">
+
                 <div class="p-5 flex flex-col items-center text-center h-full">
                     <!-- Icono/Imagen de categoría -->
                     <div
-                        class="w-16 h-16 mb-4 rounded-full bg-blue-50 dark:bg-gray-700 flex items-center justify-center text-3xl text-blue-600 dark:text-blue-400 group-hover:bg-blue-100 dark:group-hover:bg-gray-600 transition-colors">
+                        class="w-16 h-16 mb-4 rounded-full bg-pink-50 dark:bg-slate-700 flex items-center justify-center text-3xl text-pink-600 dark:text-pink-400 group-hover:bg-pink-100 dark:group-hover:bg-slate-600 transition-colors">
                         <i class="ri-folder-line"></i>
                     </div>
 
                     <!-- Nombre de categoría -->
                     <h3
-                        class="font-semibold text-lg text-gray-800 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                        class="font-semibold text-lg text-gray-900 dark:text-white mb-2 group-hover:text-pink-600 dark:group-hover:text-pink-400 transition-colors">
                         {{ category.name }}
                     </h3>
 
                     <!-- Contador de productos -->
-                    <span class="text-sm text-gray-500 dark:text-gray-400 mt-auto">
+                    <span class="text-sm text-gray-600 dark:text-gray-300 mt-auto">
                         {{ category.productCount || 0 }} productos
                     </span>
                 </div>
