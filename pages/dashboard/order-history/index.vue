@@ -7,7 +7,7 @@
                 <p class="text-gray-500 dark:text-gray-400 mt-1">Review your past purchases and order status</p>
             </div>
             <div class="relative">
-                <select v-model="filterStatus" @change="fetchOrders" 
+                <select v-model="filterStatus" @change="fetchOrders"
                     class="pl-4 pr-8 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none">
                     <option value="ALL">All Orders</option>
                     <option value="PENDING">Pending</option>
@@ -25,23 +25,27 @@
         </div>
 
         <!-- Empty State -->
-        <div v-else-if="orders.length === 0" class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-8 text-center">
-            <div class="mx-auto w-20 h-20 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mb-4">
+        <div v-else-if="orders.length === 0"
+            class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-8 text-center">
+            <div
+                class="mx-auto w-20 h-20 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mb-4">
                 <i class="ri-shopping-bag-line text-3xl text-gray-400 dark:text-gray-500"></i>
             </div>
             <h3 class="text-lg font-medium text-gray-800 dark:text-white mb-2">No orders found</h3>
             <p class="text-gray-500 dark:text-gray-400">You haven't placed any orders yet</p>
-            <NuxtLink to="/products" class="inline-block mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+            <NuxtLink to="/products"
+                class="inline-block mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
                 Browse Products
             </NuxtLink>
         </div>
 
         <!-- Orders List -->
         <div v-else class="space-y-4">
-            <div v-for="order in orders" :key="order.id" 
+            <div v-for="order in orders" :key="order.id"
                 class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
                 <!-- Order Header -->
-                <div class="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row justify-between gap-4">
+                <div
+                    class="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row justify-between gap-4">
                     <div class="flex items-start gap-4">
                         <div class="p-2 bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 rounded-lg">
                             <i class="ri-shopping-bag-2-line text-xl"></i>
@@ -65,10 +69,11 @@
 
                 <!-- Order Items -->
                 <div class="divide-y divide-gray-200 dark:divide-gray-700">
-                    <div v-for="(itemGroup, index) in groupItemsByProduct(order.orderItems)" :key="index" class="p-4 sm:p-6">
+                    <div v-for="(itemGroup, index) in groupItemsByProduct(order.orderItems)" :key="index"
+                        class="p-4 sm:p-6">
                         <div class="flex gap-4">
                             <div class="flex-shrink-0">
-                                <img :src="itemGroup[0].product.imageUrl || 'https://via.placeholder.com/80'" 
+                                <img :src="itemGroup[0].product.imageUrl || 'https://via.placeholder.com/80'"
                                     class="h-16 w-16 rounded-lg object-cover border border-gray-200 dark:border-gray-700">
                             </div>
                             <div class="flex-1 min-w-0">
@@ -80,7 +85,7 @@
                                 </p>
                             </div>
                             <div class="text-base font-medium text-gray-800 dark:text-white">
-                                S/. {{ (itemGroup.reduce((total, item) => total + item.price * item.quantity, 0)) }}
+                                S/. {{(itemGroup.reduce((total, item) => total + item.price * item.quantity, 0))}}
                             </div>
                         </div>
                     </div>
@@ -88,7 +93,7 @@
 
                 <!-- Order Footer -->
                 <div class="p-4 sm:p-6 bg-gray-50 dark:bg-gray-700/50 flex justify-end">
-                    <NuxtLink :to="`/orders/${order.id}`" 
+                    <NuxtLink :to="`/orders/${order.id}`"
                         class="flex items-center gap-2 px-4 py-2 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors">
                         <span>View Details</span>
                         <i class="ri-arrow-right-line"></i>
@@ -100,20 +105,20 @@
         <!-- Pagination -->
         <div v-if="orders.length > 0 && totalPages > 1" class="flex justify-center mt-8">
             <nav class="flex items-center gap-2">
-                <button @click="prevPage" :disabled="currentPage === 1" 
+                <button @click="prevPage" :disabled="currentPage === 1"
                     class="p-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed">
                     <i class="ri-arrow-left-line"></i>
                 </button>
-                
+
                 <template v-for="page in visiblePages" :key="page">
-                    <button @click="goToPage(page)" 
-                        :class="{'bg-blue-600 text-white': currentPage === page, 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700': currentPage !== page}"
+                    <button @click="goToPage(page)"
+                        :class="{ 'bg-blue-600 text-white': currentPage === page, 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700': currentPage !== page }"
                         class="w-10 h-10 rounded-lg border border-gray-300 dark:border-gray-600 font-medium">
                         {{ page }}
                     </button>
                 </template>
-                
-                <button @click="nextPage" :disabled="currentPage === totalPages" 
+
+                <button @click="nextPage" :disabled="currentPage === totalPages"
                     class="p-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed">
                     <i class="ri-arrow-right-line"></i>
                 </button>
@@ -136,14 +141,16 @@ const itemsPerPage = ref(5);
 const totalOrders = ref(0);
 
 definePageMeta({
-    layout: "dashboard",
+    middleware: ['auth'],
+    layout: 'dashboard',
 });
+
 
 // Format date for display
 const formatDate = (dateString: string) => {
-    const options: Intl.DateTimeFormatOptions = { 
-        year: 'numeric', 
-        month: 'short', 
+    const options: Intl.DateTimeFormatOptions = {
+        year: 'numeric',
+        month: 'short',
         day: 'numeric',
         hour: '2-digit',
         minute: '2-digit'
@@ -242,7 +249,7 @@ const fetchOrders = async () => {
                 limit: itemsPerPage.value
             }
         });
-        
+
         orders.value = data.value?.orders || [];
         totalOrders.value = data.value?.total || 0;
     } catch (error) {
@@ -263,7 +270,9 @@ watchEffect(() => {
 <style scoped>
 /* Animation for loading */
 @keyframes spin {
-    to { transform: rotate(360deg); }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .animate-spin {

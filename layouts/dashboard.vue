@@ -1,24 +1,31 @@
 <template>
-    <div>
-        <div class="min-h-screen flex" :class="{ 'sidebar-open': isMobileSidebarOpen }">
-            <!-- Sidebar -->
-            <Sidebar @sidebar-toggle="handleSidebarToggle" />
+    <div class="min-h-screen bg-gray-50 dark:bg-gray-900 flex">
+        <!-- Sidebar - Fijo en desktop, overlay en mobile -->
+        <Sidebar @sidebar-toggle="handleSidebarToggle"
+            :class="{ 'md:translate-x-0': true, 'translate-x-0': isMobileSidebarOpen }" />
 
-            <!-- Main content -->
-            <div class="flex-1 p-6 bg-white dark:bg-gray-900 dark:text-white transition-all duration-300">
-                <Navbar />
+        <!-- Main content area -->
+        <div class="flex-1 flex flex-col min-w-0">
+            <!-- Navbar sticky -->
+            <Navbar class="sticky top-0 z-30" @toggle-sidebar="isMobileSidebarOpen = !isMobileSidebarOpen" />
+
+            <!-- Content area with scroll -->
+            <main class="flex-1 overflow-y-auto pt-16 md:pt-16 transition-all duration-300 "
+                :class="{ 'ml-0': !isExpanded && !isMobile, '': !isExpanded && !isMobile, '': isExpanded && !isMobile }">
                 <NuxtPage />
-                <Footer />
-            </div>
+            </main>
+
+            <!-- Footer -->
+            <Footer class="mt-auto" />
         </div>
 
+        <!-- Mobile overlay -->
+        <div v-if="isMobileSidebarOpen" @click="isMobileSidebarOpen = false"
+            class="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"></div>
     </div>
-
 </template>
 
 <script setup>
-import { ref } from 'vue';
-
 const isExpanded = ref(true);
 const isMobileSidebarOpen = ref(false);
 
@@ -27,4 +34,25 @@ const handleSidebarToggle = (expanded) => {
 };
 </script>
 
-<style></style>
+<style scoped>
+/* Smooth transitions */
+.sidebar-enter-active,
+.sidebar-leave-active {
+    transition: transform 0.3s ease;
+}
+
+.sidebar-enter-from,
+.sidebar-leave-to {
+    transform: translateX(-100%);
+}
+
+/* Ensure full height */
+
+
+/* iOS viewport fix */
+@supports (-webkit-touch-callout: none) {
+    .min-h-screen {
+        min-height: -webkit-fill-available;
+    }
+}
+</style>

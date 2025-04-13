@@ -1,5 +1,5 @@
 <template>
-    <div class="flex justify-center items-center h-screen bg-gray-900 text-white">
+    <div class="flex justify-center items-center">
         <div class="text-center">
             <div class="text-6xl mb-4 text-yellow-500">
                 🚧
@@ -23,7 +23,6 @@
 
 definePageMeta({
     middleware: ['auth'],
-    permiso: "ADMINISTRADOR",
     layout: 'dashboard',
 });
 </script>

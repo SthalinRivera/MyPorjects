@@ -77,7 +77,7 @@
                                         <div class="ml-4">
                                             <div class="text-sm font-medium text-gray-900 dark:text-white">{{
                                                 product.name
-                                                }}</div>
+                                            }}</div>
                                             <div class="text-sm text-gray-500 dark:text-gray-400 line-clamp-1">{{
                                                 truncateText(product.description, 50) }}</div>
                                         </div>
@@ -402,7 +402,7 @@
                     <div class="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg">
                         <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Categoría</p>
                         <p class="text-sm text-gray-900 dark:text-white">{{ getCategoryName(selectedProduct.categoryId)
-                            }}</p>
+                        }}</p>
                     </div>
 
                     <div v-if="selectedProduct.createdAt" class="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg">
@@ -433,7 +433,7 @@ const imageUrl = ref<string | null>(null);
 
 definePageMeta({
     middleware: ['auth'],
-    permiso: "ADMINISTRADOR",
+
     layout: 'dashboard',
 });
 

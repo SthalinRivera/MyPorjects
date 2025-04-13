@@ -360,7 +360,6 @@ const formState = reactive<FormState>({
 
 definePageMeta({
     middleware: ['auth'],
-    permiso: "ADMINISTRADOR",
     layout: 'dashboard',
 });
 

@@ -1,7 +1,10 @@
 <script setup lang="ts">
 definePageMeta({
-    layout: 'dashboard', // Aplica el layout de dashboard a esta página
+    middleware: ['auth'],
+
+    layout: 'dashboard',
 });
+
 </script>
 
 <template>

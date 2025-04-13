@@ -1,14 +1,60 @@
 <template>
     <div
-        class="min-h-screen transition-colors duration-300 bg-gray-50 dark:bg-slate-800 text-gray-900 dark:text-gray-100">
-        <navbar />
-        <UContainer class="my-4">
-            <slot></slot>
-        </UContainer>
-        <FloatingCartButton />
-        <Footer></Footer>
+        class="min-h-screen flex flex-col transition-colors duration-300 bg-gray-50 dark:bg-slate-800 text-gray-900 dark:text-gray-100">
+        <!-- Navbar sticky -->
+        <Navbar
+            class="sticky top-0 z-50 shadow-sm bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-gray-200 dark:border-slate-700" />
+
+        <!-- Main content with proper spacing and max-width constraints -->
+        <main class="flex-1 pt-12 md:pt-14 ">
+            <UContainer class="py-6 px-4 sm:px-6 lg:px-8">
+                <div class="mx-auto max-w-7xl">
+                    <slot />
+                </div>
+            </UContainer>
+        </main>
+
+        <!-- Floating cart button (positioned fixed) -->
+        <FloatingCartButton class="fixed bottom-6 right-6 z-40" />
+
+        <!-- Footer with proper spacing -->
+        <Footer class="bg-white dark:bg-slate-900 border-t border-gray-200 dark:border-slate-700" />
     </div>
 </template>
+
 <script setup lang="ts">
+// Optional: Add any needed imports or logic
 </script>
-<style></style>
+
+<style scoped>
+/* Smooth scrolling for the entire page */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Better scrollbar styling (optional) */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* iOS viewport fix */
+@supports (-webkit-touch-callout: none) {
+    .min-h-screen {
+        min-height: -webkit-fill-available;
+    }
+}
+</style>

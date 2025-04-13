@@ -1,10 +1,11 @@
 <template>
     <div class="relative">
         <!-- Barra de navegación principal -->
-        <nav class="bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 shadow-sm">
+        <nav
+            class="fixed w-full top-0 z-50 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 shadow-sm">
             <div class="max-w-screen-xl flex items-center justify-between mx-auto px-4 py-3">
                 <!-- Logo -->
-                <NuxtLink to="/" class="flex items-center gap-2" @click="isMobileMenuOpen = false">
+                <NuxtLink to="/" class=" pl-4 md:pl-0 flex items-center gap-2" @click="isMobileMenuOpen = false">
                     <img src="/logo-ligh.png" alt="Logo Claro" class="h-8 block dark:hidden">
                     <img src="/logo-dark.png" alt="Logo Oscuro" class="h-8 hidden dark:block">
                 </NuxtLink>
@@ -15,8 +16,10 @@
                     @click.stop="toggleMobileMenu" aria-label="Toggle menu" aria-expanded="isMobileMenuOpen">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="w-6 h-6">
+                        <!-- 3 puntos verticales (mobile) -->
                         <path v-if="!isMobileMenuOpen" stroke-linecap="round" stroke-linejoin="round"
-                            d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                            d="M12 6.5a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zM12 12.5a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zM12 18.5a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1z" />
+                        <!-- Icono cerrar (X) -->
                         <path v-else stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
@@ -86,6 +89,10 @@
 
                         <!-- Menú de usuario (si está logueado) -->
                         <ClientOnly v-if="loggedIn">
+                            <LayoutUsuario />
+                        </ClientOnly>
+                        <!-- Menú de usuario (si está logueado) -->
+                        <ClientOnly v-if="!loggedIn">
                             <LayoutUsuario />
                         </ClientOnly>
 

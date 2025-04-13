@@ -4,7 +4,8 @@
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
             <div>
                 <h1 class="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white">Gestión de Categorías</h1>
-                <p class="text-sm sm:text-base text-gray-500 dark:text-gray-400 mt-1">Organiza tus productos con categorías</p>
+                <p class="text-sm sm:text-base text-gray-500 dark:text-gray-400 mt-1">Organiza tus productos con
+                    categorías</p>
             </div>
             <button @click="openCreateModal"
                 class="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-lg hover:from-blue-700 hover:to-blue-600 transition-all shadow-md hover:shadow-lg w-full sm:w-auto justify-center">
@@ -14,12 +15,14 @@
         </div>
 
         <!-- Estado de Error -->
-        <div v-if="error" class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 mb-4">
+        <div v-if="error"
+            class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 mb-4">
             <div class="flex items-center gap-3">
                 <i class="ri-error-warning-line text-red-500 dark:text-red-400 text-xl"></i>
                 <div>
                     <h3 class="font-medium text-red-800 dark:text-red-200">Error al cargar categorías</h3>
-                    <p class="text-sm text-red-600 dark:text-red-300">{{ error.message || 'Ocurrió un error desconocido' }}</p>
+                    <p class="text-sm text-red-600 dark:text-red-300">{{ error.message || 'Ocurrió un error desconocido'
+                        }}</p>
                 </div>
             </div>
             <button @click="fetchCategories" class="mt-2 text-sm text-red-600 dark:text-red-300 hover:underline">
@@ -36,7 +39,8 @@
         <!-- Empty State -->
         <div v-else-if="categories.length === 0"
             class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-8 text-center">
-            <div class="mx-auto w-20 h-20 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mb-4">
+            <div
+                class="mx-auto w-20 h-20 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mb-4">
                 <i class="ri-folder-line text-3xl text-gray-400 dark:text-gray-500"></i>
             </div>
             <h3 class="text-lg font-medium text-gray-800 dark:text-white mb-2">No se encontraron categorías</h3>
@@ -83,7 +87,8 @@
                     </div>
                     <form @submit.prevent="createCategory" class="space-y-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nombre de Categoría</label>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nombre de
+                                Categoría</label>
                             <input v-model="newCategory.name" type="text" placeholder="e.g. Collar, Aretes ..." required
                                 class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
                         </div>
@@ -116,7 +121,8 @@
                     </div>
                     <form @submit.prevent="updateCategory" class="space-y-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nombre de Categoría</label>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nombre de
+                                Categoría</label>
                             <input v-model="editingCategory.name" type="text" required
                                 class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
                         </div>
@@ -157,7 +163,7 @@ const showCreateModal = ref(false);
 // Configuración de la página
 definePageMeta({
     middleware: ['auth'],
-    permiso: "ADMINISTRADOR",
+
     layout: 'dashboard',
 });
 
@@ -165,7 +171,7 @@ definePageMeta({
 const fetchCategories = async (retries = 3) => {
     loading.value = true;
     error.value = null;
-    
+
     try {
         const { data, error: fetchError } = await useFetch('/api/v1/category', {
             headers: {
@@ -184,13 +190,13 @@ const fetchCategories = async (retries = 3) => {
         categories.value = data.value;
     } catch (err) {
         console.error("Error al cargar categorías:", err);
-        
+
         if (retries > 1) {
             // Reintentar después de un breve retraso
             await new Promise(resolve => setTimeout(resolve, 1000));
             return fetchCategories(retries - 1);
         }
-        
+
         error.value = err;
         $toast.error("Error al cargar categorías");
         categories.value = [];

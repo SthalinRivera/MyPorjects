@@ -48,7 +48,7 @@
       </button>
 
       <!-- Cuenta/Login -->
-      <NuxtLink v-if="!loggedIn" to="/profile"
+      <NuxtLink to="/profile"
         class="flex flex-col items-center justify-center p-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
         active-class="text-blue-600 dark:text-blue-400">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">

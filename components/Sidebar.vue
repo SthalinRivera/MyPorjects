@@ -1,24 +1,24 @@
 <template>
     <div>
-        <!-- Mobile Toggle Button - Solo visible cuando el sidebar está cerrado -->
-        <button v-if="!isMobileSidebarOpen" @click="toggleMobileSidebar"
-            class="md:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-white dark:bg-gray-800 shadow-md border border-gray-200 dark:border-gray-700 transition-all hover:scale-105">
-            <Icon name="heroicons:bars-3-bottom-left" class="w-5 h-5 text-gray-600 dark:text-gray-300" />
+        <!-- Mobile Toggle Button -->
+        <button v-if="!isMobileSidebarOpen && isMobile" @click="openMobileSidebar" class="md:hidden fixed top-0 left-0 z-50 p-3 
+       
+         
+         hover:bg-white dark:hover:bg-gray-700" aria-label="Menú">
+            <i class="ri-menu-line text-gray-700 dark:text-gray-300 text-xl"></i>
         </button>
-
         <!-- Sidebar -->
         <div ref="sidebar" :class="[
-            'fixed md:relative z-40 h-screen transition-all duration-300 flex flex-col justify-between',
+            'fixed md:sticky top-0 z-40 h-screen transition-all duration-300 flex flex-col justify-between',
             'bg-gradient-to-b from-white to-gray-50 dark:from-gray-800 dark:to-gray-900',
             'border-r border-gray-200 dark:border-gray-700',
             'shadow-xl dark:shadow-gray-900/40',
-            isExpanded ? 'w-72' : 'w-20',
-            isHovered && !isExpanded ? 'w-32' : '',
+            sidebarWidthClass,
             isMobileSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
-        ]" @mouseenter="isHovered = true" @mouseleave="isHovered = false">
+        ]" @mouseenter="onSidebarHover" @mouseleave="onSidebarLeave">
 
-            <!-- Botón de cerrar dentro del sidebar (solo móvil) -->
-            <button v-if="isMobileSidebarOpen" @click="toggleMobileSidebar"
+            <!-- Close Button (mobile only) -->
+            <button v-if="isMobileSidebarOpen && isMobile" @click="closeMobileSidebar"
                 class="md:hidden absolute top-4 right-4 p-2 rounded-lg bg-white dark:bg-gray-800 shadow-md border border-gray-200 dark:border-gray-700 transition-all hover:scale-105">
                 <Icon name="heroicons:x-mark" class="w-5 h-5 text-gray-600 dark:text-gray-300" />
             </button>
@@ -33,13 +33,13 @@
                         <Icon name="heroicons:cube" class="w-5 h-5" />
                     </div>
                     <transition name="fade">
-                        <span v-if="showTitle"
+                        <span v-if="showFullContent"
                             class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-500 dark:from-indigo-400 dark:to-purple-400">
                             Dashboard
                         </span>
                     </transition>
                 </NuxtLink>
-                <button @click="toggleSidebar"
+                <button @click="toggleSidebarMode" v-if="!isMobile"
                     class="p-2 rounded-lg focus:outline-none hover:bg-gray-200 dark:hover:bg-gray-700/50 transition-all"
                     aria-label="Toggle sidebar">
                     <Icon :name="isExpanded ? 'heroicons:chevron-double-left' : 'heroicons:chevron-double-right'"
@@ -63,7 +63,7 @@
                         </div>
                     </div>
                     <transition name="slide-fade">
-                        <div v-if="showUserInfo" class="ml-3 min-w-0">
+                        <div v-if="showFullContent" class="ml-3 min-w-0">
                             <p class="text-sm font-medium text-gray-900 dark:text-white truncate">
                                 {{ user.name || 'Usuario' }}
                             </p>
@@ -95,13 +95,12 @@
 
                             <div class="min-w-0 flex items-center">
                                 <transition name="slide-fade">
-                                    <span v-if="showMenuText" class="ml-3 font-medium truncate">
-                                        {{ isMobileSidebarOpen ? item.title : (isMobile ? item.shortTitle || item.title
-                                            : item.title) }}
+                                    <span v-if="showFullContent" class="ml-3 font-medium truncate">
+                                        {{ item.title }}
                                     </span>
                                 </transition>
                                 <transition name="fade">
-                                    <span v-if="showMenuText && item.badge"
+                                    <span v-if="showFullContent && item.badge"
                                         class="ml-2 px-2 py-0.5 text-xs rounded-full whitespace-nowrap flex-shrink-0"
                                         :class="[
                                             item.badge === 'new' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400' : '',
@@ -117,13 +116,13 @@
             </nav>
 
             <!-- Logout Button -->
-            <div class=" min-w-0 px-3 mb-5">
+            <div class="min-w-0 px-3 mb-5">
                 <button @click="salir"
                     class="flex items-center w-full p-3 rounded-xl transition-all group hover:bg-red-50/70 dark:hover:bg-red-900/10 hover:text-red-600 dark:hover:text-red-400">
                     <Icon name="heroicons:arrow-left-on-rectangle"
                         class="w-5 h-5 transition-transform group-hover:scale-110 flex-shrink-0" />
                     <transition name="slide-fade">
-                        <span v-if="showMenuText" class="ml-1 font-medium">
+                        <span v-if="showFullContent" class="ml-1 font-medium">
                             Salir
                         </span>
                     </transition>
@@ -132,7 +131,7 @@
         </div>
 
         <!-- Mobile Overlay -->
-        <div v-if="isMobileSidebarOpen" @click="isMobileSidebarOpen = false"
+        <div v-if="isMobileSidebarOpen && isMobile" @click="closeMobileSidebar"
             class="fixed inset-0 z-30 bg-black bg-opacity-50 md:hidden transition-opacity duration-300"></div>
     </div>
 </template>
@@ -150,94 +149,116 @@ const isExpanded = ref(true);
 const isHovered = ref(false);
 const isMobileSidebarOpen = ref(false);
 const isMobile = ref(false);
+const firstLoad = ref(true);
 const sidebar = ref(null);
 
-// Menu items with optional short titles for mobile
+// Menu items
 const menuItems = [
     {
         to: '/dashboard',
         title: 'Dashboard',
-        shortTitle: 'Inicio',
         icon: 'heroicons:chart-bar'
     },
     {
         to: '/product',
         title: 'Ver Tienda',
-        shortTitle: 'Ver Tienda',
         icon: 'heroicons:building-storefront'
     },
     {
         to: '/dashboard/order-history',
         title: 'Historial de Pedidos',
-        shortTitle: 'Pedidos',
         icon: 'heroicons:shopping-bag',
         badge: 'new'
     },
     {
         to: '/dashboard/categories',
         title: 'Gestión de Categorías',
-        shortTitle: 'Categorías',
         icon: 'heroicons:rectangle-stack'
     },
     {
         to: '/dashboard/products',
         title: 'Administrar Productos',
-        shortTitle: 'Productos',
         icon: 'heroicons:archive-box'
     },
     {
         to: '/dashboard/users',
         title: 'Administrar Usuarios',
-        shortTitle: 'Usuarios',
         icon: 'heroicons:users'
     },
     {
         to: '/dashboard/sales',
         title: 'Reportes de Ventas',
-        shortTitle: 'Ventas',
         icon: 'heroicons:banknotes',
         badge: 'pro'
     },
 ];
 
 // Computed properties
-const showTitle = computed(() => isExpanded.value || isHovered.value || isMobileSidebarOpen.value);
-const showUserInfo = computed(() => isExpanded.value || isHovered.value || isMobileSidebarOpen.value);
-const showMenuText = computed(() => isExpanded.value || isHovered.value || isMobileSidebarOpen.value);
+const showFullContent = computed(() => {
+    return isMobile.value ? isMobileSidebarOpen.value : (isExpanded.value || isHovered.value);
+});
 
-// Toggle sidebar
-const toggleSidebar = () => {
-    isExpanded.value = !isExpanded.value;
+const sidebarWidthClass = computed(() => {
+    if (isMobile.value) return 'w-72';
+    if (isExpanded.value) return 'w-72';
+    if (isHovered.value) return 'w-56';
+    return 'w-20';
+});
+
+// Sidebar interactions
+const onSidebarHover = () => {
+    if (!isMobile.value && !isExpanded.value) {
+        isHovered.value = true;
+    }
 };
 
-// Mobile sidebar functions
+const onSidebarLeave = () => {
+    isHovered.value = false;
+};
+
+const toggleSidebarMode = () => {
+    isExpanded.value = !isExpanded.value;
+    localStorage.setItem('sidebarExpanded', isExpanded.value);
+};
+
+// Mobile functions
+const openMobileSidebar = () => {
+    isMobileSidebarOpen.value = true;
+};
+
+const closeMobileSidebar = () => {
+    isMobileSidebarOpen.value = false;
+};
+
 const toggleMobileSidebar = () => {
     isMobileSidebarOpen.value = !isMobileSidebarOpen.value;
 };
 
-const closeMobileSidebar = () => {
-    if (isMobile.value) {
-        isMobileSidebarOpen.value = false;
-    }
-};
-
-// Check screen size
+// Screen size detection
 const checkScreenSize = () => {
     isMobile.value = window.innerWidth < 768;
-    if (!isMobile.value) {
-        isMobileSidebarOpen.value = true;
-        isExpanded.value = true;
+    if (isMobile.value) {
+        isMobileSidebarOpen.value = false;
     } else {
-        isExpanded.value = false;
+        isMobileSidebarOpen.value = true;
+        if (firstLoad.value) {
+            const savedPreference = localStorage.getItem('sidebarExpanded');
+            if (savedPreference !== null) {
+                isExpanded.value = savedPreference === 'true';
+            }
+            firstLoad.value = false;
+        }
     }
 };
 
-// Close mobile sidebar on route change
+// Watch for route changes
 watch(() => route.path, () => {
-    closeMobileSidebar();
+    if (isMobile.value) {
+        closeMobileSidebar();
+    }
 });
 
-// Initialize and cleanup
+// Initialize component
 onMounted(() => {
     checkScreenSize();
     window.addEventListener('resize', checkScreenSize);

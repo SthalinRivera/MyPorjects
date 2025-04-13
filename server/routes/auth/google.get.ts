@@ -1,54 +1,55 @@
+// ~/server/api/auth/google.post.ts
 import { PrismaClient } from '@prisma/client'
-
 const prisma = new PrismaClient()
 
-
 export default oauth.googleEventHandler({
-  async onSuccess(event, { user, tokens }) {
-    //comprueba si tienes un usuario
-    let usuario = await prisma.user.findUnique({
-      where: {
-        email: user.email,
-      },
-      include: {
-        role: true,
-      },
+  // Función que se ejecuta cuando la autenticación con Google es exitosa
+  async onSuccess(event, { user: googleUser, tokens }) {
+    // 1. Buscar usuario en la base de datos por su email
+    let dbUser = await prisma.user.findUnique({
+      where: { email: googleUser.email },
+      include: { role: true } // Incluir información del rol asociado
     })
-    //si no hay usuario crear nuevo
 
-    if (!usuario) {
-      const PERMISO_USUARIO = 2;
-      usuario = await prisma.user.create({
+    // 2. Crear nuevo usuario si no existe en la base de datos
+    if (!dbUser) {
+      dbUser = await prisma.user.create({
         data: {
-          email: user.email,
-          name: user.name,
-          roleId: PERMISO_USUARIO,
-          password: null,  // Indica explícitamente que no estás proporcionando una contraseña
+          email: googleUser.email,
+          name: googleUser.name,
+          roleId: 2, // ID para rol de usuario normal (no administrador)
+          password: null // No se usa contraseña en autenticación por Google
         },
-        include: {
-          role: true,
-        }
+        include: { role: true }
       })
-
+      console.log('Nuevo usuario creado:', dbUser)
+    } else {
+      console.log('Usuario existente encontrado:', dbUser)
     }
 
+    // 3. Establecer sesión del usuario en el sistema
     await setUserSession(event, {
       user: {
-        id: user.id,
-        email: user.email,
-        urlFoto: user.picture,
-        name: String(user.name).trim(),
-        permiso: usuario.role.name,
-        usuarioId: usuario?.id,
+        id: dbUser.id,
+        email: dbUser.email,
+        name: dbUser.name,
+        role: dbUser.role.name,
+        phoneNumber: dbUser.phoneNumber,
+        createdAt: dbUser.createdAt
       },
-    });
-    return sendRedirect(event, "/");
+      loggedIn: true
+    })
+    console.log('Sesión iniciada para usuario:', dbUser.email)
+
+    // 4. Redirigir según el rol del usuario
+    const redirectPath = dbUser.role.name === 'ADMINISTRADOR' ? '/dashboard' : '/'
+    console.log('Redirigiendo a:', redirectPath)
+    return sendRedirect(event, redirectPath)
   },
+
+  // Función que se ejecuta si hay un error en la autenticación
   onError(event, error) {
-    console.log("Error Google Auth", error);
-    return sendRedirect(event, "/");
-  },
-});
-
-
-
+    console.error("Google Auth Error:", error)
+    return sendRedirect(event, "/login?error=google_auth_failed")
+  }
+})
