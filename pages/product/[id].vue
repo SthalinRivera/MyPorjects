@@ -2,7 +2,8 @@
     <div class=" my-2 md:my-8 px-4 sm:px-6 lg:px-8">
         <!-- Encabezado -->
         <div class="text-center mb-2 md:mb-12">
-            <h1 class="text-lg md:text-5xl font-bold text-gray-900 dark:text-white mb-1 md:mb-4">Detalles del Producto</h1>
+            <h1 class="text-lg md:text-5xl font-bold text-gray-900 dark:text-white mb-1 md:mb-4">Detalles del Producto
+            </h1>
             <div class="w-24 h-1 bg-pink-500 mx-auto rounded-full"></div>
         </div>
 
@@ -38,7 +39,8 @@
                                 {{ product.category ? product.category.name : 'Sin categoría' }}
                             </span>
                         </div>
-                        <h2 class="text-lg md:text-s3xl font-bold text-gray-900 dark:text-white mb-3">{{ product.name }}</h2>
+                        <h2 class="text-lg md:text-s3xl font-bold text-gray-900 dark:text-white mb-3">{{ product.name }}
+                        </h2>
 
                         <div class="flex items-center justify-between mb-6">
                             <div>
@@ -72,37 +74,53 @@
                                 class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Cantidad</label>
                             <div class="flex items-center">
                                 <button
-                                    class="bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-white px-3 py-1 rounded-l-lg"
+                                    class="bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-white px-3 py-1 rounded-l-lg disabled:opacity-50"
+                                    :disabled="quantity <= 1 || product.stock === 0"
                                     @click="quantity > 1 ? quantity-- : null">
                                     -
                                 </button>
                                 <span class="bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-1">
-                                    {{ quantity }}
+                                    {{ product.stock === 0 ? 0 : quantity }}
                                 </span>
                                 <button
-                                    class="bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-white px-3 py-1 rounded-r-lg"
-                                    @click="quantity++">
+                                    class="bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-white px-3 py-1 rounded-r-lg disabled:opacity-50"
+                                    :disabled="quantity >= product.stock || product.stock === 0"
+                                    @click="quantity < product.stock ? quantity++ : null">
                                     +
                                 </button>
-                                <span class="ml-4 text-sm text-gray-500 dark:text-gray-400">
-                                    {{ product.stock }} disponibles
+                                <span class="ml-4 text-sm" :class="{
+                                    'text-gray-500 dark:text-gray-400': product.stock > 0,
+                                    'text-red-500 dark:text-red-400 font-semibold': product.stock === 0
+                                }">
+                                    {{ product.stock > 0 ? `${product.stock} disponibles` : 'AGOTADO' }}
                                 </span>
+
+
                             </div>
                         </div>
                     </div>
 
+
                     <div class="space-y-3">
-                        <button @click="addToCart(product); isOpen = true"
-                            class="w-full bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white py-3 px-6 rounded-lg font-medium transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-pink-500/20 flex items-center justify-center">
+                        <button @click="handleAddToCart(product)" :disabled="product.stock === 0"
+                            class="w-full bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white py-3 px-6 rounded-lg font-medium transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-pink-500/20 flex items-center justify-center disabled:from-gray-400 disabled:to-gray-500 disabled:hover:from-gray-400 disabled:hover:to-gray-500 disabled:cursor-not-allowed">
                             <UIcon name="i-heroicons-shopping-cart-solid" class="w-5 h-5 mr-2" />
-                            Añadir al carrito - S/ {{ (product.price * quantity) }}
+                            {{ product.stock > 0 ? `Añadir al carrito - S/ ${(product.price * quantity)}` :
+                                'Producto agotado' }}
                         </button>
 
-                        <button @click="addToFavorites(product)"
+
+                        <button @click="toggleFavorite(product)"
                             class="w-full border border-pink-500 text-pink-500 dark:text-pink-400 dark:border-pink-400 py-3 px-6 rounded-lg font-medium transition-all duration-300 hover:bg-pink-50 dark:hover:bg-pink-900/30 flex items-center justify-center">
-                            <UIcon name="i-heroicons-heart-solid" class="w-5 h-5 mr-2" />
-                            Añadir a favoritos
+
+                            <UIcon :name="isFavorite(product.id) ? 'i-heroicons-heart-solid' : 'i-heroicons-heart'"
+                                class="w-5 h-5 mr-2" :class="{
+                                    'text-pink-500 dark:text-pink-400': !isFavorite(product.id),
+                                    'text-red-500 dark:text-red-500': isFavorite(product.id)
+                                }" />
+                            {{ isFavorite(product.id) ? 'En favoritos' : 'Añadir a favoritos' }}
                         </button>
+
                     </div>
                 </div>
             </div>
@@ -205,6 +223,8 @@
                         </span>
                     </div>
 
+
+
                     <div class="p-4">
                         <div class="flex justify-between items-start mb-2">
                             <NuxtLink :to="`/product/${relatedProduct.id}`"
@@ -249,11 +269,26 @@
 <script setup lang="ts">
 import type { Product } from '~/interfaces/product';
 import { useProductShoppingCartStore } from '~/stores/productShoppingCart';
-
+const productStore = useProductStore();
 const { $toast } = useNuxtApp();
 const route = useRoute();
 const { id } = route.params;
 const { addToFavorites } = useProductStore();
+// Verificar si un producto está en favoritos
+const isFavorite = (productId: number) => {
+    return productStore.favorites.some(item => item.id === productId);
+};
+
+// Manejar favoritos
+const toggleFavorite = (product: Product) => {
+    if (isFavorite(product.id)) {
+        productStore.deleteFavorites(product.id);
+        $toast.success("Eliminado de favoritos");
+    } else {
+        productStore.addToFavorites(product);
+        $toast.success("Agregado a favoritos");
+    }
+};
 
 // Estado reactivo
 const isOpen = ref(false);
@@ -268,7 +303,7 @@ const currentImage = ref('');
 
 // Obtener datos del producto
 const { data: productData, error } = await useFetch<Product>(`/api/v1/product/${id}`);
-console.log("viendo el producudo unico por el id",productData)
+
 
 if (error.value) {
     throw createError({
@@ -297,10 +332,10 @@ productImages.value = [
 const currentDisplayImage = computed(() => productImages.value[currentImageIndex.value]);
 
 // Obtener productos relacionados
-const { data: relatedProductsData } = await useFetch<Product[]>( `/api/v1/productByCategoryId/${product.value.categoryId}`,
+const { data: relatedProductsData } = await useFetch<Product[]>(`/api/v1/productByCategoryId/${product.value.categoryId}`,
     { default: () => [] }
 );
-console.log( "haber que sale", relatedProductsData)
+
 const relatedProducts = computed(() => relatedProductsData.value || []);
 
 // Funciones de la galería
@@ -351,6 +386,23 @@ const handleKeyDown = (e: KeyboardEvent) => {
         prevImage();
     }
 };
+
+// Función para manejar la adición al carrito con validación
+const handleAddToCart = (productItem: Product) => {
+    if (productItem.stock === 0) {
+        $toast.error("Este producto está agotado");
+        return;
+    }
+
+    if (quantity.value > productItem.stock) {
+        $toast.error(`No hay suficiente stock. Solo quedan ${productItem.stock} unidades`);
+        return;
+    }
+
+    addToCart(productItem);
+    isOpen.value = true; // Aquí abrimos el modal solo si se pudo agregar al carrito
+};
+
 
 onMounted(() => {
     window.addEventListener('keydown', handleKeyDown);

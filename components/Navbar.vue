@@ -1,8 +1,8 @@
 <template>
-    <div class="relative">
+    <div class="">
         <!-- Barra de navegación principal -->
         <nav
-            class="fixed w-full top-0 z-50 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 shadow-sm">
+            class=" w-full top-0 z-50 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 shadow-sm">
             <div class="max-w-screen-xl flex items-center justify-between mx-auto px-4 py-3">
                 <!-- Logo -->
                 <NuxtLink to="/" class=" pl-4 md:pl-0 flex items-center gap-2" @click="isMobileMenuOpen = false">

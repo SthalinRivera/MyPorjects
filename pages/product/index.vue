@@ -36,9 +36,13 @@
                             class="text-xs sm:text-sm font-medium bg-pink-100 dark:bg-pink-900/40 text-pink-600 dark:text-pink-300 py-0.5 sm:py-1 px-2 sm:px-3 rounded-full">
                             {{ product.category ? product.category.name : 'No category' }}
                         </span>
-                        <div
+                        <div v-if="product.stock > 0"
                             class="bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-200 rounded-full px-2 sm:px-3 py-0.5 sm:py-1 text-xs font-medium">
                             {{ product.stock }} in stock
+                        </div>
+                        <div v-else
+                            class="bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 rounded-full px-2 sm:px-3 py-0.5 sm:py-1 text-xs font-medium animate-pulse">
+                            AGOTADO
                         </div>
                     </div>
 

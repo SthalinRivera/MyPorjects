@@ -1,9 +1,7 @@
 <template>
-    <div
-        class="min-h-screen flex flex-col transition-colors duration-300 bg-gray-50 dark:bg-slate-800 text-gray-900 dark:text-gray-100">
+    <div class="min-h-screen flex flex-col transition-colors duration-300 ">
         <!-- Navbar sticky -->
-        <Navbar
-            class="sticky top-0 z-50 shadow-sm bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-gray-200 dark:border-slate-700" />
+        <Navbar class="sticky top-0 z-50 shadow-sm " />
 
         <!-- Main content with proper spacing and max-width constraints -->
         <main class="flex-1 pt-12 md:pt-14 ">
