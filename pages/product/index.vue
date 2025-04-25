@@ -1,11 +1,12 @@
 <template>
     <div>
 
-        <div class="text-center py-12 px-4">
-            <h1 class="text-4xl font-extrabold text-pink-600 dark:text-pink-300 mb-3">
-                🎁 Colección exclusiva
+        <div>
+            <h1
+                class="text-slate-900 dark:text-white font-bold text-3xl mb-2 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:h-1 after:w-20 after:bg-pink-500 after:rounded-full pb-2">
+                Todos los productos
             </h1>
-            <p class="text-lg text-gray-700 dark:text-gray-200">
+            <p class="text-lg text-gray-700 dark:text-gray-200 mb-2">
                 Descubre productos únicos hechos especialmente para ti.
             </p>
         </div>
@@ -81,7 +82,9 @@
 <script setup lang="ts">
 import { useNuxtApp } from '#app';
 import type { Product } from '~/interfaces/product';
-
+definePageMeta({
+    middleware: ['visit']
+});
 const { $toast } = useNuxtApp();
 const { addToFavorites } = useProductStore();
 const { data: products, error } = await useFetch("/api/v1/product");

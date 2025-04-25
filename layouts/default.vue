@@ -4,8 +4,8 @@
         <Navbar class="sticky top-0 z-50 shadow-sm " />
 
         <!-- Main content with proper spacing and max-width constraints -->
-        <main class="flex-1 pt-12 md:pt-14 ">
-            <UContainer class="py-6 px-4 sm:px-6 lg:px-8">
+        <main class="flex-1">
+            <UContainer class="p-2">
                 <div class="mx-auto max-w-7xl">
                     <slot />
                 </div>

@@ -252,19 +252,29 @@ const removeProductShoppingCart = (id: number) => {
     $toast.error('Producto eliminado!');
 };
 
-const updateQuantity = (product: Product, newQuantity: number) => {
-    if (newQuantity > 0 && newQuantity <= product.stock) {
-        productStore.updateProductQuantity(product.id, newQuantity);
+
+const increaseQuantity = (product: Product) => {
+    const newQuantity = product.quantity + 1;
+    const success = productStore.updateProductQuantity(product.id, newQuantity);
+    if (!success) {
+        $toast.error('No hay suficiente stock disponible');
+    } else {
+        // Forzar la reactividad actualizando el array
+        productStore.productShoppingCart = [...productStore.productShoppingCart];
     }
 };
 
-const increaseQuantity = (product: Product) => {
-    updateQuantity(product, product.quantity + 1);
+const decreaseQuantity = (product: Product) => {
+    const newQuantity = product.quantity - 1;
+    const success = productStore.updateProductQuantity(product.id, newQuantity);
+    if (!success) {
+        $toast.error('La cantidad mínima es 1');
+    } else {
+        // Forzar la reactividad actualizando el array
+        productStore.productShoppingCart = [...productStore.productShoppingCart];
+    }
 };
 
-const decreaseQuantity = (product: Product) => {
-    updateQuantity(product, product.quantity - 1);
-};
 
 const initiateWhatsAppOrder = () => {
     if (isEmptyCart.value) {
@@ -278,25 +288,65 @@ const initiateWhatsAppOrder = () => {
         showCustomerModal.value = true;
     }
 };
+const sendWhatsAppOrder = async () => {
+    try {
+        const phoneNumber = '51919753974';
+        const whatsappBaseUrl = 'https://wa.me';
 
-const sendWhatsAppOrder = () => {
-    const phoneNumber = '51919753974';
-    const whatsappBaseUrl = 'https://wa.me';
-    const clientName = user.value?.name || customerData.name;
-    const clientPhone = user.value?.phoneNumber || customerData.phone;
+        const userId = user.value?.id || 22;
+        const clientName = user.value?.name || customerData.name;
+        const clientPhone = user.value?.phoneNumber || customerData.phone;
 
-    let message = `¡Hola! Quiero hacer un pedido:\n\n`;
-    productShoppingCart.value.forEach((product, index) => {
-        message += `${index + 1}. ${product.name} - ${product.quantity} x S/.${product.price}\n`;
-    });
+        const orderItems = productShoppingCart.value.map(item => ({
+            productId: item.id,
+            quantity: item.quantity,
+            price: item.price,
+            productName: item.name
+        }));
 
-    message += `\n*Total: S/.${totalPrice.value}*\n\n`;
-    message += `Mis datos:\nNombre: ${clientName}\nTeléfono: ${clientPhone}`;
+        const total = productShoppingCart.value.reduce(
+            (sum, product) => sum + Number(product.price) * product.quantity, 0
+        );
 
-    window.open(`${whatsappBaseUrl}/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
-    showCustomerModal.value = false;
-    closeModal();
+        let message = `¡Hola! Quiero hacer un pedido:\n\n`;
+        orderItems.forEach((item, index) => {
+            message += `${index + 1}. ${item.productName} - ${item.quantity} x S/.${item.price}\n`;
+        });
+        message += `\n*Total: S/.${total.toFixed(2)}*\n\n`;
+        message += `Mis datos:\nNombre: ${clientName}\nTeléfono: ${clientPhone}`;
+
+        const requestData = {
+            orderItems: orderItems,
+            total,
+            clientName,
+            clientPhone,
+            userId
+        };
+
+        console.log("Datos enviados a la API:", requestData);
+
+        const { data, error } = await useFetch('/api/v1/addWhatsAppOrder', {
+            method: 'POST',
+            body: requestData
+        });
+
+        if (error.value) throw new Error(error.value.message);
+
+        const orderId = data.value?.orderId || 'Por generar';
+        message += `\n\nN° de Orden: ${orderId}`;
+
+        window.open(`${whatsappBaseUrl}/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
+
+        productStore.clearShoppingCart();
+        showCustomerModal.value = false;
+        closeModal();
+        $toast.success('Pedido enviado correctamente');
+    } catch (error) {
+        $toast.error('Ocurrió un error al enviar el pedido');
+        $toast.error(`Detalle: ${error.message}`);
+    }
 };
+
 </script>
 
 <style scoped>

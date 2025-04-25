@@ -41,24 +41,51 @@
                         </div>
                         <h2 class="text-lg md:text-s3xl font-bold text-gray-900 dark:text-white mb-3">{{ product.name }}
                         </h2>
+                        <!-- Badge de promoción - Versión mejorada -->
+                        <div v-if="product.hasPromotion" class="bg-rose-600 text-white px-3 py-2 rounded-lg shadow-md">
+                            <div class="font-bold text-sm md:text-base flex items-center gap-1">
+                                <UIcon name="i-heroicons-tag" class="w-4 h-4" />
+                                {{ product.currentPromotion.isPercentage
+                                    ? `-${product.currentPromotion.discount}% DE DESCUENTO`
+                                    : `-S/. ${product.currentPromotion.discount} DE DESCUENTO` }}
+                            </div>
+                            <div class="text-xs mt-1 flex items-center">
+                                <UIcon name="i-heroicons-clock" class="w-3 h-3 mr-1" />
+                                Válido hasta {{ formatDate(product.currentPromotion.endDate) }}
+                            </div>
+                        </div>
 
-                        <div class="flex items-center justify-between mb-6">
+                        <!-- Sección de precios mejorada -->
+                        <div class="flex items-center justify-between my-4">
                             <div>
-                                <p class="text-lg md:text-2xl font-bold text-pink-500 dark:text-pink-400">
-                                    S/ {{ product.price }}
+                                <!-- Precio actual (con descuento si aplica) -->
+                                <p class="text-xl md:text-3xl font-bold text-rose-600 dark:text-rose-400">
+                                    S/ {{ product.currentPrice.toFixed(2) }}
                                 </p>
-                                <p v-if="product.originalPrice"
+
+                                <!-- Precio original tachado (si hay promoción) -->
+                                <p v-if="product.hasPromotion"
                                     class="text-sm text-gray-500 dark:text-gray-400 line-through">
-                                    S/ {{ product.originalPrice }}
+                                    S/ {{ product.originalPrice.toFixed(2) }}
+                                </p>
+
+                                <!-- Ahorro calculado -->
+                                <p v-if="product.hasPromotion"
+                                    class="text-xs text-emerald-600 dark:text-emerald-400 mt-1">
+                                    Ahorras S/ {{ (product.originalPrice - product.currentPrice).toFixed(2) }}
                                 </p>
                             </div>
-                            <div class="flex items-center">
-                                <div class="flex text-yellow-400">
+
+                            <!-- Valoración con estrellas -->
+                            <div class="flex flex-col items-end">
+                                <div class="flex text-amber-400">
                                     <UIcon v-for="i in 5" :key="i"
                                         :name="i <= 4 ? 'i-heroicons-star-solid' : 'i-heroicons-star-half-solid'"
                                         class="w-5 h-5" />
                                 </div>
-                                <span class="ml-1 text-sm text-gray-600 dark:text-gray-300">(24 reviews)</span>
+                                <span class="text-sm text-gray-600 dark:text-gray-300 mt-1">
+                                    (24 reseñas) <!-- Cambiado de "reviews" a "reseñas" -->
+                                </span>
                             </div>
                         </div>
 
@@ -102,11 +129,12 @@
 
 
                     <div class="space-y-3">
-                        <button @click="handleAddToCart(product)" :disabled="product.stock === 0"
+                        <button @click="handleAddToCart(product)"
+                            :disabled="product.stock === 0 || quantity > (product.stock - (productInCart ? productInCart.quantity : 0))"
                             class="w-full bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white py-3 px-6 rounded-lg font-medium transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-pink-500/20 flex items-center justify-center disabled:from-gray-400 disabled:to-gray-500 disabled:hover:from-gray-400 disabled:hover:to-gray-500 disabled:cursor-not-allowed">
                             <UIcon name="i-heroicons-shopping-cart-solid" class="w-5 h-5 mr-2" />
-                            {{ product.stock > 0 ? `Añadir al carrito - S/ ${(product.price * quantity)}` :
-                                'Producto agotado' }}
+                            {{ product.stock > 0 ? `Añadir al carrito - S/ ${(product.hasPromotion ?
+                                product.currentPrice : product.price) * quantity}` : 'Producto agotado' }}
                         </button>
 
 
@@ -162,37 +190,7 @@
         </Transition>
 
         <!-- Beneficios -->
-        <div class="max-w-6xl mx-auto mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm dark:shadow-gray-700/30 flex items-start">
-                <div class="bg-pink-100 dark:bg-pink-900/50 p-3 rounded-full mr-4">
-                    <UIcon name="i-heroicons-truck" class="w-6 h-6 text-pink-500 dark:text-pink-400" />
-                </div>
-                <div>
-                    <h3 class="font-semibold text-gray-900 dark:text-white mb-1">Envío rápido</h3>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">Recibe tu pedido en 24-48 horas</p>
-                </div>
-            </div>
-
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm dark:shadow-gray-700/30 flex items-start">
-                <div class="bg-pink-100 dark:bg-pink-900/50 p-3 rounded-full mr-4">
-                    <UIcon name="i-heroicons-arrow-path" class="w-6 h-6 text-pink-500 dark:text-pink-400" />
-                </div>
-                <div>
-                    <h3 class="font-semibold text-gray-900 dark:text-white mb-1">Devoluciones</h3>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">30 días para devoluciones gratuitas</p>
-                </div>
-            </div>
-
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm dark:shadow-gray-700/30 flex items-start">
-                <div class="bg-pink-100 dark:bg-pink-900/50 p-3 rounded-full mr-4">
-                    <UIcon name="i-heroicons-shield-check" class="w-6 h-6 text-pink-500 dark:text-pink-400" />
-                </div>
-                <div>
-                    <h3 class="font-semibold text-gray-900 dark:text-white mb-1">Pago seguro</h3>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">Protegido con encriptación SSL</p>
-                </div>
-            </div>
-        </div>
+        <Benefits></Benefits>
 
         <!-- Productos relacionados -->
         <div class="max-w-6xl mx-auto mt-16">
@@ -304,6 +302,7 @@ const currentImage = ref('');
 // Obtener datos del producto
 const { data: productData, error } = await useFetch<Product>(`/api/v1/product/${id}`);
 
+console.log(" debe de traer las promociones ", productData);
 
 if (error.value) {
     throw createError({
@@ -313,6 +312,7 @@ if (error.value) {
 }
 
 // Producto reactivo
+// Producto reactivo
 const product = computed(() => productData.value || {
     id: '',
     name: 'Cargando...',
@@ -321,7 +321,10 @@ const product = computed(() => productData.value || {
     stock: 0,
     imageUrl: '',
     category: null,
-    originalPrice: null
+    hasPromotion: false,
+    currentPrice: 0,
+    originalPrice: 0,
+    currentPromotion: null
 });
 
 // Inicializar imágenes del producto
@@ -366,14 +369,41 @@ const prevImage = () => {
 };
 
 // Función para añadir al carrito
-const addToCart = (productItem: Product) => {
-    const productWithQuantity = { ...productItem, quantity: quantity.value };
-    addProductShoppingCart(productWithQuantity);
-    isOpen.value = true;
-    $toast.success("¡Producto añadido al carrito!");
-    quantity.value = 1;
-};
+const addToCart = (relatedProduct: Product) => {
+    const shoppingCartStore = useProductShoppingCartStore();
 
+    // Verificar si el producto está agotado
+    if (relatedProduct.stock === 0) {
+        $toast.error("Este producto está agotado");
+        return;
+    }
+
+    // Calcular cuántas unidades ya hay en el carrito
+    const existingItem = shoppingCartStore.productShoppingCart.find(item => item.id === relatedProduct.id);
+    const alreadyInCart = existingItem ? existingItem.quantity : 0;
+    const totalRequested = alreadyInCart + 1; // Cantidad fija de 1 para productos relacionados
+
+    // Verificar si hay suficiente stock
+    if (totalRequested > relatedProduct.stock) {
+        const available = relatedProduct.stock - alreadyInCart;
+        $toast.error(`No hay suficiente stock. Solo puedes agregar ${available > 0 ? available : 0} unidad(es) más`);
+        return;
+    }
+
+    const productWithQuantity = {
+        ...relatedProduct,
+        quantity: 1,
+        price: relatedProduct.hasPromotion ? relatedProduct.currentPrice : relatedProduct.price
+    };
+
+    const added = shoppingCartStore.addProductShoppingCart(productWithQuantity);
+    if (added) {
+        isOpen.value = true;
+        $toast.success("¡Producto añadido al carrito!");
+    } else {
+        $toast.error("No se pudo agregar al carrito. Stock insuficiente.");
+    }
+};
 // Manejar teclado para navegación
 const handleKeyDown = (e: KeyboardEvent) => {
     if (!isImageModalOpen.value) return;
@@ -388,19 +418,43 @@ const handleKeyDown = (e: KeyboardEvent) => {
 };
 
 // Función para manejar la adición al carrito con validación
+
 const handleAddToCart = (productItem: Product) => {
+    const shoppingCartStore = useProductShoppingCartStore();
+
+    // Verificar si el producto está agotado
     if (productItem.stock === 0) {
         $toast.error("Este producto está agotado");
         return;
     }
 
-    if (quantity.value > productItem.stock) {
-        $toast.error(`No hay suficiente stock. Solo quedan ${productItem.stock} unidades`);
+    // Calcular cuántas unidades ya hay en el carrito
+    const existingItem = shoppingCartStore.productShoppingCart.find(item => item.id === productItem.id);
+    const alreadyInCart = existingItem ? existingItem.quantity : 0;
+    const totalRequested = alreadyInCart + quantity.value;
+
+    // Verificar si hay suficiente stock
+    if (totalRequested > productItem.stock) {
+        const available = productItem.stock - alreadyInCart;
+        $toast.error(`No hay suficiente stock. Solo puedes agregar ${available > 0 ? available : 0} unidad(es) más`);
         return;
     }
 
-    addToCart(productItem);
-    isOpen.value = true; // Aquí abrimos el modal solo si se pudo agregar al carrito
+    // Crear un objeto con el precio correcto (con descuento si aplica)
+    const productToAdd = {
+        ...productItem,
+        quantity: quantity.value,
+        price: productItem.hasPromotion ? productItem.currentPrice : productItem.price
+    };
+
+    const added = shoppingCartStore.addProductShoppingCart(productToAdd);
+    if (added) {
+        isOpen.value = true;
+        $toast.success("¡Producto añadido al carrito!");
+        quantity.value = 1;
+    } else {
+        $toast.error("No se pudo agregar al carrito. Stock insuficiente.");
+    }
 };
 
 
@@ -412,6 +466,19 @@ onBeforeUnmount(() => {
     window.removeEventListener('keydown', handleKeyDown);
     document.body.style.overflow = '';
 });
+
+const shoppingCartStore = useProductShoppingCartStore();
+const productInCart = computed(() => {
+    return shoppingCartStore.productShoppingCart.find(item => item.id === product.value.id);
+});
+
+const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString('es-PE', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+    });
+};
 </script>
 
 <style scoped>

@@ -1,12 +1,11 @@
 <template>
     <div>
         <!-- Mobile Toggle Button -->
-        <button v-if="!isMobileSidebarOpen && isMobile" @click="openMobileSidebar" class="md:hidden fixed top-0 left-0 z-50 p-3 
-       
-         
-         hover:bg-white dark:hover:bg-gray-700" aria-label="Menú">
+        <button v-if="!isMobileSidebarOpen && isMobile" @click="openMobileSidebar"
+            class="md:hidden fixed top-0 left-0 z-50 p-3 hover:bg-white dark:hover:bg-gray-700" aria-label="Menú">
             <i class="ri-menu-line text-gray-700 dark:text-gray-300 text-xl"></i>
         </button>
+
         <!-- Sidebar -->
         <div ref="sidebar" :class="[
             'fixed md:sticky top-0 z-40 h-screen transition-all duration-300 flex flex-col justify-between',
@@ -79,8 +78,9 @@
             <nav class="flex-1 overflow-y-auto py-2 px-2">
                 <ul class="space-y-1">
                     <li v-for="item in menuItems" :key="item.to">
-                        <NuxtLink :to="item.to" class="flex items-center p-3 rounded-xl transition-all group relative"
-                            :class="[
+                        <!-- Items without submenu -->
+                        <NuxtLink v-if="!item.submenu" :to="item.to"
+                            class="flex items-center p-3 rounded-xl transition-all group relative" :class="[
                                 $route.path.startsWith(item.to)
                                     ? 'bg-indigo-50/80 text-indigo-600 dark:bg-gray-700/80 dark:text-indigo-400'
                                     : 'hover:bg-gray-100/70 dark:hover:bg-gray-700/50 text-gray-700 dark:text-gray-300',
@@ -111,6 +111,60 @@
                                 </transition>
                             </div>
                         </NuxtLink>
+
+                        <!-- Items with submenu -->
+                        <div v-else>
+                            <button @click="toggleSubmenu(item.to)"
+                                class="flex items-center justify-between w-full p-3 rounded-xl transition-all group relative"
+                                :class="[
+                                    isSubmenuOpen(item.to) || $route.path.startsWith(item.to)
+                                        ? 'bg-indigo-50/80 text-indigo-600 dark:bg-gray-700/80 dark:text-indigo-400'
+                                        : 'hover:bg-gray-100/70 dark:hover:bg-gray-700/50 text-gray-700 dark:text-gray-300',
+                                    'hover:shadow-sm hover:shadow-indigo-100/30 dark:hover:shadow-indigo-900/10'
+                                ]">
+                                <div class="flex items-center">
+                                    <div class="relative flex-shrink-0">
+                                        <Icon :name="item.icon"
+                                            class="w-5 h-5 transition-transform group-hover:scale-110" />
+                                        <div v-if="$route.path.startsWith(item.to)"
+                                            class="absolute -left-2 top-1/2 -translate-y-1/2 w-1 h-6 bg-indigo-500 rounded-full">
+                                        </div>
+                                    </div>
+                                    <transition name="slide-fade">
+                                        <span v-if="showFullContent" class="ml-3 font-medium truncate">
+                                            {{ item.title }}
+                                        </span>
+                                    </transition>
+                                </div>
+                                <transition name="fade">
+                                    <Icon v-if="showFullContent"
+                                        :name="isSubmenuOpen(item.to) ? 'heroicons:chevron-up' : 'heroicons:chevron-down'"
+                                        class="w-4 h-4 ml-2 text-gray-500 dark:text-gray-400 transition-transform duration-200"
+                                        :class="{ 'transform rotate-180': isSubmenuOpen(item.to) }" />
+                                </transition>
+                            </button>
+
+                            <transition name="slide-fade">
+                                <div v-if="isSubmenuOpen(item.to) && showFullContent" class="pl-8 mt-1 space-y-1">
+                                    <NuxtLink v-for="subItem in item.submenu" :key="subItem.to" :to="subItem.to"
+                                        class="flex items-center p-2 rounded-lg transition-all group" :class="[
+                                            $route.path === subItem.to
+                                                ? 'bg-indigo-100/50 text-indigo-600 dark:bg-gray-700 dark:text-indigo-400'
+                                                : 'hover:bg-gray-100/50 dark:hover:bg-gray-700/30 text-gray-600 dark:text-gray-300',
+                                        ]" @click="closeMobileSidebar">
+                                        <Icon :name="subItem.icon" class="w-4 h-4 mr-2" />
+                                        <span class="text-sm">{{ subItem.title }}</span>
+                                        <span v-if="subItem.badge" class="ml-auto px-1.5 py-0.5 text-xs rounded-full"
+                                            :class="[
+                                                subItem.badge === 'new' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400' : '',
+                                                subItem.badge === 'pro' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400' : ''
+                                            ]">
+                                            {{ subItem.badge === 'new' ? 'Nuevo' : 'Pro' }}
+                                        </span>
+                                    </NuxtLink>
+                                </div>
+                            </transition>
+                        </div>
                     </li>
                 </ul>
             </nav>
@@ -151,8 +205,9 @@ const isMobileSidebarOpen = ref(false);
 const isMobile = ref(false);
 const firstLoad = ref(true);
 const sidebar = ref(null);
+const openSubmenus = ref([]);
 
-// Menu items
+// Menu items with submenus
 const menuItems = [
     {
         to: '/dashboard',
@@ -170,15 +225,31 @@ const menuItems = [
         icon: 'heroicons:shopping-bag',
         badge: 'new'
     },
-    {
-        to: '/dashboard/categories',
-        title: 'Gestión de Categorías',
-        icon: 'heroicons:rectangle-stack'
-    },
+
     {
         to: '/dashboard/products',
         title: 'Administrar Productos',
-        icon: 'heroicons:archive-box'
+        icon: 'heroicons:archive-box',
+        submenu: [
+            {
+                to: '/dashboard/products/',
+                title: 'Ver Productos',
+                icon: 'heroicons:list-bullet'
+            },
+
+            {
+                to: '/dashboard/products/categories',
+                title: 'Categorías',
+                icon: 'heroicons:tag'
+            },
+
+            {
+                to: '/dashboard/products/promotion',
+                title: 'Promociones',
+                icon: 'heroicons:sparkles',
+                badge: 'pro'
+            }
+        ]
     },
     {
         to: '/dashboard/users',
@@ -192,6 +263,19 @@ const menuItems = [
         badge: 'pro'
     },
 ];
+
+// Submenu functions
+const toggleSubmenu = (path) => {
+    if (openSubmenus.value.includes(path)) {
+        openSubmenus.value = openSubmenus.value.filter(item => item !== path);
+    } else {
+        openSubmenus.value.push(path);
+    }
+};
+
+const isSubmenuOpen = (path) => {
+    return openSubmenus.value.includes(path) || menuItems.find(item => item.to === path)?.submenu?.some(subItem => route.path.startsWith(subItem.to));
+};
 
 // Computed properties
 const showFullContent = computed(() => {
@@ -262,6 +346,13 @@ watch(() => route.path, () => {
 onMounted(() => {
     checkScreenSize();
     window.addEventListener('resize', checkScreenSize);
+
+    // Open submenu if current route matches any subitem
+    menuItems.forEach(item => {
+        if (item.submenu && item.submenu.some(subItem => route.path.startsWith(subItem.to))) {
+            openSubmenus.value.push(item.to);
+        }
+    });
 });
 
 onBeforeUnmount(() => {

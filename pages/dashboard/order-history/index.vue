@@ -1,49 +1,82 @@
 <template>
-    <div class="max-w-7xl mx-auto p-4 sm:p-6">
-        <!-- Header -->
+    <div class="max-w-9xl mx-auto p-4">
+
+        <!-- Breadcrumb -->
+        <Breadcrumb :items="[
+
+            { title: 'Historial de orden', to: '/dashboard/orders' },
+
+        ]" class="mb-6" />
+
+
+        <!-- Encabezado -->
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
             <div>
-                <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Order History</h1>
-                <p class="text-gray-500 dark:text-gray-400 mt-1">Review your past purchases and order status</p>
+                <h1 class="text-2xl font-bold text-gray-800 dark:text-white">
+                    {{ isAdmin ? 'Todos los Pedidos' : 'Mis Pedidos' }}
+                </h1>
+                <p class="text-gray-500 dark:text-gray-400 mt-1">
+                    {{ isAdmin ? 'Administra todos los pedidos del sistema' :
+                        'Revisa tus compras anteriores y estado de pedidos' }}
+                </p>
             </div>
-            <div class="relative">
-                <select v-model="filterStatus" @change="fetchOrders"
-                    class="pl-4 pr-8 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none">
-                    <option value="ALL">All Orders</option>
-                    <option value="PENDING">Pending</option>
-                    <option value="COMPLETED">Completed</option>
-                    <option value="CANCELLED">Cancelled</option>
-                </select>
-                <i class="ri-arrow-down-s-line absolute right-3 top-2.5 text-gray-400 pointer-events-none"></i>
+            <div class="flex gap-4">
+                <!-- Filtro de Cliente (solo para admin) -->
+                <div v-if="isAdmin" class="relative">
+                    <select v-model="selectedClient" @change="fetchOrders"
+                        class="pl-4 pr-8 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none">
+                        <option value="ALL">Todos los Clientes</option>
+                        <option v-for="client in clients" :key="client.id" :value="client.id">
+                            {{ client.name }} ({{ client.email }})
+                        </option>
+                    </select>
+                    <i class="ri-arrow-down-s-line absolute right-3 top-2.5 text-gray-400 pointer-events-none"></i>
+                </div>
+
+                <!-- Filtro de Estado -->
+                <div class="relative">
+                    <select v-model="filterStatus" @change="fetchOrders"
+                        class="pl-4 pr-8 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none">
+                        <option value="ALL">Todos los Estados</option>
+                        <option value="PENDING">Pendiente</option>
+                        <option value="PROCESSED">Procesado</option>
+                        <option value="SHIPPED">Enviado</option>
+                        <option value="DELIVERED">Entregado</option>
+                        <option value="CANCELED">Cancelado</option>
+                    </select>
+                    <i class="ri-arrow-down-s-line absolute right-3 top-2.5 text-gray-400 pointer-events-none"></i>
+                </div>
             </div>
         </div>
 
-        <!-- Loading State -->
+        <!-- Estado de Carga -->
         <div v-if="loading" class="flex flex-col items-center justify-center py-16">
             <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
-            <p class="text-gray-600 dark:text-gray-400">Loading your orders...</p>
+            <p class="text-gray-600 dark:text-gray-400">Cargando pedidos...</p>
         </div>
 
-        <!-- Empty State -->
+        <!-- Estado Vacío -->
         <div v-else-if="orders.length === 0"
             class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-8 text-center">
             <div
                 class="mx-auto w-20 h-20 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mb-4">
                 <i class="ri-shopping-bag-line text-3xl text-gray-400 dark:text-gray-500"></i>
             </div>
-            <h3 class="text-lg font-medium text-gray-800 dark:text-white mb-2">No orders found</h3>
-            <p class="text-gray-500 dark:text-gray-400">You haven't placed any orders yet</p>
-            <NuxtLink to="/products"
+            <h3 class="text-lg font-medium text-gray-800 dark:text-white mb-2">No se encontraron pedidos</h3>
+            <p class="text-gray-500 dark:text-gray-400">
+                {{ isAdmin ? 'No hay pedidos que coincidan con tus filtros' : 'Aún no has realizado ningún pedido' }}
+            </p>
+            <NuxtLink v-if="!isAdmin" to="/products"
                 class="inline-block mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                Browse Products
+                Ver Productos
             </NuxtLink>
         </div>
 
-        <!-- Orders List -->
+        <!-- Lista de Pedidos -->
         <div v-else class="space-y-4">
             <div v-for="order in orders" :key="order.id"
                 class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                <!-- Order Header -->
+                <!-- Encabezado del Pedido -->
                 <div
                     class="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row justify-between gap-4">
                     <div class="flex items-start gap-4">
@@ -51,9 +84,11 @@
                             <i class="ri-shopping-bag-2-line text-xl"></i>
                         </div>
                         <div>
-                            <h2 class="text-lg font-semibold text-gray-800 dark:text-white">Order #{{ order.id }}</h2>
+                            <h2 class="text-lg font-semibold text-gray-800 dark:text-white">Pedido #{{ order.id }}</h2>
                             <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                                Placed on {{ formatDate(order.createdAt) }}
+                                Realizado el {{ formatDate(order.createdAt) }}
+                                <span v-if="isAdmin" class="block">por {{ order.clientName || 'Invitado' }} ({{
+                                    order.clientPhone || 'Sin teléfono' }})</span>
                             </p>
                         </div>
                     </div>
@@ -62,18 +97,18 @@
                             {{ formatStatus(order.status) }}
                         </span>
                         <p class="text-lg font-bold text-gray-800 dark:text-white mt-2">
-                            S/. {{ parseFloat(order.total.toString()) }}
+                            S/. {{ order.total }}
                         </p>
                     </div>
                 </div>
 
-                <!-- Order Items -->
+                <!-- Artículos del Pedido -->
                 <div class="divide-y divide-gray-200 dark:divide-gray-700">
                     <div v-for="(itemGroup, index) in groupItemsByProduct(order.orderItems)" :key="index"
                         class="p-4 sm:p-6">
                         <div class="flex gap-4">
                             <div class="flex-shrink-0">
-                                <img :src="itemGroup[0].product.imageUrl || 'https://via.placeholder.com/80'"
+                                <img :src="itemGroup[0].product.imageUrl || '/placeholder-product.png'"
                                     class="h-16 w-16 rounded-lg object-cover border border-gray-200 dark:border-gray-700">
                             </div>
                             <div class="flex-1 min-w-0">
@@ -81,28 +116,39 @@
                                     {{ itemGroup[0].product.name }}
                                 </h3>
                                 <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                                    Quantity: {{ itemGroup.length }}
+                                    Cantidad: {{ itemGroup.length }}
                                 </p>
                             </div>
                             <div class="text-base font-medium text-gray-800 dark:text-white">
-                                S/. {{(itemGroup.reduce((total, item) => total + item.price * item.quantity, 0))}}
+                                S/. {{(itemGroup.reduce((total, item) => total + item.price * item.quantity,
+                                    0))}}
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Order Footer -->
-                <div class="p-4 sm:p-6 bg-gray-50 dark:bg-gray-700/50 flex justify-end">
-                    <NuxtLink :to="`/orders/${order.id}`"
+                <!-- Pie del Pedido -->
+                <div class="p-4 sm:p-6 bg-gray-50 dark:bg-gray-700/50 flex justify-between items-center">
+                    <div v-if="isAdmin" class="flex gap-2">
+                        <button @click="updateOrderStatus(order.id, 'DELIVERED')"
+                            class="px-3 py-1 text-xs bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-200 rounded-full font-semibold hover:bg-green-200 dark:hover:bg-green-800">
+                            Marcar como Entregado
+                        </button>
+                        <button @click="updateOrderStatus(order.id, 'CANCELED')"
+                            class="px-3 py-1 text-xs bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-200 rounded-full font-semibold hover:bg-red-200 dark:hover:bg-red-800">
+                            Cancelar Pedido
+                        </button>
+                    </div>
+                    <NuxtLink :to="`/dashboard/order-history/${order.id}`"
                         class="flex items-center gap-2 px-4 py-2 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors">
-                        <span>View Details</span>
+                        <span>Ver Detalles</span>
                         <i class="ri-arrow-right-line"></i>
                     </NuxtLink>
                 </div>
             </div>
         </div>
 
-        <!-- Pagination -->
+        <!-- Paginación -->
         <div v-if="orders.length > 0 && totalPages > 1" class="flex justify-center mt-8">
             <nav class="flex items-center gap-2">
                 <button @click="prevPage" :disabled="currentPage === 1"
@@ -128,25 +174,28 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watchEffect } from "vue";
-import { useRoute } from "vue-router";
+import { ref, computed, watchEffect, onMounted } from "vue";
 
-const route = useRoute();
 const { user } = useUserSession();
 const orders = ref<any[]>([]);
+const clients = ref<any[]>([]);
 const loading = ref(true);
 const filterStatus = ref("ALL");
+const selectedClient = ref("ALL");
 const currentPage = ref(1);
-const itemsPerPage = ref(5);
+const itemsPerPage = ref(10);
 const totalOrders = ref(0);
-
 definePageMeta({
     middleware: ['auth'],
     layout: 'dashboard',
 });
 
+// Verificar si el usuario es admin
+const isAdmin = computed(() => {
+    return user.value?.role === 'ADMINISTRADOR';
+});
 
-// Format date for display
+// Formatear fecha para mostrar
 const formatDate = (dateString: string) => {
     const options: Intl.DateTimeFormatOptions = {
         year: 'numeric',
@@ -155,20 +204,22 @@ const formatDate = (dateString: string) => {
         hour: '2-digit',
         minute: '2-digit'
     };
-    return new Date(dateString).toLocaleDateString('en-US', options);
+    return new Date(dateString).toLocaleDateString('es-ES', options);
 };
 
-// Format status for display
+// Formatear estado para mostrar
 const formatStatus = (status: string) => {
     const statusMap: Record<string, string> = {
-        PENDING: "Pending",
-        COMPLETED: "Completed",
-        CANCELLED: "Cancelled"
+        PENDING: "Pendiente",
+        PROCESSED: "Procesado",
+        SHIPPED: "Enviado",
+        DELIVERED: "Entregado",
+        CANCELED: "Cancelado"
     };
     return statusMap[status] || status;
 };
 
-// Status badge classes
+// Clases para el badge de estado
 const statusClass = (status: string): string => {
     const classes: Record<string, string> = {
         PENDING: "bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-200",
@@ -178,7 +229,7 @@ const statusClass = (status: string): string => {
     return classes[status] || "bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200";
 };
 
-// Group order items by product
+// Agrupar artículos del pedido por producto
 const groupItemsByProduct = (orderItems: any[]) => {
     const grouped: any[] = [];
     const map = new Map();
@@ -197,7 +248,7 @@ const groupItemsByProduct = (orderItems: any[]) => {
     return grouped;
 };
 
-// Pagination
+// Paginación
 const totalPages = computed(() => Math.ceil(totalOrders.value / itemsPerPage.value));
 
 const visiblePages = computed(() => {
@@ -236,14 +287,52 @@ const goToPage = (page: number) => {
     fetchOrders();
 };
 
-// Fetch orders
-const fetchOrders = async () => {
-    if (!user.value?.usuarioId) return;
+// Obtener todos los clientes (para admin)
+const fetchClients = async () => {
+    try {
+        const { data, error } = await useFetch('/api/v1/users/clients');
+        console.log("data user cleinte", data);
 
+        if (error.value) {
+            throw error.value;
+        }
+
+        clients.value = data.value?.clients || [];
+    } catch (error) {
+        console.error("Error al obtener clientes:", error);
+
+    }
+};
+
+// Actualizar estado del pedido (solo admin)
+const updateOrderStatus = async (orderId: number, status: string) => {
+    try {
+        console.log("estado que estamos enviando", status);
+
+        const { error } = await useFetch(`/api/v1/orders/${orderId}/status`, {
+            method: 'PATCH',
+            body: { status }
+        });
+
+        if (error.value) {
+            throw error.value;
+        }
+
+        fetchOrders(); // Refrescar pedidos después de actualizar
+    } catch (error) {
+        console.error("Error al actualizar estado del pedido:", error);
+    }
+};
+
+// Obtener pedidos
+const fetchOrders = async () => {
     loading.value = true;
     try {
-        const { data } = await useFetch(`/api/v1/ordersByUser/${user.value.usuarioId}`, {
+        let url = isAdmin.value ? '/api/v1/orders' : `/api/v1/ordersByUser/${user.value?.id}`;
+
+        const { data } = await useFetch(url, {
             query: {
+                userId: isAdmin.value && selectedClient.value !== 'ALL' ? selectedClient.value : undefined,
                 status: filterStatus.value === "ALL" ? undefined : filterStatus.value,
                 page: currentPage.value,
                 limit: itemsPerPage.value
@@ -253,39 +342,43 @@ const fetchOrders = async () => {
         orders.value = data.value?.orders || [];
         totalOrders.value = data.value?.total || 0;
     } catch (error) {
-        console.error("Error fetching orders:", error);
+        console.error("Error al obtener pedidos:", error);
+        orders.value = [];
+        totalOrders.value = 0;
     } finally {
         loading.value = false;
     }
 };
 
-// Watch for user changes
+// Carga inicial
+onMounted(async () => {
+    if (isAdmin.value) {
+        await fetchClients();
+    }
+    await fetchOrders();
+});
+
+// Observar cambios
 watchEffect(() => {
-    if (user.value?.usuarioId) {
+    if (user.value) {
+        currentPage.value = 1;
         fetchOrders();
     }
 });
 </script>
 
 <style scoped>
-/* Animation for loading */
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
 @keyframes spin {
     to {
         transform: rotate(360deg);
     }
 }
 
-.animate-spin {
-    animation: spin 1s linear infinite;
-}
-
-/* Transition for hover effects */
 .transition-shadow {
     transition: box-shadow 0.2s ease-in-out;
-}
-
-/* Custom styling for status badges */
-.status-badge {
-    @apply px-3 py-1 text-xs rounded-full font-semibold;
 }
 </style>

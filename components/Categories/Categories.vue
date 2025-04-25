@@ -29,7 +29,7 @@
 
         <!-- Categories Grid -->
         <div v-else class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
-            <NuxtLink v-for="category in data" :key="category.id" :to="`/category/${category.slug || category.id}`"
+            <NuxtLink v-for="category in data" :key="category.id" :to="`/category/${category.id}`"
                 class="category-card bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 overflow-hidden hover:shadow-lg transition-all duration-300 group">
 
                 <div class="p-5 flex flex-col items-center text-center h-full">

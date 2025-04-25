@@ -83,7 +83,6 @@ export const userById = async (event: H3Event) => {
     return user;
 };
 
-
 export const updateUserPhone = async (event: H3Event) => {
     try {
         const id = event.context.params?.id;
@@ -92,46 +91,50 @@ export const updateUserPhone = async (event: H3Event) => {
         if (!id || !body?.phoneNumber || !body?.address) {
             return { error: "ID de usuario, número de teléfono y dirección son requeridos." };
         }
+
+        // Actualizar número de teléfono
         const user = await prisma.user.update({
             where: { id: Number(id) },
             data: { phoneNumber: body.phoneNumber },
         });
 
-
-
-        // Crear o actualizar la dirección
-        // Buscar si el usuario ya tiene una dirección registrada
+        // Verificar dirección existente
         const existingAddress = await prisma.address.findFirst({
             where: { userId: Number(id) }
         });
 
+        let updatedAddress;
+
         if (existingAddress) {
-            // Si existe, actualizarla
-            await prisma.address.update({
-                where: { id: existingAddress.id },  // Usa el `id` único de la dirección
+            updatedAddress = await prisma.address.update({
+                where: { id: existingAddress.id },
                 data: {
                     street: body.address.street,
                     city: body.address.city,
                     country: body.address.country,
                     postalCode: body.address.postalCode,
-
                 }
             });
         } else {
-            // Si no existe, crear una nueva
-            await prisma.address.create({
+            updatedAddress = await prisma.address.create({
                 data: {
                     userId: Number(id),
                     street: body.address.street,
                     city: body.address.city,
                     country: body.address.country,
                     postalCode: body.address.postalCode,
-
                 }
             });
         }
-        return { userId: user.id, message: "Número actualizado correctamente." };
+
+        return {
+            id: user.id,
+            phoneNumber: user.phoneNumber,
+            address: updatedAddress, // Retorna la dirección actualizada/creada
+            message: "Datos actualizados correctamente."
+        };
     } catch (error: unknown) {
+        console.error(error);
         return { error: "Error interno del servidor." };
     }
 };
@@ -204,5 +207,22 @@ export const updateUser = async (event: H3Event): Promise<string> => {
             name: "Error updating user",
             message: error instanceof Error ? error.message : "Unknown error",
         });
+    }
+};
+
+export const getClients = async (event: H3Event) => {
+
+    console.log("Se ejecutó getClients"); // <--- este debe verse
+
+    try {
+        const clients = await prisma.user.findMany({
+            where: { roleId: 2 }
+        });
+
+        console.log("Clientes encontrados:", clients.length);
+        return { clients };
+    } catch (error) {
+        console.error("Error:", error);
+        return { error: "Error interno" };
     }
 };

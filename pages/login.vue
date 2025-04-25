@@ -73,6 +73,10 @@
 const signInWithGoogle = () => {
   window.location.href = '/auth/google'
 }
+
+definePageMeta({
+  middleware: ['redirect-if-logged']
+})
 </script>
 
 <style scoped>

@@ -1,10 +1,14 @@
 <template>
-    <div class="max-w-7xl mx-auto p-6">
+    <div class="max-w-9xl mx-auto p-4">
+        <Breadcrumb :items="[
+            { title: 'Productos', to: '/dashboard/products' },
+
+        ]" />
         <!-- Header Section -->
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
             <div>
                 <h1 class="text-3xl font-bold text-gray-800 dark:text-white">Gestión de Productos</h1>
-                <p class="text-gray-500 dark:text-gray-400 mt-1">**Gestiona tu inventario de productos y detalles**.</p>
+                <p class="text-gray-500 dark:text-gray-400 mt-1">Gestiona tu inventario de productos y detalles</p>
             </div>
             <button @click="openModal()"
                 class="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-lg hover:from-blue-700 hover:to-blue-600 transition-all shadow-md hover:shadow-lg">
@@ -43,85 +47,104 @@
             class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
             <!-- Desktop Table (hidden on mobile) -->
             <div class="hidden md:block overflow-x-auto">
+
                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                        <thead class="bg-gray-50 dark:bg-gray-700">
-                            <tr>
-                                <th scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                    Producto</th>
-                                <th scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                    Categoría</th>
-                                <th scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                    Precio</th>
-                                <th scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                    Stock</th>
-                                <th scope="col"
-                                    class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                    Acción</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                            <tr v-for="product in products" :key="product.id"
-                                class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        <div class="flex-shrink-0 h-10 w-10">
-                                            <img class="h-10 w-10 rounded-md object-cover"
-                                                :src="product.imageUrl || 'https://via.placeholder.com/40'"
-                                                alt="Product image">
-                                        </div>
-                                        <div class="ml-4">
-                                            <div class="text-sm font-medium text-gray-900 dark:text-white">{{
-                                                product.name
+                    <thead class="bg-gray-50 dark:bg-gray-700">
+                        <tr>
+                            <th scope="col"
+                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                Producto</th>
+                            <th scope="col"
+                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                Categoría</th>
+                            <th scope="col"
+                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                Prommocion</th>
+                            <th scope="col"
+                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                Precio</th>
+                            <th scope="col"
+                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                Stock</th>
+                            <th scope="col"
+                                class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                        <tr v-for="product in products" :key="product.id"
+                            class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 h-10 w-10">
+                                        <img class="h-10 w-10 rounded-md object-cover"
+                                            :src="product.imageUrl || 'https://via.placeholder.com/40'"
+                                            alt="Product image">
+                                    </div>
+                                    <div class="ml-4">
+                                        <div class="text-sm font-medium text-gray-900 dark:text-white">{{
+                                            product.name
                                             }}</div>
-                                            <div class="text-sm text-gray-500 dark:text-gray-400 line-clamp-1">{{
-                                                truncateText(product.description, 50) }}</div>
-                                        </div>
+                                        <div class="text-sm text-gray-500 dark:text-gray-400 line-clamp-1">{{
+                                            truncateText(product.description, 50) }}</div>
                                     </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span
-                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
-                                        {{ getCategoryName(product.categoryId) }}
-                                    </span>
-                                </td>
-                                <td
-                                    class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
-                                    S/. {{ product.price }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span :class="{
-                                        'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200': product.stock > 10,
-                                        'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200': product.stock > 0 && product.stock <= 10,
-                                        'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200': product.stock === 0
-                                    }" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
-                                        {{ product.stock }} en stock
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                    <div class="flex justify-end gap-2">
-                                        <button @click="openViewModal(product)"
-                                            class="text-green-600 dark:text-green-400 hover:text-green-900 dark:hover:text-green-300 transition-colors">
-                                            <i class="ri-eye-line"></i>
-                                        </button>
-                                        <button @click="openModal(product)"
-                                            class="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 transition-colors">
-                                            <i class="ri-pencil-line"></i>
-                                        </button>
-                                        <button @click="deleteProduct(product.id)"
-                                            class="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300 transition-colors">
-                                            <i class="ri-delete-bin-line"></i>
-                                        </button>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span
+                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
+                                    {{ getCategoryName(product.categoryId) }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div v-if="product.hasPromotion"
+                                    class="promotion-badge bg-red-500 text-white p-2 rounded-lg">
+                                    <div class="flex items-center gap-2">
+                                        <span class="font-bold text-lg">
+                                            {{ promotionText }}
+                                        </span>
+                                        <span class="text-sm">
+                                            Válido hasta {{ formatDate(product.promotions[0].endDate) }}
+                                        </span>
                                     </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                                    <div class="flex items-center mt-1">
+                                        <span class="line-through mr-2">S/ {{ product.originalPrice }}</span>
+                                        <span class="font-bold text-xl">S/ {{ product.currentPrice }}</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                                S/. {{ product.price }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span :class="{
+                                    'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200': product.stock > 10,
+                                    'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200': product.stock > 0 && product.stock <= 10,
+                                    'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200': product.stock === 0
+                                }" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
+                                    {{ product.stock }} en stock
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <div class="flex justify-end gap-2">
+                                    <button @click="openViewModal(product)"
+                                        class="text-green-600 dark:text-green-400 hover:text-green-900 dark:hover:text-green-300 transition-colors">
+                                        <i class="ri-eye-line"></i>
+                                    </button>
+                                    <button @click="openModal(product)"
+                                        class="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 transition-colors">
+                                        <i class="ri-pencil-line"></i>
+                                    </button>
+                                    <button @click="deleteProduct(product.id)"
+                                        class="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300 transition-colors">
+                                        <i class="ri-delete-bin-line"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
                 </table>
+
             </div>
 
             <!-- Mobile Cards (shown on mobile) -->
@@ -419,6 +442,8 @@
 
 <script setup lang="ts">
 import { ref, reactive, watchEffect, nextTick } from "vue";
+import { format } from 'date-fns';
+
 import { useNuxtApp } from "#app";
 import { useFirebaseUpload } from '~/composables/useFirebaseUpload';
 const showViewModal = ref(false);
@@ -456,6 +481,23 @@ const formState = reactive({
 });
 const showViewProductModal = ref<boolean>(false);
 const selectedProduct = ref<Product | null>(null);
+const props = defineProps({
+    product: {
+        type: Object,
+        required: true
+    }
+});
+
+const promotionText = computed(() => {
+    const promo = props.product.promotions[0];
+    return promo.isPercentage
+        ? `${promo.discount}% DE DESCUENTO`
+        : `S/ ${promo.discount} DE DESCUENTO`;
+});
+
+const formatDate = (dateString) => {
+    return format(new Date(dateString), 'dd/MM/yyyy');
+};
 
 // Define Product interface (add this at the top of your script)
 interface Product {
@@ -480,6 +522,8 @@ const fetchProducts = async () => {
     try {
         const { data } = await useFetch("/api/v1/product");
         products.value = data.value || [];
+        console.log("data product", data);
+
     } catch (err) {
         error.value = "Failed to load products.";
     } finally {

@@ -26,18 +26,18 @@
                     <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
                         <div class="flex flex-col items-center">
                             <div class="relative mb-4">
-                                <img :src="user.avatar || `https://ui-avatars.com/api/?name=${user.name}&background=random`"
+                                <img :src="currentUser.avatar || `https://ui-avatars.com/api/?name=${currentUser.name}&background=random`"
                                     class="w-32 h-32 rounded-full object-cover border-4 border-white dark:border-gray-800 shadow"
                                     alt="Avatar" />
                                 <UButton icon="i-heroicons-camera" color="gray" variant="solid" size="sm"
                                     class="absolute bottom-0 right-0" @click="isAvatarModalOpen = true" />
                             </div>
-                            <h2 class="text-xl font-bold text-gray-900 dark:text-white">{{ user.name }}</h2>
-                            <p class="text-gray-600 dark:text-gray-400">{{ user.email }}</p>
+                            <h2 class="text-xl font-bold text-gray-900 dark:text-white">{{ currentUser.name }}</h2>
+                            <p class="text-gray-600 dark:text-gray-400">{{ currentUser.email }}</p>
 
                             <!-- Badge de rol -->
-                            <UBadge :label="user.role" :color="user.role === 'ADMINISTRADOR' ? 'red' : 'primary'"
-                                class="mt-2" />
+                            <UBadge :label="currentUser.role"
+                                :color="currentUser.role === 'ADMINISTRADOR' ? 'red' : 'primary'" class="mt-2" />
 
                             <div class="mt-4 flex space-x-3">
                                 <UButton icon="i-heroicons-pencil" label="Editar perfil" color="primary" variant="solid"
@@ -52,22 +52,22 @@
                             <ul class="space-y-3">
                                 <li class="flex items-center">
                                     <UIcon name="i-heroicons-envelope" class="text-gray-500 dark:text-gray-400 mr-3" />
-                                    <span class="text-gray-600 dark:text-gray-300">{{ user.email }}</span>
+                                    <span class="text-gray-600 dark:text-gray-300">{{ currentUser.email }}</span>
                                 </li>
                                 <li class="flex items-center">
                                     <UIcon name="i-heroicons-phone" class="text-gray-500 dark:text-gray-400 mr-3" />
                                     <span class="text-gray-600 dark:text-gray-300">
-                                        {{ user.phoneNumber || 'No especificado' }}</span>
+                                        {{ currentUser.phoneNumber || 'No especificado' }}</span>
                                 </li>
                                 <li class="flex items-center">
                                     <UIcon name="i-heroicons-shield-check"
                                         class="text-gray-500 dark:text-gray-400 mr-3" />
-                                    <span class="text-gray-600 dark:text-gray-300">Rol: {{ user.role }}</span>
+                                    <span class="text-gray-600 dark:text-gray-300">Rol: {{ currentUser.role }}</span>
                                 </li>
                                 <li class="flex items-center">
                                     <UIcon name="i-heroicons-calendar" class="text-gray-500 dark:text-gray-400 mr-3" />
                                     <span class="text-gray-600 dark:text-gray-300">Miembro desde {{
-                                        formatDate(user.createdAt) }}</span>
+                                        formatDate(currentUser.createdAt) }}</span>
                                 </li>
                             </ul>
                         </div>
@@ -77,7 +77,7 @@
                 <!-- Columna derecha - Contenido adicional -->
                 <div class="lg:col-span-2 space-y-6">
                     <!-- Dashboard rápido para admin -->
-                    <div v-if="user.role === 'ADMINISTRADOR'"
+                    <div v-if="currentUser.role === 'ADMINISTRADOR'"
                         class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border border-gray-100 dark:border-gray-700">
                         <div class="flex items-center justify-between mb-4">
                             <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Panel de control</h3>
@@ -136,19 +136,66 @@
                         </div>
                     </div>
 
-                    <!-- Sección de actividad reciente -->
+
+                    <!-- Sección de órdenes recientes -->
                     <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-                        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Tu actividad</h3>
+                        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Tus órdenes recientes</h3>
                         <div class="space-y-4">
-                            <div v-for="item in 3" :key="item"
-                                class="flex items-start gap-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition">
-                                <div class="bg-primary-100 dark:bg-primary-900/50 p-2 rounded-full">
-                                    <UIcon name="i-heroicons-bell" class="text-primary-600 dark:text-primary-400" />
+                            <div v-for="order in orders" :key="order.id"
+                                class="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                <div class="flex justify-between items-start mb-2">
+                                    <p class="font-medium">Orden #{{ order.id }}</p>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                                        {{ new Date(order.createdAt).toLocaleDateString() }}
+                                    </p>
                                 </div>
-                                <div>
-                                    <p class="font-medium">Notificación de ejemplo</p>
-                                    <p class="text-sm text-gray-500 dark:text-gray-400">Hace 2 días</p>
+
+                                <div class="space-y-2 mt-2">
+                                    <div v-for="item in order.orderItems" :key="item.id"
+                                        class="flex items-center gap-3">
+                                        <div
+                                            class="flex-shrink-0 w-10 h-10 bg-gray-100 dark:bg-gray-600 rounded-md overflow-hidden">
+                                            <img v-if="item.product.image" :src="item.product.image"
+                                                :alt="item.product.name" class="w-full h-full object-cover">
+                                        </div>
+                                        <div class="flex-1">
+                                            <p class="text-sm">{{ item.product.name }}</p>
+                                            <p class="text-xs text-gray-500 dark:text-gray-400">
+                                                {{ item.quantity }} x ${{ item.product.price }}
+                                            </p>
+                                        </div>
+                                        <p class="text-sm font-medium">${{ (item.quantity *
+                                            item.product.price) }}</p>
+                                    </div>
                                 </div>
+
+                                <div
+                                    class="flex justify-between items-center mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                                    <p class="text-sm">Estado:
+                                        <span :class="{
+                                            'text-green-600 dark:text-green-400': order.status === 'COMPLETED',
+                                            'text-yellow-600 dark:text-yellow-400': order.status === 'PENDING',
+                                            'text-red-600 dark:text-red-400': order.status === 'CANCELLED'
+                                        }">
+                                            {{ order.status }}
+                                        </span>
+                                    </p>
+                                    <p class="font-medium">Total: ${{ order.total }}</p>
+                                </div>
+                            </div>
+
+                            <div v-if="orders.length === 0" class="text-center py-8">
+                                <div
+                                    class="mx-auto w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mb-4">
+                                    <UIcon name="i-heroicons-shopping-bag"
+                                        class="text-gray-400 dark:text-gray-500 text-2xl" />
+                                </div>
+                                <h4 class="text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">No tienes órdenes
+                                    recientes</h4>
+                                <p class="text-gray-500 dark:text-gray-400 mb-4">Parece que aún no has realizado compras
+                                    en nuestra tienda</p>
+                                <UButton icon="i-heroicons-arrow-right" trailing color="primary" variant="solid"
+                                    label="Explorar productos" to="/products" />
                             </div>
                         </div>
                     </div>
@@ -167,19 +214,34 @@
                     </div>
                 </template>
 
-                <UForm :state="user" class="space-y-4" @submit="updateProfile">
+                <UForm :state="formData" class="space-y-4" @submit="updateProfile">
                     <UFormGroup label="Nombre completo" name="name">
-                        <UInput v-model="user.name" />
+                        <UInput v-model="formData.name" />
                     </UFormGroup>
 
                     <UFormGroup label="Correo electrónico" name="email">
-                        <UInput v-model="user.email" type="email" disabled />
+                        <UInput v-model="formData.email" type="email" disabled />
                     </UFormGroup>
 
                     <UFormGroup label="Teléfono" name="phoneNumber">
-                        <UInput v-model="user.phoneNumber" type="tel" placeholder="+1234567890" />
+                        <UInput v-model="formData.phoneNumber" type="tel" placeholder="+1234567890" />
                     </UFormGroup>
 
+                    <UFormGroup label="Calle" name="street">
+                        <UInput v-model="formData.address.street" placeholder="Calle 123" />
+                    </UFormGroup>
+
+                    <UFormGroup label="Ciudad" name="city">
+                        <UInput v-model="formData.address.city" placeholder="Ciudad" />
+                    </UFormGroup>
+
+                    <UFormGroup label="País" name="country">
+                        <UInput v-model="formData.address.country" placeholder="País" />
+                    </UFormGroup>
+
+                    <UFormGroup label="Código Postal" name="postalCode">
+                        <UInput v-model="formData.address.postalCode" placeholder="Código Postal" />
+                    </UFormGroup>
                     <div class="flex justify-end space-x-3 pt-4">
                         <UButton label="Cancelar" color="gray" variant="ghost" @click="isEditModalOpen = false" />
                         <UButton type="submit" label="Guardar cambios" color="primary" :loading="isUpdating" />
@@ -202,7 +264,7 @@
                 <div class="space-y-4">
                     <div class="flex justify-center">
                         <div class="relative">
-                            <img :src="avatarPreview || user.avatar || `https://ui-avatars.com/api/?name=${user.name}&background=random`"
+                            <img :src="avatarPreview || currentUser.avatar || `https://ui-avatars.com/api/?name=${currentUser.name}&background=random`"
                                 class="w-32 h-32 rounded-full object-cover border-4 border-white dark:border-gray-800 shadow"
                                 alt="Avatar preview">
                         </div>
@@ -225,10 +287,69 @@
 <script setup lang="ts">
 const { loggedIn, user, clear } = useUserSession()
 const router = useRouter()
+const { $toast } = useNuxtApp();
 
 // Modales
 const isEditModalOpen = ref(false)
 const isAvatarModalOpen = ref(false)
+
+// Interfaz para la dirección
+interface Address {
+    street: string;
+    city: string;
+    country: string;
+    postalCode: string;
+}
+
+// Interfaz para el usuario
+interface User {
+    id?: string;
+    name: string;
+    email: string;
+    phoneNumber: string;
+    role?: string;
+    avatar?: string;
+    createdAt?: string;
+    address: Address;
+}
+
+// Usamos computed para manejar el usuario de forma segura
+const currentUser = computed<User>(() => {
+    return user.value || {
+        name: '',
+        email: '',
+        phoneNumber: '',
+        address: {
+            street: '',
+            city: '',
+            country: '',
+            postalCode: ''
+        }
+    };
+});
+
+// Datos de formulario para edición (clonar para evitar mutaciones directas)
+const formData = ref<User>({
+    name: '',
+    email: '',
+    phoneNumber: '',
+    address: {
+        street: '',
+        city: '',
+        country: '',
+        postalCode: ''
+    }
+});
+
+// Vigilar cambios en currentUser para actualizar formData
+watch(currentUser, (newUser) => {
+    formData.value = {
+        ...newUser,
+        address: {
+            ...newUser.address
+        }
+    };
+}, { immediate: true });
 
 // Avatar
 const avatarPreview = ref<string | null>(null)
@@ -236,7 +357,8 @@ const avatarFile = ref<File | null>(null)
 const isUploading = ref(false)
 const isUpdating = ref(false)
 
-const formatDate = (dateString: string) => {
+const formatDate = (dateString?: string) => {
+    if (!dateString) return 'N/A';
     return new Date(dateString).toLocaleDateString('es-ES', {
         year: 'numeric',
         month: 'long',
@@ -247,7 +369,7 @@ const formatDate = (dateString: string) => {
 const logout = async () => {
     await clear()
     router.push('/')
-    useToast().success('Sesión cerrada correctamente')
+    $toast.error("Sesión cerrada correctamente");
 }
 
 const handleAvatarUpload = (event: Event) => {
@@ -268,33 +390,102 @@ const saveAvatar = async () => {
         // Simular subida de imagen
         await new Promise(resolve => setTimeout(resolve, 1000))
 
-        // Actualizar avatar (en un caso real, llamarías a tu API)
-        if (avatarPreview.value) {
-            user.avatar = avatarPreview.value
+        // En un entorno real, aquí llamarías a tu API
+        if (avatarPreview.value && user.value) {
+            user.value.avatar = avatarPreview.value
         }
 
-        useToast().success('Foto de perfil actualizada')
+        $toast.success("Foto de perfil actualizada");
         isAvatarModalOpen.value = false
     } catch (error) {
-        useToast().error('Error al actualizar la foto')
+        $toast.error("Error al actualizar la foto");
     } finally {
         isUploading.value = false
     }
 }
 
 const updateProfile = async () => {
-    isUpdating.value = true
-    try {
-        // Simular actualización (en un caso real, llamarías a tu API)
-        await new Promise(resolve => setTimeout(resolve, 1000))
-        useToast().success('Perfil actualizado correctamente')
-        isEditModalOpen.value = false
-    } catch (error) {
-        useToast().error('Error al actualizar el perfil')
-    } finally {
-        isUpdating.value = false
+    isUpdating.value = true;
+
+    if (!user.value?.id) {
+        $toast.error("ID de usuario no disponible.");
+        isUpdating.value = false;
+        return;
     }
-}
+
+    try {
+        const userData = {
+            name: formData.value.name,
+            phoneNumber: formData.value.phoneNumber,
+            address: {
+                street: formData.value.address?.street || '',
+                city: formData.value.address?.city || '',
+                country: formData.value.address?.country || '',
+                postalCode: formData.value.address?.postalCode || '',
+            }
+        };
+
+        const response = await $fetch(`/api/v1/updateUserPhone/${user.value.id}`, {
+            method: 'PUT',
+            body: userData
+        });
+
+        // Actualizar los datos del usuario (si user.value existe)
+        if (user.value) {
+            user.value.name = response.name || user.value.name;
+            user.value.phoneNumber = response.phoneNumber;
+
+            // Inicializar address si no existe
+            if (!user.value.address) {
+                user.value.address = {
+                    street: '',
+                    city: '',
+                    country: '',
+                    postalCode: ''
+                };
+            }
+
+            // Actualizar address con los valores de respuesta
+            if (response.address) {
+                user.value.address = response.address;
+            }
+        }
+
+        $toast.success("Perfil actualizado correctamente");
+        isEditModalOpen.value = false;
+    } catch (error) {
+        console.error('Error al actualizar el perfil:', error);
+        $toast.error("Error al actualizar el perfil");
+    } finally {
+        isUpdating.value = false;
+    }
+};
+
+// Obtener las órdenes del usuario
+const fetchOrders = async () => {
+    if (!user.value?.id) return [];
+
+    try {
+        const { data: ordersData } = await useFetch(`/api/v1/ordersByUser/${user.value.id}`, {
+            method: 'GET'
+        });
+
+        return ordersData.value?.orders || [];
+    } catch (error) {
+        console.error('Error al obtener órdenes:', error);
+        $toast.error("Error al cargar órdenes");
+        return [];
+    }
+};
+
+const orders = ref([]);
+
+// Cargar órdenes cuando el componente se monta y el usuario está autenticado
+onMounted(async () => {
+    if (loggedIn.value && user.value?.id) {
+        orders.value = await fetchOrders();
+    }
+});
 </script>
 
 <style scoped>

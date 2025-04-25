@@ -10,7 +10,7 @@
             <Navbar class="sticky top-0 z-30" @toggle-sidebar="isMobileSidebarOpen = !isMobileSidebarOpen" />
 
             <!-- Content area with scroll -->
-            <main class="flex-1 overflow-y-auto pt-16 md:pt-16 transition-all duration-300 "
+            <main class="flex-1 overflow-y-auto pt-2 md:pt-2 transition-all duration-300 "
                 :class="{ 'ml-0': !isExpanded && !isMobile, '': !isExpanded && !isMobile, '': isExpanded && !isMobile }">
                 <NuxtPage />
             </main>

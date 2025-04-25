@@ -5,23 +5,41 @@ export const useProductShoppingCartStore = defineStore("productsShoppingCart", (
 
     const addProductShoppingCart = (product: Product) => {
         const existingProduct = productShoppingCart.value.find((v) => v.id === product.id);
+
         if (existingProduct) {
-            // Incrementa la cantidad si ya existe
-            existingProduct.quantity += 1;
+            // Verificar que no exceda el stock disponible
+            if (existingProduct.quantity + product.quantity <= product.stock) {
+                existingProduct.quantity += product.quantity;
+                return true;
+            }
+            return false;
         } else {
-            // Inicializa el producto con una cantidad predeterminada
-            productShoppingCart.value.push({
-                ...product,
-                quantity: 1, // Asegura que la cantidad siempre se inicializa aquí
-            });
+            // Verificar que la cantidad no exceda el stock
+            if (product.quantity <= product.stock) {
+                productShoppingCart.value.push({
+                    ...product,
+                    quantity: product.quantity
+                });
+                return true;
+            }
+            return false;
         }
     };
 
-    const updateProductQuantity = (id: number, quantity: number) => {
-        const product = productShoppingCart.value.find((v) => v.id === id);
-        if (product) {
-            product.quantity = quantity;
+    const updateProductQuantity = (id: number, newQuantity: number) => {
+        const index = productShoppingCart.value.findIndex((v) => v.id === id);
+        if (index !== -1) {
+            const product = productShoppingCart.value[index];
+            // Validar que la nueva cantidad no exceda el stock
+            if (newQuantity > 0 && newQuantity <= product.stock) {
+                productShoppingCart.value[index] = {
+                    ...product,
+                    quantity: newQuantity
+                };
+                return true;
+            }
         }
+        return false;
     };
 
     const clearShoppingCart = () => {
@@ -40,7 +58,7 @@ export const useProductShoppingCartStore = defineStore("productsShoppingCart", (
     const totalPrice = computed(() =>
         productShoppingCart.value
             .reduce((sum, product) => sum + Number(product.price) * product.quantity, 0)
-            .toFixed(2) // Asegura que el resultado sea un string con dos decimales
+            .toFixed(2)
     );
 
     return {
