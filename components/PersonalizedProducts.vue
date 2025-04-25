@@ -112,7 +112,7 @@
 import type { Product } from '~/interfaces/product';
 
 // Obtener la categoría personalizada desde tu API
-const { data: personalizedCategory } = await useFetch('/api/v2/personalizedCategory');
+const { data: personalizedCategory } = await useFetch('/api/v1/personalizedCategory');
 const { data: products, pending } = useFetch('/api/v1/product');
 const productStore = useProductStore();
 const { $toast } = useNuxtApp();

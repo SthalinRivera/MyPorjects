@@ -76,4 +76,5 @@ router.get('/dashboardReport', defineEventHandler(dashboardController.dashboardR
 router.get('/getVisits', defineEventHandler(visitController.getVisits));
 router.post('/addVisit', defineEventHandler(visitController.addVisit));
 router.get('/getVisitStats', defineEventHandler(visitController.getVisitStats));
+
 export default useBase("/api/v1", router.handler);
