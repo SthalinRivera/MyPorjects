@@ -8,11 +8,10 @@
             Explora nuestros productos por categoría
         </p>
 
-
         <!-- Slider container -->
         <div class="relative group">
             <!-- Navigation buttons - Desktop -->
-            <button v-if="showNavigation" @click="scrollLeft"
+            <button v-if="showNavigation" @click="handleScrollLeft"
                 class="hidden md:block absolute left-0 top-1/2 z-10 -translate-y-1/2 bg-white dark:bg-gray-800 rounded-full p-3 shadow-lg hover:shadow-xl transition-all hover:scale-110 focus:outline-none"
                 aria-label="Previous categories">
                 <i class="ri-arrow-left-s-line text-2xl text-gray-700 dark:text-gray-300"></i>
@@ -26,9 +25,9 @@
                 <div v-for="category in categories" :key="category.id"
                     class="flex-shrink-0 w-40 sm:w-48 md:w-56 group/card flex flex-col items-center pb-4"
                     @click="emit('categoryClick', category)">
-                    <!-- Imagen circular -->
+                    <!-- Imagen circular con cursor pointer -->
                     <div
-                        class="h-32 w-32 md:h-40 md:w-40 rounded-full overflow-hidden mt-6 mb-1 relative group-hover/card:scale-105 transition-all duration-300">
+                        class="h-32 w-32 md:h-40 md:w-40 rounded-full overflow-hidden mt-6 mb-1 relative group-hover/card:scale-105 transition-all duration-300 cursor-pointer">
                         <!-- Imagen de fondo o icono -->
                         <div class="h-full w-full flex items-center justify-center bg-gray-100 dark:bg-gray-700" :style="category.imageUrl ? {
                             'background-image': `url('${category.imageUrl}')`,
@@ -42,7 +41,7 @@
 
                         <!-- Overlay hover circular -->
                         <div
-                            class="absolute inset-0 bg-black bg-opacity-0 group-hover/card:bg-opacity-40 transition-all duration-300 flex items-center justify-center rounded-full">
+                            class="absolute inset-0 bg-black bg-opacity-0 group-hover/card:bg-opacity-40 transition-all duration-300 flex items-center justify-center rounded-full cursor-pointer">
                             <i v-if="showLinkIcon"
                                 class="ri-external-link-line text-white text-3xl opacity-0 group-hover/card:opacity-100 transition-all duration-300 transform group-hover/card:scale-125"></i>
                         </div>
@@ -61,8 +60,8 @@
                 </div>
             </div>
 
-            <!-- Navigation buttons - Desktop -->
-            <button v-if="showNavigation" @click="scrollRight"
+            <!-- Navigation buttons - Desktop CORREGIDO (ahora usa handleScrollRight) -->
+            <button v-if="showNavigation" @click="handleScrollRight"
                 class="hidden md:block absolute right-0 top-1/2 z-10 -translate-y-1/2 bg-white dark:bg-gray-800 rounded-full p-3 shadow-lg hover:shadow-xl transition-all hover:scale-110 focus:outline-none"
                 aria-label="Next categories">
                 <i class="ri-arrow-right-s-line text-2xl text-gray-700 dark:text-gray-300"></i>
@@ -108,7 +107,7 @@ const emit = defineEmits<{
 const slider = ref<HTMLElement | null>(null)
 const isDragging = ref(false)
 const startX = ref(0)
-const scrollLeft = ref(0)
+const scrollLeftPosition = ref(0)
 const activeIndex = ref(0)
 
 const scrollTo = (index: number) => {
@@ -139,15 +138,19 @@ const updateActiveIndex = () => {
     }
 }
 
-const scrollLeftFn = () => {
+const handleScrollLeft = () => {
     if (slider.value) {
         slider.value.scrollBy({ left: -300, behavior: 'smooth' })
+        // Actualizar índice activo después de un breve retraso
+        setTimeout(updateActiveIndex, 300)
     }
 }
 
-const scrollRightFn = () => {
+const handleScrollRight = () => {
     if (slider.value) {
         slider.value.scrollBy({ left: 300, behavior: 'smooth' })
+        // Actualizar índice activo después de un breve retraso
+        setTimeout(updateActiveIndex, 300)
     }
 }
 
@@ -157,7 +160,7 @@ const startDrag = (e: MouseEvent | TouchEvent) => {
 
     isDragging.value = true
     startX.value = 'touches' in e ? e.touches[0].pageX - slider.value.offsetLeft : e.pageX - slider.value.offsetLeft
-    scrollLeft.value = slider.value.scrollLeft
+    scrollLeftPosition.value = slider.value.scrollLeft
     slider.value.style.cursor = 'grabbing'
 }
 
@@ -167,7 +170,7 @@ const onDrag = (e: MouseEvent | TouchEvent) => {
 
     const x = 'touches' in e ? e.touches[0].pageX - slider.value.offsetLeft : e.pageX - slider.value.offsetLeft
     const walk = (x - startX.value) * 2
-    slider.value.scrollLeft = scrollLeft.value - walk
+    slider.value.scrollLeft = scrollLeftPosition.value - walk
 }
 
 const endDrag = () => {

@@ -1,7 +1,7 @@
 <template>
   <div class="w-full ">
     <Portada></Portada>
-
+    <!-- <UICarouselAutoSlide></UICarouselAutoSlide> -->
     <PersonalizedProducts></PersonalizedProducts>
     <Categories></Categories>
     <PromotionsGrid></PromotionsGrid>
