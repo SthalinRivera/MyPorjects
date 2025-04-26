@@ -49,7 +49,6 @@ export const addUser = async (event: H3Event): Promise<{ userId?: number; error?
     }
 };
 
-
 export const userById = async (event: H3Event) => {
     const request = getRouterParams(event);
 
@@ -86,21 +85,31 @@ export const userById = async (event: H3Event) => {
 export const updateUserPhone = async (event: H3Event) => {
     try {
         const id = event.context.params?.id;
-        const body = await readBody<{ phoneNumber: string, address: Address }>(event);
 
-        if (!id || !body?.phoneNumber || !body?.address) {
-            return { error: "ID de usuario, número de teléfono y dirección son requeridos." };
+        const body = await readBody<{
+            name: string;
+            phoneNumber: string;
+            address: Address;
+        }>(event);
+
+        if (!id || !body?.name || !body?.phoneNumber || !body?.address) {
+            return {
+                error: 'ID de usuario, nombre, número de teléfono y dirección son requeridos.',
+            };
         }
 
-        // Actualizar número de teléfono
+        // Actualizar nombre y número de teléfono
         const user = await prisma.user.update({
             where: { id: Number(id) },
-            data: { phoneNumber: body.phoneNumber },
+            data: {
+                name: body.name,
+                phoneNumber: body.phoneNumber,
+            },
         });
 
-        // Verificar dirección existente
+        // Verificar si ya existe una dirección para el usuario
         const existingAddress = await prisma.address.findFirst({
-            where: { userId: Number(id) }
+            where: { userId: Number(id) },
         });
 
         let updatedAddress;
@@ -111,9 +120,11 @@ export const updateUserPhone = async (event: H3Event) => {
                 data: {
                     street: body.address.street,
                     city: body.address.city,
+                    state: body.address.state || null,
                     country: body.address.country,
                     postalCode: body.address.postalCode,
-                }
+                    isDefault: body.address.isDefault ?? existingAddress.isDefault ?? false,
+                },
             });
         } else {
             updatedAddress = await prisma.address.create({
@@ -121,24 +132,26 @@ export const updateUserPhone = async (event: H3Event) => {
                     userId: Number(id),
                     street: body.address.street,
                     city: body.address.city,
+                    state: body.address.state || null,
                     country: body.address.country,
                     postalCode: body.address.postalCode,
-                }
+                    isDefault: body.address.isDefault ?? false,
+                },
             });
         }
 
         return {
             id: user.id,
+            name: user.name,
             phoneNumber: user.phoneNumber,
-            address: updatedAddress, // Retorna la dirección actualizada/creada
-            message: "Datos actualizados correctamente."
+            address: updatedAddress,
+            message: 'Datos actualizados correctamente.',
         };
     } catch (error: unknown) {
-        console.error(error);
-        return { error: "Error interno del servidor." };
+        console.error('Error en updateUserPhone:', error);
+        return { error: 'Error interno del servidor.' };
     }
 };
-
 
 export const deleteUser = async (event: H3Event) => {
     try {
@@ -171,8 +184,6 @@ export const deleteUser = async (event: H3Event) => {
         });
     }
 };
-
-
 
 export const updateUser = async (event: H3Event): Promise<string> => {
     try {

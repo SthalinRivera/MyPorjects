@@ -15,7 +15,7 @@ const menuItems = computed(() => {
     ],
     // Grupo 2: Navegación
     [
-      ...(user.value?.role === 'ADMINISTRADOR'
+      ...(user.value?.permiso === 'ADMINISTRADOR'
         ? [
           {
             label: 'Dashboard',

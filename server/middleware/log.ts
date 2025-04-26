@@ -1,4 +1,4 @@
 
 export default defineEventHandler((event) => {
-    console.log("accediendo : ", getRequestURL(event));
+    // console.log("accediendo : ", getRequestURL(event));
 })

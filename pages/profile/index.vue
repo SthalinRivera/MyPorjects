@@ -36,8 +36,8 @@
                             <p class="text-gray-600 dark:text-gray-400">{{ currentUser.email }}</p>
 
                             <!-- Badge de rol -->
-                            <UBadge :label="currentUser.role"
-                                :color="currentUser.role === 'ADMINISTRADOR' ? 'red' : 'primary'" class="mt-2" />
+                            <UBadge :label="currentUser.permiso"
+                                :color="currentUser.permiso === 'ADMINISTRADOR' ? 'red' : 'primary'" class="mt-2" />
 
                             <div class="mt-4 flex space-x-3">
                                 <UButton icon="i-heroicons-pencil" label="Editar perfil" color="primary" variant="solid"
@@ -62,7 +62,7 @@
                                 <li class="flex items-center">
                                     <UIcon name="i-heroicons-shield-check"
                                         class="text-gray-500 dark:text-gray-400 mr-3" />
-                                    <span class="text-gray-600 dark:text-gray-300">Rol: {{ currentUser.role }}</span>
+                                    <span class="text-gray-600 dark:text-gray-300">Rol: {{ currentUser.permiso }}</span>
                                 </li>
                                 <li class="flex items-center">
                                     <UIcon name="i-heroicons-calendar" class="text-gray-500 dark:text-gray-400 mr-3" />
@@ -77,7 +77,7 @@
                 <!-- Columna derecha - Contenido adicional -->
                 <div class="lg:col-span-2 space-y-6">
                     <!-- Dashboard rápido para admin -->
-                    <div v-if="currentUser.role === 'ADMINISTRADOR'"
+                    <div v-if="currentUser.permiso === 'ADMINISTRADOR'"
                         class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border border-gray-100 dark:border-gray-700">
                         <div class="flex items-center justify-between mb-4">
                             <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Panel de control</h3>
@@ -161,10 +161,10 @@
                                         <div class="flex-1">
                                             <p class="text-sm">{{ item.product.name }}</p>
                                             <p class="text-xs text-gray-500 dark:text-gray-400">
-                                                {{ item.quantity }} x ${{ item.product.price }}
+                                                {{ item.quantity }} x S/. {{ item.product.price }}
                                             </p>
                                         </div>
-                                        <p class="text-sm font-medium">${{ (item.quantity *
+                                        <p class="text-sm font-medium">S/. {{ (item.quantity *
                                             item.product.price) }}</p>
                                     </div>
                                 </div>
@@ -180,7 +180,7 @@
                                             {{ order.status }}
                                         </span>
                                     </p>
-                                    <p class="font-medium">Total: ${{ order.total }}</p>
+                                    <p class="font-medium">Total: S/.{{ order.total }}</p>
                                 </div>
                             </div>
 
@@ -195,7 +195,7 @@
                                 <p class="text-gray-500 dark:text-gray-400 mb-4">Parece que aún no has realizado compras
                                     en nuestra tienda</p>
                                 <UButton icon="i-heroicons-arrow-right" trailing color="primary" variant="solid"
-                                    label="Explorar productos" to="/products" />
+                                    label="Explorar productos" to="/product" />
                             </div>
                         </div>
                     </div>
@@ -327,6 +327,7 @@ const currentUser = computed<User>(() => {
         }
     };
 });
+console.log("Este usuario es para  user ", currentUser);
 
 // Datos de formulario para edición (clonar para evitar mutaciones directas)
 const formData = ref<User>({
@@ -424,6 +425,7 @@ const updateProfile = async () => {
                 postalCode: formData.value.address?.postalCode || '',
             }
         };
+        console.log("esos  datos estamos enviando", userData);
 
         const response = await $fetch(`/api/v1/updateUserPhone/${user.value.id}`, {
             method: 'PUT',

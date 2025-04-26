@@ -5,4 +5,7 @@ export interface Category {
     imageUrl?: string;
     bannerUrl?: string;
     description?: string;
+    _count?: {
+        products?: number
+    }
 }

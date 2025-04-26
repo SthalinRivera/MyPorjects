@@ -1,6 +1,7 @@
 <template>
   <div class="w-full ">
     <Portada></Portada>
+
     <PersonalizedProducts></PersonalizedProducts>
     <Categories></Categories>
     <PromotionsGrid></PromotionsGrid>
@@ -9,7 +10,7 @@
     <Faq></Faq>
 
     <div id="subscribe">
-      <ParallaxSubscription></ParallaxSubscription>
+      <ParallaxSuscription></ParallaxSuscription>
     </div>
 
   </div>
