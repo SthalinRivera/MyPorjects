@@ -175,9 +175,9 @@
 
 
 <script setup lang="ts">
-const { data: products, error, pending } = useFetch('/api/v1/promotionactive');
 import type { Product } from '~/interfaces/product';
-import type { Record } from '~/interfaces/Record';
+const { data: products, error, pending } = useFetch('/api/v1/promotionactive');
+
 const productStore = useProductStore();
 const id = 1;
 
@@ -189,7 +189,7 @@ const isFavorite = (productId: number) => {
 };
 
 // Manejar favoritos
-const toggleFavorite = (product) => {
+const toggleFavorite = (product: Product) => {
     if (isFavorite(product.id)) {
         productStore.deleteFavorites(product.id);
         $toast.success("Eliminado de favoritos");

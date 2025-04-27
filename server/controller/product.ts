@@ -15,6 +15,31 @@ export const allProduct = async () => {
   });
 }
 
+
+export const paginatedProducts = async (event: H3Event) => {
+  const query = getQuery(event);
+  const page = Number(query.page) || 1;
+  const limit = Number(query.limit) || 12;
+  const skip = (page - 1) * limit;
+
+  const [products, totalItems] = await Promise.all([
+    prisma.product.findMany({ skip, take: limit /* ... */ }),
+    prisma.product.count()
+  ]);
+
+  // Estructura de respuesta CORRECTA
+  return {
+    data: products,
+    meta: {  // Asegúrate de incluir este objeto meta
+      totalItems,
+      totalPages: Math.ceil(totalItems / limit),
+      currentPage: page,
+      itemsPerPage: limit
+    }
+  };
+}
+
+
 // export const productById = async (event: H3Event) => {
 //   const request = getRouterParams(event);
 //   if (!request.id) {

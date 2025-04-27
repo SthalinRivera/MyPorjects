@@ -12,7 +12,7 @@
             <!-- Content area with scroll -->
             <main class="flex-1 overflow-y-auto pt-2 md:pt-2 transition-all duration-300 "
                 :class="{ 'ml-0': !isExpanded && !isMobile, '': !isExpanded && !isMobile, '': isExpanded && !isMobile }">
-                <NuxtPage />
+                <NuxtPage /> <!-- Key añadida aquí -->
             </main>
 
             <!-- Footer -->

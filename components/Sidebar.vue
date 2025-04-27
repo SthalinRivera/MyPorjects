@@ -227,16 +227,15 @@ const menuItems = [
     },
 
     {
-        to: '/dashboard/products',
+        to: '/dashboard/productss',
         title: 'Administrar Productos',
         icon: 'heroicons:archive-box',
         submenu: [
             {
-                to: '/dashboard/products/',
+                to: '/dashboard/products',
                 title: 'Ver Productos',
                 icon: 'heroicons:list-bullet'
             },
-
             {
                 to: '/dashboard/products/categories',
                 title: 'Categorías',
@@ -355,6 +354,16 @@ onMounted(() => {
     });
 });
 
+watch(() => route.path, (newPath) => {
+    console.log('Ruta cambiada a:', newPath);
+    openSubmenus.value = [];
+    // Reabrir submenú si corresponde
+    menuItems.forEach(item => {
+        if (item.submenu && item.submenu.some(subItem => newPath.startsWith(subItem.to))) {
+            openSubmenus.value.push(item.to);
+        }
+    });
+});
 onBeforeUnmount(() => {
     window.removeEventListener('resize', checkScreenSize);
 });

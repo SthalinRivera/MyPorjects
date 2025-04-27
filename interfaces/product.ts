@@ -10,4 +10,5 @@ export interface Product {
     likes: number;
     categoryId: number;
     userId: number;
+
 }

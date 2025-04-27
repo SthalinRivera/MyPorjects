@@ -6,22 +6,44 @@
             { title: 'Categorias', to: '/dashboard/categories' }
 
         ]" />
-        <!-- Encabezado -->
+        <!-- Encabezado con buscador y botones -->
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
             <div>
                 <h1 class="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white">Gestión de Categorías</h1>
                 <p class="text-sm sm:text-base text-gray-500 dark:text-gray-400 mt-1">Organiza tus productos con
                     categorías</p>
             </div>
-            <button @click="openCreateModal"
-                class="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-lg hover:from-blue-700 hover:to-blue-600 transition-all shadow-md hover:shadow-lg w-full sm:w-auto justify-center">
-                <i class="ri-add-line"></i>
-                <span>Nueva Categoría</span>
-            </button>
-        </div>
+            <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+                <!-- Buscador -->
+                <div class="relative w-full sm:w-64">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="ri-search-line text-gray-400"></i>
+                    </div>
+                    <input v-model="searchQuery" type="text" placeholder="Buscar categorías..."
+                        class="pl-10 w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                </div>
 
+                <!-- Botones de acción -->
+                <div class="flex gap-2">
+                    <button @click="exportToExcel"
+                        class="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all shadow-md hover:shadow-lg">
+                        <i class="ri-file-excel-line"></i>
+                        <span>Exportar</span>
+                    </button>
+                    <button @click="openCreateModal"
+                        class="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-lg hover:from-blue-700 hover:to-blue-600 transition-all shadow-md hover:shadow-lg">
+                        <i class="ri-add-line"></i>
+                        <span>Nueva</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Loading State -->
+        <div v-if="loading">
+            <SketonTableCategories></SketonTableCategories>
+        </div>
         <!-- Estado de Error -->
-        <div v-if="error"
+        <div v-else-if="error"
             class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 mb-4">
             <div class="flex items-center gap-3">
                 <i class="ri-error-warning-line text-red-500 dark:text-red-400 text-xl"></i>
@@ -31,16 +53,9 @@
                     }}</p>
                 </div>
             </div>
-            <button @click="fetchCategories" class="mt-2 text-sm text-red-600 dark:text-red-300 hover:underline">
-                Intentar nuevamente
-            </button>
         </div>
 
-        <!-- Loading State -->
-        <div v-else-if="loading" class="flex flex-col items-center justify-center py-16">
-            <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
-            <p class="text-gray-600 dark:text-gray-400">Cargando categorías...</p>
-        </div>
+
 
         <!-- Empty State -->
         <div v-else-if="categories.length === 0"
@@ -66,20 +81,17 @@
                         <tr>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                Imagen
+                            </th>
+                            <th scope="col"
+                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                 Nombre
                             </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                 Slug
                             </th>
-                            <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Imagen
-                            </th>
-                            <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Banner
-                            </th>
+
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                 Descripción
@@ -91,8 +103,13 @@
                         </tr>
                     </thead>
                     <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                        <tr v-for="category in categories" :key="category.id"
+                        <tr v-for="category in paginatedCategories" :key="category.id"
                             class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <img class="h-12 w-12 rounded-md object-cover"
+                                    :src="category.imageUrl || '/default-image.png'"
+                                    :alt="category.name || 'Imagen de categoría'" loading="lazy">
+                            </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-sm font-medium text-gray-900 dark:text-white">
                                     {{ category.name }}
@@ -103,22 +120,6 @@
                                     {{ category.slug }}
                                 </div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <img class="h-12 w-12 rounded-md object-cover"
-                                    :src="category.imageUrl || '/default-image.png'"
-                                    :alt="category.name || 'Imagen de categoría'" loading="lazy">
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-500 dark:text-gray-400 truncate max-w-xs">
-                                    <template v-if="category.bannerUrl">
-                                        {{ category.bannerUrl }}
-                                    </template>
-                                    <template v-else>
-                                        <span class="text-gray-400 italic">Sin imagen</span>
-                                    </template>
-                                </div>
-                            </td>
-
                             <td class="px-6 py-4">
                                 <div class="text-sm text-gray-500 dark:text-gray-400 truncate max-w-xs">
                                     {{ category.description }}
@@ -139,6 +140,44 @@
                         </tr>
                     </tbody>
                 </table>
+                <!-- Paginación -->
+                <div v-if="filteredCategories.length > 0"
+                    class="flex flex-col sm:flex-row items-center justify-between px-6 py-4 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600">
+                    <div class="text-sm text-gray-700 dark:text-gray-300 mb-4 sm:mb-0">
+                        Mostrando {{ Math.min((currentPage - 1) * itemsPerPage + 1, filteredCategories.length) }}
+                        a {{ Math.min(currentPage * itemsPerPage, filteredCategories.length) }}
+                        de {{ filteredCategories.length }} resultados
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <select v-model="itemsPerPage"
+                            class="px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-md text-sm dark:bg-gray-700 dark:text-white">
+                            <option value="5">5 por página</option>
+                            <option value="10">10 por página</option>
+                            <option value="20">20 por página</option>
+                            <option value="50">50 por página</option>
+                        </select>
+
+                        <button @click="currentPage = Math.max(1, currentPage - 1)" :disabled="currentPage === 1"
+                            class="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-md text-sm disabled:opacity-50 dark:bg-gray-700 dark:text-white">
+                            Anterior
+                        </button>
+
+                        <div class="flex gap-1">
+                            <button v-for="page in totalPages" :key="page" @click="currentPage = page"
+                                :class="{ 'bg-blue-600 text-white': currentPage === page, 'hover:bg-gray-100 dark:hover:bg-gray-600': currentPage !== page }"
+                                class="w-8 h-8 flex items-center justify-center rounded-md text-sm transition-colors">
+                                {{ page }}
+                            </button>
+                        </div>
+
+                        <button @click="currentPage = Math.min(totalPages, currentPage + 1)"
+                            :disabled="currentPage === totalPages"
+                            class="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-md text-sm disabled:opacity-50 dark:bg-gray-700 dark:text-white">
+                            Siguiente
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -280,12 +319,7 @@
 
                             </div>
                         </div>
-                        <!-- <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">URL de
-                                Banner</label>
-                            <input v-model="editingCategory.bannerUrl" type="text"
-                                class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
-                        </div> -->
+
                         <div>
                             <label
                                 class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Descripción</label>
@@ -314,10 +348,13 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import { useRoute } from "vue-router";
 
+import { ref, reactive, watch, computed, onMounted, nextTick } from 'vue';
+import { useRoute } from "vue-router";
+import * as XLSX from 'xlsx';
+import SketonTableCategories from '~/components/UI/Skeleton/SketonTableCategories.vue';
 import { useFirebaseUpload } from '~/composables/useFirebaseUpload';
+
 const { $toast } = useNuxtApp();
 const route = useRoute();
 const { user } = useUserSession();
@@ -330,6 +367,10 @@ const editImageFile = ref<File | null>(null);
 const isCreating = ref(false);
 const isUpdating = ref(false);
 
+// Estados para paginación y búsqueda
+const searchQuery = ref('');
+const currentPage = ref(1);
+const itemsPerPage = ref(10);
 const { uploadProgress, uploadImage } = useFirebaseUpload();
 
 const handleFileUpload = async (event: Event) => {
@@ -358,6 +399,40 @@ const handleFileUpload = async (event: Event) => {
         $toast.error("Error al subir la imagen");
         imagePreview.value = null;
     }
+};
+// Computed properties
+const filteredCategories = computed(() => {
+    if (!searchQuery.value) {
+        return [...categories.value];
+    }
+    const query = searchQuery.value.toLowerCase();
+    return categories.value.filter(category =>
+        category.name.toLowerCase().includes(query) ||
+        category.description?.toLowerCase().includes(query) ||
+        category.slug.toLowerCase().includes(query)
+    );
+});
+
+const totalPages = computed(() => Math.ceil(filteredCategories.value.length / itemsPerPage.value));
+const paginatedCategories = computed(() => {
+    const start = (currentPage.value - 1) * itemsPerPage.value;
+    const end = start + itemsPerPage.value;
+    return filteredCategories.value.slice(start, end);
+});
+
+// Función para exportar a Excel
+const exportToExcel = () => {
+    const dataToExport = filteredCategories.value.map(category => ({
+        'Nombre': category.name,
+        'Slug': category.slug,
+        'Descripción': category.description || 'N/A',
+        'Imagen': category.imageUrl ? 'Sí' : 'No'
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Categorías");
+    XLSX.writeFile(workbook, "categorias.xlsx");
 };
 
 const handleEditFileUpload = async (event: Event) => {
@@ -414,34 +489,15 @@ definePageMeta({
 });
 
 // Función para cargar categorías con reintentos
-const fetchCategories = async (retries = 3) => {
+const fetchCategories = async () => {
     loading.value = true;
     error.value = null;
 
     try {
-        const { data, error: fetchError } = await useFetch('/api/v1/category', {
-            headers: {
-                'Authorization': `Bearer ${user.value?.token}`
-            }
-        });
-
-        if (fetchError.value) {
-            throw fetchError.value;
-        }
-
-        if (!data.value || !Array.isArray(data.value)) {
-            throw new Error('Formato de respuesta inválido');
-        }
-
-        categories.value = data.value;
+        const { data } = await useFetch('/api/v1/category');
+        categories.value = data.value || [];
     } catch (err) {
         console.error("Error al cargar categorías:", err);
-
-        if (retries > 1) {
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            return fetchCategories(retries - 1);
-        }
-
         error.value = err;
         $toast.error("Error al cargar categorías");
         categories.value = [];
@@ -591,17 +647,13 @@ const editCategory = (category: any) => {
     editingCategory.value = { ...category };
 };
 
-// Inicialización
-onMounted(() => {
+watchEffect(async () => {
+    await nextTick();
+
     fetchCategories();
 });
 
-// Recargar cuando cambia la ruta (si es necesario)
-watch(() => route.path, (newPath, oldPath) => {
-    if (newPath !== oldPath) {
-        fetchCategories();
-    }
-});
+
 </script>
 
 <style scoped></style>

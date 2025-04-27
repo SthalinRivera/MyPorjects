@@ -14,6 +14,8 @@ const router = createRouter();
 
 // 📦 PRODUCTOS
 router.post('/addProduct', defineEventHandler(productController.addProduct));
+router.get('/product/paginated', defineEventHandler(productController.paginatedProducts)); // Nueva ruta
+
 router.get('/product', defineEventHandler(productController.allProduct));
 router.get('/product/:id', defineEventHandler(productController.productById));
 router.put('/updateProduct/:id', defineEventHandler(productController.updateProduct));

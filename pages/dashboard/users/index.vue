@@ -17,9 +17,8 @@
         </div>
 
         <!-- Loading State -->
-        <div v-if="loading" class="flex flex-col items-center justify-center py-16">
-            <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
-            <p class="text-gray-600 dark:text-gray-400">Cargando usuarios...</p>
+        <div v-if="loading">
+            <SkeletonTableUsers />
         </div>
 
         <!-- Users Table -->
@@ -316,6 +315,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted, nextTick } from 'vue';
+import SkeletonTableUsers from '~/components/UI/Skeleton/SkeletonTableUsers.vue';
 
 interface User {
     id: number;
