@@ -4,7 +4,6 @@ const prisma = new PrismaClient()
 export default oauth.googleEventHandler({
   async onSuccess(event, { user: googleUser, tokens }) {
 
-    console.log("soy user de google: ", googleUser);
 
     // 1. Buscar o crear usuario
     let dbUser = await prisma.user.findUnique({
@@ -19,7 +18,7 @@ export default oauth.googleEventHandler({
           name: googleUser.name,
           roleId: 2, // Rol de usuario normal
           password: null,
-          urlFoto: googleUser.picture || '', // Usar foto de Google
+          avatarUrl: googleUser.picture || '', // Usar foto de Google
         },
         include: { role: true }
       })
@@ -32,8 +31,9 @@ export default oauth.googleEventHandler({
       email: dbUser.email,
       permiso: dbUser.role.name, // Asumiendo que 'permiso' equivale al nombre del rol
       phoneNumber: dbUser.phoneNumber,
-      urlFoto: dbUser.urlFoto,
-      usuarioId: dbUser.usuarioId
+      urlFoto: dbUser.avatarUrl || '',  // Si es null, asigna una cadena vacía
+      usuarioId: dbUser.id
+
     }
 
     // 3. Establecer sesión persistente

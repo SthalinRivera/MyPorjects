@@ -50,6 +50,7 @@ router.get('/allUser', defineEventHandler(userController.allUser));
 router.get('/userById/:id', defineEventHandler(userController.userById));
 router.post('/addUser', defineEventHandler(userController.addUser));
 router.put('/updateUser/:id', defineEventHandler(userController.updateUser));
+router.put('/updateUserAvatar/:id', defineEventHandler(userController.updateUserAvatar));
 router.put('/updateUserPhone/:id', defineEventHandler(userController.updateUserPhone));
 router.delete('/userDelete/:id', defineEventHandler(userController.deleteUser));
 

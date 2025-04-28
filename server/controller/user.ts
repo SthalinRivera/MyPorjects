@@ -237,3 +237,40 @@ export const getClients = async (event: H3Event) => {
         return { error: "Error interno" };
     }
 };
+export const updateUserAvatar = async (event: H3Event): Promise<{ success: boolean; message: string }> => {
+    try {
+        const { id } = getRouterParams(event);
+        const { avatarUrl } = await readBody(event);
+
+        if (!id || !avatarUrl) {
+            throw createError({
+                statusCode: 400,
+                statusMessage: 'ID de usuario y URL de avatar son requeridos'
+            });
+        }
+
+        // Actualizar solo el campo avatarUrl
+        const updatedUser = await prisma.user.update({
+            where: { id: Number(id) },
+            data: {
+                avatarUrl, // Solo actualizar avatarUrl
+            },
+            select: {
+                id: true,
+                avatarUrl: true
+            }
+        });
+
+        return {
+            success: true,
+            message: 'Avatar actualizado correctamente',
+            data: updatedUser
+        };
+    } catch (error: any) {
+        console.error('Error en updateUserAvatar:', error);
+        throw createError({
+            statusCode: error.statusCode || 500,
+            statusMessage: error.message || 'Error al actualizar el avatar'
+        });
+    }
+};

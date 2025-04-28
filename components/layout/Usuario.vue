@@ -47,6 +47,7 @@ const menuItems = computed(() => {
 
   return items;
 });
+console.log("Verificamos que trae e urlSS", user);
 
 const handleLogout = async () => {
   try {
@@ -57,21 +58,30 @@ const handleLogout = async () => {
     toast.error('Error al cerrar sesión');
   }
 };
+const handleLogin = async () => {
+  try {
+    await navigateTo('/login');
+    toast.success('Redirigido a login correctamente');
+  } catch (error) {
+    toast.error('Error al ir a login');
+  }
+};
+
 </script>
 
 <template>
   <div class="flex items-center gap-3">
     <!-- Solo muestra botones de registro -->
     <template v-if="!user">
-      <UButton to="/login" color="primary" variant="solid" label="Iniciar Sesión" icon="i-heroicons-user"
-        trailing-icon="i-heroicons-arrow-right-20-solid"
-        class="px-6 py-3 font-medium rounded-lg transition-all duration-300 hover:shadow-lg hover:scale-105 transform bg-gradient-to-r from-pink-500 to-orange-400 hover:from-pink-600 hover:to-orange-500 text-white sm:[&>span]:block hidden sm:inline-flex"
-        :ui="{
-          rounded: 'rounded-xl',
-          padding: { sm: 'px-4 py-2' },
-          base: 'sm:inline-flex focus:ring-2 focus:ring-pink-200'
-        }">
-      </UButton>
+      <button @click="handleLogin()"
+        class="relative p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+          class="size-6">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+        </svg>
+
+      </button>
     </template>
 
     <!-- Menú desplegable para usuario logueado -->
@@ -90,9 +100,9 @@ const handleLogout = async () => {
     }">
       <!-- Avatar con badge de admin -->
       <div class="relative">
-        <UAvatar :src="user?.avatar || '/default-avatar.jpg'" :alt="user?.name || 'Avatar'" size="md"
+        <UAvatar :src="user?.urlFoto || '/default-avatar.jpg'" :alt="user?.name || 'Avatar'" size="md"
           class="ring-2 ring-primary-500 dark:ring-primary-400 hover:ring-primary-600 transition-all" />
-        <span v-if="user?.role === 'ADMINISTRADOR'"
+        <span v-if="user?.permiso === 'ADMINISTRADOR'"
           class="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full border-2 border-white dark:border-gray-900">
           Admin
         </span>

@@ -1,7 +1,7 @@
 <template>
     <div class="">
         <!-- Navbar sticky -->
-        <Navbar class="" />
+        <Navbar class="sticky top-0 z-50 shadow-sm " />
 
         <!-- Main content with proper spacing and max-width constraints -->
         <main class="">

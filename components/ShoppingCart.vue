@@ -5,7 +5,7 @@
             @click.self="closeModal" aria-modal="true">
             <!-- Panel del carrito -->
             <div
-                class="relative w-full max-w-md h-full overflow-y-auto bg-white dark:bg-gray-800 shadow-xl  content-between">
+                class="relative w-full sm:max-w-md max-w-xs h-full overflow-y-auto bg-white dark:bg-gray-800 shadow-xl  content-between">
                 <!-- Encabezado -->
                 <div
                     class="sticky top-0 flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 z-10">
@@ -144,7 +144,7 @@
         </div>
     </transition>
 
-    <!-- Modal para datos del cliente -->
+
     <!-- Modal para datos del cliente (cuando no está logueado) -->
     <transition name="fade">
         <div v-if="showCustomerModal" class="fixed inset-0 z-50 overflow-y-auto">

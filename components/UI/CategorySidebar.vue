@@ -27,7 +27,7 @@ const navegarACategoria = (categoria: Category) => {
 </script>
 
 <template>
-    <aside class="sticky top-6 h-fit">
+    <aside class="sticky  hidden md:block top-6 z-5 h-fit">
         <div class="rounded-2xl p-5 transition-all duration-300 shadow-sm hover:shadow-md bg-white dark:bg-slate-800">
             <!-- Encabezado con icono animado -->
             <div class="flex items-center justify-between mb-6 group cursor-pointer">

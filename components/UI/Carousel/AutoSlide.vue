@@ -1,38 +1,28 @@
 <template>
-    <div class="relative w-full h-[300px] md:h-[500px] mx-auto overflow-x-hidden">
+    <div class="relative w-full h-[120px] md:h-[500px] mx-auto overflow-x-hidden">
         <!-- Contenedor principal -->
-        <div class="relative h-full flex items-center max-w-7xl mx-auto">
+        <div class="relative h-full flex items-center">
             <!-- Slides -->
             <div v-for="(slide, index) in visibleSlides" :key="`${slide.id}-${index}`"
-                class="absolute transition-all duration-500 ease-in-out flex items-center" :style="{
-                    width: isMobile ? '100%' : '90%',
-                    height: isMobile ? '80%' : '100%',
+                class="absolute transition-all duration-500 ease-in-out flex items-center justify-center" :style="{
+                    width: `${SLIDE_WIDTH}%`,
+                    height: '100%',
                     left: getSlidePosition(index),
                     zIndex: getZIndex(index),
-                    opacity: getOpacity(index),
-                    transform: getTransform(index)
+                    opacity: getOpacity(index)
                 }">
                 <!-- Contenido del slide -->
-                <div class="h-full w-full px-1 md:px-2 relative overflow-hidden group" @click="handleSlideClick(index)">
-                    <img :src="slide.image" :alt="slide.title" class="w-full h-full object-cover rounded-lg shadow-sm">
-                    <!-- Efecto flash horizontal -->
-                    <div class="absolute inset-0 overflow-hidden">
-                        <div class="absolute -left-full top-0 w-full h-full bg-gradient-to-r from-transparent via-white/90 to-transparent 
-                            opacity-0 group-hover:opacity-100 group-active:opacity-100 group-hover:animate-horizontal-flash 
-                            group-active:animate-horizontal-flash transition-opacity duration-300 mix-blend-overlay">
-                        </div>
-                    </div>
+                <div class="h-full w-full relative overflow-hidden group" @click="handleSlideClick(index)">
+                    <img :src="slide.image" :alt="slide.title" class="w-full h-full object-contain">
                 </div>
             </div>
         </div>
 
-        <!-- Indicadores -->
-        <div
-            class="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-3 z-50 px-3 py-2 bg-black/30 backdrop-blur-sm rounded-full">
+        <!-- Indicadores simplificados -->
+        <div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex space-x-2 z-50">
             <button v-for="(_, i) in originalSlides" :key="i" @click="goToSlide(i)"
-                class="h-2 w-6 rounded-full transition-all duration-300"
-                :class="currentSlideIndex === i ? 'bg-white' : 'bg-white/40'"
-                :aria-label="'Ir a slide ' + (i + 1)"></button>
+                class="h-1.5 w-4 rounded-full transition-all duration-200"
+                :class="currentSlideIndex === i ? 'bg-white' : 'bg-white/40'"></button>
         </div>
     </div>
 </template>
@@ -40,11 +30,10 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 
-// Configuración
+// Configuración ÚNICA para todos los dispositivos
 const AUTO_ROTATE_INTERVAL = 5000
-const DESKTOP_SLIDE_WIDTH = 80 // Porcentaje del ancho del slide en desktop
-const MOBILE_SLIDE_WIDTH = 100 // Porcentaje del ancho del slide en móvil
-const SLIDE_OFFSET = 2 // Espacio entre slides
+const SLIDE_WIDTH = 65 // Mismo ancho para todos los dispositivos
+const SLIDE_OFFSET = 1 // Espacio fijo entre slides
 
 const originalSlides = [
     { id: 1, title: 'EQUIPAJE DE VIAJE', image: '/banner-1.webp' },
@@ -54,16 +43,11 @@ const originalSlides = [
 
 // Estado
 const currentPosition = ref(1)
-const isMobile = ref(false)
 const intervalId = ref<number | null>(null)
 
 // Computed
 const currentSlideIndex = computed(() => {
     return ((currentPosition.value % originalSlides.length) + originalSlides.length) % originalSlides.length
-})
-
-const visibleSlides = computed(() => {
-    return isMobile.value ? originalSlides : infiniteSlides.value
 })
 
 const infiniteSlides = computed(() => {
@@ -78,52 +62,30 @@ const centerSlideIndex = computed(() => {
     return Math.floor(infiniteSlides.value.length / 2)
 })
 
-// Métodos
-const checkMobile = () => {
-    isMobile.value = window.innerWidth < 768
-}
+const visibleSlides = computed(() => {
+    return infiniteSlides.value
+})
 
+// Métodos
 const getSlidePosition = (index: number) => {
-    if (isMobile.value) {
-        // Para móvil: mostrar 3 slides con el central completo
-        const centerPosition = 50 - (MOBILE_SLIDE_WIDTH / 2)
-        const offset = (index - currentSlideIndex.value) * (MOBILE_SLIDE_WIDTH + SLIDE_OFFSET)
-        return `${centerPosition + offset}%`
-    }
-    // Para desktop: comportamiento original
     const offset = index - (centerSlideIndex.value + currentPosition.value)
-    const totalWidth = DESKTOP_SLIDE_WIDTH + 10
-    return `${50 - (DESKTOP_SLIDE_WIDTH / 2) + (offset * totalWidth)}%`
+    const totalWidth = SLIDE_WIDTH + SLIDE_OFFSET
+    return `${50 - (SLIDE_WIDTH / 2) + (offset * totalWidth)}%`
 }
 
 const getOpacity = (index: number) => {
-    if (isMobile.value) {
-        // Para móvil: opacidad basada en la distancia del slide central
-        const distance = Math.abs(index - currentSlideIndex.value)
-        return distance > 1 ? 0.6 : 1 - (distance * 0.2)
-    }
     const position = Math.abs(index - (centerSlideIndex.value + currentPosition.value))
-    return position > 2 ? 0 : 1 - position * 0.3
+    return position > 1 ? 0.6 : 1 // Solo 2 niveles de opacidad
 }
 
 const getZIndex = (index: number) => {
-    if (isMobile.value) {
-        // Para móvil: z-index más alto para el slide central
-        const distance = Math.abs(index - currentSlideIndex.value)
-        return 50 - distance * 10
-    }
     const position = Math.abs(index - (centerSlideIndex.value + currentPosition.value))
-    return 50 - Math.floor(position) * 10
+    return 50 - position * 10
 }
 
 const getTransform = (index: number) => {
-    if (isMobile.value) {
-        // Para móvil: escala reducida para slides laterales
-        const distance = Math.abs(index - currentSlideIndex.value)
-        return `scale(${1 - distance * 0.01})`
-    }
     const position = Math.abs(index - (centerSlideIndex.value + currentPosition.value))
-    return `scale(${1 - position * 0.0})`
+    return position > 0 ? 'scale(0.98)' : 'scale(1)' // Escala casi imperceptible
 }
 
 const nextSlide = () => {
@@ -144,15 +106,9 @@ const goToSlide = (index: number) => {
 }
 
 const handleSlideClick = (index: number) => {
-    if (isMobile.value) {
-        const distance = index - currentSlideIndex.value
-        if (distance < 0) prevSlide()
-        if (distance > 0) nextSlide()
-    } else {
-        const clickedPosition = index - centerSlideIndex.value
-        if (clickedPosition < 0) prevSlide()
-        if (clickedPosition > 0) nextSlide()
-    }
+    const clickedPosition = index - centerSlideIndex.value
+    if (clickedPosition < 0) prevSlide()
+    if (clickedPosition > 0) nextSlide()
     resetInterval()
 }
 
@@ -177,20 +133,30 @@ const startInterval = () => {
     intervalId.value = window.setInterval(nextSlide, AUTO_ROTATE_INTERVAL)
 }
 
-// Lifecycle
-onMounted(() => {
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    startInterval()
-})
 
-onBeforeUnmount(() => {
-    window.removeEventListener('resize', checkMobile)
-    if (intervalId.value) {
-        clearInterval(intervalId.value)
-        intervalId.value = null
-    }
-})
 </script>
 
-<style scoped></style>
+<style scoped>
+/* Animación flash horizontal */
+@keyframes horizontal-flash {
+    0% {
+        left: -100%;
+    }
+
+    20%,
+    100% {
+        left: 100%;
+    }
+}
+
+.animate-horizontal-flash {
+    animation: horizontal-flash 1.5s ease-out;
+}
+
+/* Asegurar que las imágenes mantengan su relación de aspecto */
+img {
+    object-fit: contain !important;
+    max-width: 100%;
+    max-height: 100%;
+}
+</style>

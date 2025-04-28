@@ -1,17 +1,22 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { defineProps } from 'vue'
 
-// Imagen dinámica (pon aquí la ruta que quieras)
-const backgroundImage = ref('/banner-sale-offer-reverse.webp')  // Tu imagen dentro de /public
+// Definir las props para recibir la imagen y otras configuraciones
+const props = defineProps<{
+    imageSrc: string
+    altText: string
+    height?: string
+    width?: string
+}>()
+
 </script>
 
 <template>
     <div class="flex items-center justify-center m-4 mt-28">
-        <div class="relative w-full max-w-[800px] h-[400px] md:h-[600px] rounded-lg overflow-hidden shadow-lg">
-
+        <div class="relative w-full max-w-[800px] rounded-lg overflow-hidden shadow-lg"
+            :style="{ height: props.height || '400px' }">
             <!-- Imagen dinámica -->
-            <img :src="backgroundImage" alt="Colección exclusiva" class="w-full h-full object-cover" />
-
+            <img :src="props.imageSrc" :alt="props.altText" class="w-full h-full object-cover" />
         </div>
     </div>
 </template>

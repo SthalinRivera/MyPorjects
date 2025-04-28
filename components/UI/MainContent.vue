@@ -3,7 +3,7 @@ import { ref, onMounted } from 'vue'
 
 const banner = ref({
     name: "Gafas de Sol Prada",
-    image: "/banner-1-home.webp",
+    image: "/banner-1-home-2.webp",
 
 })
 
@@ -11,12 +11,12 @@ const products = [
     {
         id: 1,
         name: "Gafas de Sol Prada",
-        image: "/banner-2-home.webp",
+        image: "/banner1.png",
     },
     {
         id: 2,
         name: "Gafas de Sol Prada",
-        image: "/banner-3-home.webp",
+        image: "/banner2.png",
     }
 ]
 </script>

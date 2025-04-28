@@ -6,15 +6,12 @@ declare module '#auth-utils' {
         permiso: string
         urlFoto: string
         usuarioId: number
+
     }
+
 }
 
-declare module 'h3' {
-    interface H3EventContext {
-        user?: UserSession['user']
-    }
-}
-
+// Modificar el tipo UserSession para incluir 'loggedIn'
 interface UserSession {
     user?: {
         id: number
@@ -23,8 +20,17 @@ interface UserSession {
         permiso: string
         urlFoto: string
         usuarioId: number
+
     }
-    loggedIn: boolean
+    loggedIn: boolean; // Aquí está el problema: 'loggedIn' no es reconocido
+
+}
+
+declare module 'h3' {
+    interface H3EventContext {
+        user?: UserSession['user'];  // Hace referencia al tipo 'user' de UserSession
+    }
 }
 
 export { }
+

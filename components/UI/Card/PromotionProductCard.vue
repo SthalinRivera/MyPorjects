@@ -1,5 +1,5 @@
 <template>
-    <div class=" m-2 my-6">
+    <div class=" m-2 mb-6">
         <h1
             class="text-slate-900 dark:text-white font-bold text-3xl mb-6 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:h-1 after:w-20 after:bg-pink-500 after:rounded-full pb-2">
             Productos en Oferta

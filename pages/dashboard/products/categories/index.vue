@@ -50,7 +50,7 @@
                 <div>
                     <h3 class="font-medium text-red-800 dark:text-red-200">Error al cargar categorías</h3>
                     <p class="text-sm text-red-600 dark:text-red-300">{{ error.message || 'Ocurrió un error desconocido'
-                    }}</p>
+                        }}</p>
                 </div>
             </div>
         </div>

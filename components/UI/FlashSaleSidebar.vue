@@ -10,7 +10,7 @@ const flashSaleItems = [
         salePrice: 60.00,
         sold: 100,
         available: 40,
-        image: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=736&q=80"
+        image: "http://localhost:3000/SaleFlash-01.webp"
     },
     {
         id: 2,
@@ -20,7 +20,7 @@ const flashSaleItems = [
         salePrice: 899.00,
         sold: 45,
         available: 15,
-        image: "https://images.unsplash.com/photo-1551232864-3f0890e580d9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80"
+        image: "http://localhost:3000/SaleFlash-02.webp"
     },
     {
         id: 3,
@@ -30,7 +30,7 @@ const flashSaleItems = [
         salePrice: 249.00,
         sold: 78,
         available: 22,
-        image: "https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=725&q=80"
+        image: "http://localhost:3000/SaleFlash-03.webp"
     }
 ];
 
@@ -95,11 +95,11 @@ onUnmounted(() => {
             <div class="relative rounded-lg overflow-hidden mb-5 group" @mouseenter="stopAutoSlide"
                 @mouseleave="startAutoSlide">
                 <!-- Diapositivas -->
-                <div class="relative h-60 overflow-hidden">
+                <div class="relative w-full max-w-md mx-auto aspect-[9/16] overflow-hidden">
                     <div v-for="(item, index) in flashSaleItems" :key="item.id"
                         class="absolute inset-0 transition-opacity duration-500"
                         :class="{ 'opacity-100 z-10': currentIndex === index, 'opacity-0 z-0': currentIndex !== index }">
-                        <img :src="item.image" :alt="item.name" class="w-full h-full object-cover">
+                        <img :src="item.image" :alt="item.name" class="w-full h-full object-cover ">
 
                         <!-- Etiqueta de descuento -->
                         <div
@@ -147,7 +147,7 @@ onUnmounted(() => {
                     <span class="text-sm line-through text-gray-500 dark:text-gray-400 mr-2">${{
                         flashSaleItems[currentIndex].originalPrice.toFixed(2) }}</span>
                     <span class="text-xl font-bold text-red-500">${{ flashSaleItems[currentIndex].salePrice.toFixed(2)
-                        }}</span>
+                    }}</span>
                     <span
                         class="ml-auto text-xs font-medium px-2 py-1 rounded bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
                         ⚡ Oferta Limitada
@@ -167,18 +167,7 @@ onUnmounted(() => {
                     </div>
                 </div>
 
-                <!-- Botón de añadir al carrito con animación hover -->
-                <button
-                    class="w-full py-3 rounded-xl font-bold flex items-center justify-center transition-all duration-300 relative overflow-hidden group bg-red-500 hover:bg-red-600 text-white">
-                    <span class="relative z-10">Añadir al Carrito</span>
-                    <span
-                        class="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-300"></span>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2 relative z-10" fill="none"
-                        viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                    </svg>
-                </button>
+             
             </div>
         </div>
     </aside>
