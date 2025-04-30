@@ -5,7 +5,7 @@
         <div class="flex-grow flex flex-col">
             <div class="relative w-full overflow-hidden rounded-lg">
                 <div
-                    class="w-full h-60 md:h-96 xl:h-[29rem] bg-gray-100 dark:bg-slate-700 flex items-center justify-center">
+                    class="w-full h-60 md:h-96 lg:h-[20rem] xl:h-[24rem] bg-gray-100 dark:bg-slate-700 flex items-center justify-center">
                     <img :src="product.imageUrl" :alt="product.name" class="object-cover w-full h-full" />
                 </div>
             </div>

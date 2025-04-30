@@ -4,34 +4,34 @@ import { useRouter } from 'vue-router'; // Importación opcional para manejar na
 
 const flashSaleItems = [
     {
-        id: 1,
+        id: 9,
         name: "COLLAR DE PRINCESITAS DE DISNEY",
         description: "Material Acero Quirurjico Inoxidable",
         originalPrice: 23.00,
         salePrice: 23.00,
         sold: 1,
         available: 4,
-        image: "http://localhost:3000/SaleFlash-01.webp"
+        image: "SaleFlash-01.webp"
     },
     {
-        id: 2,
+        id: 27,
         name: "COLECCIÓN ARETES VERANO",
         description: "Aretes de acero inoxidable",
         originalPrice: 17.00,
         salePrice: 17.00,
         sold: 1,
         available: 3,
-        image: "http://localhost:3000/SaleFlash-02.webp"
+        image: "SaleFlash-02.webp"
     },
     {
-        id: 3,
+        id: 16,
         name: "PULSERA PANDORAS",
         description: "Pulsera estilo pandora con charms con distintos diseños💝",
         originalPrice: 25.00,
         salePrice: 25.00,
         sold: 1,
         available: 2,
-        image: "http://localhost:3000/SaleFlash-03.webp"
+        image: "SaleFlash-03.webp"
     }
 ];
 
@@ -108,7 +108,7 @@ onUnmounted(() => {
                         </h3>
                         <p class="text-sm text-gray-600 dark:text-gray-300 md:mb-3 line-clamp-1">{{
                             flashSaleItems[currentIndex].description
-                        }}</p>
+                            }}</p>
 
                         <div class="flex items-center nd:mb-4">
                             <span class="text-md font-bold text-gray-500 dark:text-gray-400  mr-2">S/.{{
