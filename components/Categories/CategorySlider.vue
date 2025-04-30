@@ -1,7 +1,7 @@
 <template>
     <div class="">
         <h2 v-if="title"
-            class="text-slate-900 dark:text-white font-bold text-3xl mb-2 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:h-1 after:w-20 after:bg-pink-500 dark:after:bg-pink-600 after:rounded-full pb-2">
+            class="text-slate-900 dark:text-white font-bold text-2xl mb-2 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:h-1 after:w-20 after:bg-pink-500 dark:after:bg-pink-600 after:rounded-full pb-2">
             {{ title }}
         </h2>
         <p class="text-sm sm:text-base text-gray-500 dark:text-gray-400 my-4">

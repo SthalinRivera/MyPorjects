@@ -11,7 +11,7 @@ useMotion(titleRef, {
 });
 </script>
 <template>
-  <div class="md:h-96 h-32 flex items-center justify-center bg-cover bg-center relative rounded-xl"
+  <div class="md:h-96 h-32 flex items-center justify-center bg-cover bg-center relative rounded-lg"
     style="background-image: url('/banner1.jpg');">
     <!-- <div class="absolute inset-0 bg-black/100"></div> -->
     <h1 ref="titleRef"

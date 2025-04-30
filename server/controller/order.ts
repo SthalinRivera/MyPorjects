@@ -40,7 +40,7 @@ export const addWhatsAppOrder = async (event: H3Event): Promise<string> => {
 
     const createdOrder = await prisma.order.create({
       data: {
-        userId: request.userId || 3, // admin por defecto
+        userId: request.userId || 2, // admin por defecto
         clientName: request.clientName || null,
         clientPhone: request.clientPhone || null,
         total: request.total,

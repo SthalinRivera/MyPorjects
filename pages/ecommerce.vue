@@ -3,9 +3,9 @@ import { ref, onMounted } from 'vue'
 
 import ProductCard from '~/components/UI/Card/ProductCard.vue';
 
-import CategorySidebar from '~/components/UI/CategorySidebar.vue';
-import FlashSaleSidebar from '~/components/UI/FlashSaleSidebar.vue';
-import MainContent from '~/components/UI/MainContent.vue';
+import CategorySidebar from '~/components/Categories/CategorySidebar.vue';
+import FlashSaleSidebar from '~/components/promotion/FlashSaleSidebar.vue';
+import MainContent from '~/components/promotion/MainContent.vue';
 import Subscription from '~/components/UI/Subscription/Subscription.vue';
 import PromotionProductCard from '~/components/UI/Card/PromotionProductCard.vue';
 import Sale from '~/components/UI/CardSale/Sale.vue';

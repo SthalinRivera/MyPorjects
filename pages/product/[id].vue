@@ -12,8 +12,8 @@
             <div class="flex flex-col lg:flex-row bg-white dark:bg-gray-800">
                 <!-- Galería de imágenes -->
                 <div class="lg:w-1/2 p-2 md:p-6 bg-gray-50 dark:bg-gray-700">
-                    <div class="relative h-96 rounded-xl overflow-hidden">
-                        <img class="w-full h-full object-contain transition-all duration-300 hover:scale-105 cursor-zoom-in"
+                    <div class="relative h-96 rounded-lg overflow-hidden">
+                        <img class="w-full h-full object-cover transition-all duration-300 hover:scale-105 cursor-zoom-in"
                             :src="currentDisplayImage" :alt="product.name"
                             @click="openImageModal(currentDisplayImage)" />
                         <span v-if="product.stock < 10"
@@ -201,64 +201,10 @@
                     <UIcon name="i-heroicons-arrow-right" class="w-4 h-4 ml-1" />
                 </NuxtLink>
             </div>
-
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div v-for="relatedProduct in relatedProducts" :key="relatedProduct.id"
-                    class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 group">
-                    <div class="relative">
-                        <NuxtLink :to="`/product/${relatedProduct.id}`">
-                            <img class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105"
-                                :src="relatedProduct.imageUrl" :alt="relatedProduct.name" />
-                        </NuxtLink>
-                        <button @click="addToFavorites(relatedProduct)"
-                            class="absolute top-3 right-3 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm p-2 rounded-full hover:bg-pink-500 dark:hover:bg-pink-500 transition-colors duration-300">
-                            <UIcon name="i-heroicons-heart"
-                                class="w-5 h-5 text-pink-500 dark:text-pink-400 group-hover:text-white" />
-                        </button>
-                        <span v-if="relatedProduct.stock < 5"
-                            class="absolute top-3 left-3 bg-pink-500 text-white text-xs font-bold px-2 py-1 rounded">
-                            ¡Últimas unidades!
-                        </span>
-                    </div>
-
-
-
-                    <div class="p-4">
-                        <div class="flex justify-between items-start mb-2">
-                            <NuxtLink :to="`/product/${relatedProduct.id}`"
-                                class="font-medium text-gray-700 dark:text-gray-300 hover:text-pink-500 dark:hover:text-pink-400">
-                                {{ relatedProduct.category?.name || 'General' }}
-                            </NuxtLink>
-                            <div class="flex items-center text-yellow-400 text-sm">
-                                <UIcon name="i-heroicons-star-solid" class="w-4 h-4" />
-                                <span class="ml-1 text-gray-600 dark:text-gray-400">4.8</span>
-                            </div>
-                        </div>
-
-                        <NuxtLink :to="`/product/${relatedProduct.id}`">
-                            <h3 class="font-semibold text-lg text-gray-900 dark:text-white mb-2 line-clamp-1">
-                                {{ relatedProduct.name }}
-                            </h3>
-                        </NuxtLink>
-
-                        <p class="text-gray-600 dark:text-gray-400 text-sm mb-3 line-clamp-2">
-                            {{ relatedProduct.description }}
-                        </p>
-
-                        <div class="flex justify-between items-center">
-                            <span class="font-bold text-pink-500 dark:text-pink-400">
-                                S/ {{ relatedProduct.price }}
-                            </span>
-                            <button @click="addToCart(relatedProduct)"
-                                class="text-sm bg-pink-500 hover:bg-pink-600 text-white px-3 py-1 rounded-full transition-colors duration-300">
-                                <UIcon name="i-heroicons-plus" class="w-4 h-4" />
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                <ProductCardReusable v-for="product in relatedProducts" :key="product.id" :product="product" />
             </div>
         </div>
-
         <!-- Modal del carrito -->
         <ShoppingCart :isOpen="isOpen" @update:isOpen="isOpen = $event" />
     </div>

@@ -293,7 +293,7 @@ const sendWhatsAppOrder = async () => {
         const phoneNumber = '51919753974';
         const whatsappBaseUrl = 'https://wa.me';
 
-        const userId = user.value?.id || 22;
+        const userId = user.value?.id || 2;
         const clientName = user.value?.name || customerData.name;
         const clientPhone = user.value?.phoneNumber || customerData.phone;
 

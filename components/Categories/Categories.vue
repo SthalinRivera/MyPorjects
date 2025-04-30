@@ -32,6 +32,7 @@
 
 <script setup lang="ts">
 import type { Category } from '~/interfaces/category';
+import CategorySlider from './CategorySlider.vue';
 
 const { data: categoriesData, pending } = await useFetch<Category[]>('/api/v1/category', {
     transform: (data) => data.map(cat => ({

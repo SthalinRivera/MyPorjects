@@ -1,15 +1,15 @@
 <template>
-    <div class="min-h-screen flex flex-col transition-colors duration-300 ">
+    <div class="min-h-screen flex flex-col transition-colors duration-300 bg-white dark:bg-slate-900 ">
         <!-- Navbar sticky -->
         <Navbar class="sticky top-0 z-50 shadow-sm " />
 
         <!-- Main content with proper spacing and max-width constraints -->
         <main class="flex-1">
-            <UContainer class="p-2">
-                <div class="mx-auto max-w-7xl">
-                    <slot />
-                </div>
-            </UContainer>
+
+            <div class="m-2 ">
+                <slot />
+            </div>
+
         </main>
 
         <!-- Floating cart button (positioned fixed) -->
