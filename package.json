@@ -21,6 +21,7 @@
     "firebase": "^10.14.1",
     "nuxt": "^3.12.3",
     "nuxt-auth-utils": "^0.2.0",
+    "nuxt-charts": "^0.1.4",
     "nuxt-icon": "^1.0.0-beta.7",
     "pg": "^8.12.0",
     "pinia": "^2.1.7",

@@ -13,7 +13,7 @@ export default defineNuxtConfig({
     'remixicon/fonts/remixicon.css' // Añadido aquí
   ],
   modules: [// ...
-    '@pinia/nuxt', '@pinia-plugin-persistedstate/nuxt', ["@nuxtjs/i18n", {
+    '@pinia/nuxt', '@pinia-plugin-persistedstate/nuxt', "nuxt-charts", ["@nuxtjs/i18n", {
       vueI18n: "./i18n"
     }], "@nuxt/ui", "nuxt-auth-utils", 'nuxt-file-storage', "nuxt-icon"],
   pinia: {

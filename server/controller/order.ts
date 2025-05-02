@@ -3,35 +3,154 @@ import { PrismaClient } from "@prisma/client";
 import { Order } from "~/interfaces/order";
 const prisma = new PrismaClient();
 
+// Tipos para los filtros
+interface OrderFilters {
+  userId?: number;
+  status?: string;
+  startDate?: string;
+  endDate?: string;
+  page?: number;
+  limit?: number;
+}
+// Obtener todas las órdenes con filtros
 export const getAllOrders = async (event: H3Event) => {
   try {
-    // Obtiene todas las órdenes de la base de datos
-    const orders = await prisma.order.findMany({
-      include: {
-        orderItems: {
-          include: {
-            product: true, // Obtiene los detalles del producto.
-          },
-        },
-      },
-    });
-    console.log(orders);  // Verifica si se obtienen todas las órdenes correctamente
-    if (!orders || orders.length === 0) {
-      throw createError({
-        statusCode: 404,
-        message: "No orders found",
-      });
+    const query = getQuery(event);
+
+    const filters: OrderFilters = {
+      userId: query.userId && query.userId !== 'ALL' ? Number(query.userId) : undefined,
+      status: query.status && query.status !== 'ALL' ? String(query.status) : undefined,
+      startDate: query.startDate ? String(query.startDate) : undefined,
+      endDate: query.endDate ? String(query.endDate) : undefined,
+      page: query.page ? Number(query.page) : 1,
+      limit: query.limit ? Number(query.limit) : 10
+    };
+
+    const where: any = {};
+
+    if (filters.userId) {
+      where.userId = filters.userId;
     }
 
-    return { orders }; // Devuelve todas las órdenes.
+    if (filters.status) {
+      where.status = filters.status;
+    }
+
+    if (filters.startDate && filters.endDate) {
+      where.createdAt = {
+        gte: new Date(filters.startDate),
+        lte: new Date(filters.endDate)
+      };
+    } else if (filters.startDate) {
+      where.createdAt = {
+        gte: new Date(filters.startDate)
+      };
+    } else if (filters.endDate) {
+      where.createdAt = {
+        lte: new Date(filters.endDate)
+      };
+    }
+
+    const skip = (filters.page - 1) * filters.limit;
+    const take = filters.limit;
+
+    const [orders, total] = await Promise.all([
+      prisma.order.findMany({
+        where,
+        skip,
+        take,
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              phoneNumber: true,
+              avatarUrl: true
+            }
+          },
+          orderItems: {
+            include: {
+              product: {
+                select: {
+                  id: true,
+                  name: true,
+                  price: true,
+                  imageUrl: true
+                }
+              }
+            }
+          },
+          coupon: {
+            select: {
+              id: true,
+              code: true,
+              discount: true,
+              isPercentage: true
+            }
+          }
+        },
+        orderBy: {
+          createdAt: 'desc'
+        }
+      }),
+      prisma.order.count({ where })
+    ]);
+
+    return {
+      orders: orders.map(order => ({
+        ...order,
+        clientName: order.user?.name || order.clientName,
+        clientEmail: order.user?.email,
+        clientPhone: order.user?.phoneNumber || order.clientPhone
+      })),
+      total
+    };
   } catch (error) {
     throw createError({
       statusCode: 500,
-      name: "Error Fetching Orders",
-      message: error.message,
+      message: 'Error fetching orders',
+      data: error
     });
   }
 };
+
+// Obtener estadísticas de órdenes
+export const getOrderStats = async (event: H3Event) => {
+  try {
+    const [
+      totalOrders,
+      pendingOrders,
+      processedOrders,
+      shippedOrders,
+      deliveredOrders,
+      canceledOrders
+    ] = await Promise.all([
+      prisma.order.count(),
+      prisma.order.count({ where: { status: 'PENDING' } }),
+      prisma.order.count({ where: { status: 'PROCESSED' } }),
+      prisma.order.count({ where: { status: 'SHIPPED' } }),
+      prisma.order.count({ where: { status: 'DELIVERED' } }),
+      prisma.order.count({ where: { status: 'CANCELED' } })
+    ]);
+
+    return {
+      totalOrders,
+      pendingOrders,
+      processedOrders,
+      shippedOrders,
+      deliveredOrders,
+      canceledOrders
+    };
+  } catch (error) {
+    throw createError({
+      statusCode: 500,
+      message: 'Error fetching order statistics',
+      data: error
+    });
+  }
+};
+
 
 
 export const addWhatsAppOrder = async (event: H3Event): Promise<string> => {
@@ -107,46 +226,52 @@ export const addOrder = async (event: H3Event): Promise<string> => {
 
 export const getOrderById = async (event: H3Event) => {
   try {
-    const request = getRouterParams(event);  // Extracts parameters from the event object
-
-    const id = Number(request.id); // Ensure categoryId is a number
-
-    if (!id) {
+    const { id } = getRouterParams(event)
+    if (!id || isNaN(Number(id))) {
       throw createError({
         statusCode: 400,
-        message: "Order ID is required",
-      });
+        message: "ID de orden inválido"
+      })
     }
 
-    // Busca la orden en la base de datos
     const order = await prisma.order.findUnique({
-      where: { id: id },
+      where: { id: Number(id) },
       include: {
+        user: true,
         orderItems: {
           include: {
-            product: true, // Obtiene los detalles del producto.
-          },
+            product: true
+          }
         },
-      },
-    });
-    console.log(order);  // Verifica si se obtiene la orden correctamente
+        coupon: true
+      }
+    })
+
     if (!order) {
       throw createError({
         statusCode: 404,
-        message: "Order not found",
-      });
+        message: "Orden no encontrada"
+      })
     }
 
-    return { order }; // Devuelve los detalles de la orden.
+    // Asegúrate de devolver un objeto con estructura clara
+    return {
+      success: true,
+      data: {
+        ...order,
+        // Transforma fechas a string si es necesario
+        createdAt: order.createdAt.toISOString(),
+        updatedAt: order.updatedAt?.toISOString() || null
+      }
+    }
   } catch (error) {
+    console.error("Error en getOrderById:", error)
     throw createError({
       statusCode: 500,
-      name: "Error Fetching Projects",
-      message: error.message,
-    });
+      message: "Error al obtener la orden"
+    })
   }
-};
-
+}
 export const getOrdersByUser = async (event: H3Event) => {
   try {
     // Obtiene el ID del usuario desde los parámetros de la URL

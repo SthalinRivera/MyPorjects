@@ -30,7 +30,8 @@ router.post('/addOrder', defineEventHandler(orderController.addOrder));
 router.post('/addWhatsAppOrder', defineEventHandler(orderController.addWhatsAppOrder));
 router.get('/orders/:id', defineEventHandler(orderController.getOrderById));
 router.get('/ordersByUser/:id', defineEventHandler(orderController.getOrdersByUser));
-
+// Obtener estadísticas de órdenes
+router.get('/orders/stats', defineEventHandler(orderController.getOrderStats));
 
 // ❤️ FAVORITOS
 router.post('/addlike', defineEventHandler(favoritesController.addLike));

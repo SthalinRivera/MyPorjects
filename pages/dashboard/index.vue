@@ -7,7 +7,25 @@ definePageMeta({
 const { data: report, pending, error } = await useAsyncData('dashboardReport', () =>
     $fetch('/api/v1/dashboardReport')
 );
+const { data: visitStats } = await useFetch('/api/v1/getVisitStats')
 
+const fallbackData = {
+    daily: {
+        "2025-04-24": 15,
+        "2025-04-25": 52,
+        "2025-04-26": 71,
+        "2025-04-27": 27
+    },
+    weekly: {},
+    monthly: {},
+    yearly: {}
+}
+
+const selectedType = ref<'daily' | 'weekly' | 'monthly' | 'yearly'>('daily')
+
+const filteredData = computed(() => {
+    return visitStats?.value?.[selectedType.value] || fallbackData[selectedType.value]
+})
 // Funciones para formatear datos
 const formatoNumero = (num: number) => new Intl.NumberFormat('es-ES').format(num);
 const formatoMoneda = (monto: number) => new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'PEN' }).format(monto);
@@ -263,9 +281,20 @@ const formatoFecha = (fechaString: string) => new Date(fechaString).toLocaleDate
                         <i class="ri-line-chart-line mr-2 text-blue-500"></i>
                         Estadísticas de Visitas
                     </h3>
-                    <div class="h-full p-0">
-                        <VisitChart />
+                    <div class="h-auto p-0">
+                        <!-- Selector -->
+                        <div class="">
+                            <select v-model="selectedType"
+                                class="border rounded px-3 py-1 dark:bg-gray-700 dark:text-white">
+                                <option value="daily">Diario</option>
+                                <option value="weekly">Semanal</option>
+                                <option value="monthly">Mensual</option>
+                                <option value="yearly">Anual</option>
+                            </select>
+                        </div>
+                        <ChartVisitByDayMonYear :daily-data="filteredData" />
                     </div>
+
                 </div>
             </div>
 
@@ -274,20 +303,4 @@ const formatoFecha = (fechaString: string) => new Date(fechaString).toLocaleDate
     </div>
 </template>
 
-<style scoped>
-/* Transiciones suaves para hover */
-a,
-button,
-.shadow-sm {
-    transition: all 0.2s ease-in-out;
-}
-
-/* Sombras más sutiles */
-.shadow-sm {
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-.hover\:shadow-md:hover {
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-</style>
+<style scoped></style>
