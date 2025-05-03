@@ -36,9 +36,9 @@ const SLIDE_WIDTH = 65 // Mismo ancho para todos los dispositivos
 const SLIDE_OFFSET = 1 // Espacio fijo entre slides
 
 const originalSlides = [
-    { id: 1, title: 'EQUIPAJE DE VIAJE', image: '/banner-1.webp' },
-    { id: 2, title: 'COLECCIÓN VERANO', image: '/banner-2.webp' },
-    { id: 3, title: 'MODA URBANA', image: '/banner-3.webp' }
+    { id: 1, title: 'EQUIPAJE DE VIAJE', image: '/img-1.jpg' },
+    { id: 2, title: 'COLECCIÓN VERANO', image: '/img-2.jpg' },
+    { id: 3, title: 'MODA URBANA', image: '/img-3.jpg' }
 ]
 
 // Estado

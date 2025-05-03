@@ -8,9 +8,9 @@
 
 <script setup lang="ts">
 useHead({
-  title: '𝗦𝘂𝗻𝘀𝗵𝗶𝗻𝗲 | 𝗔𝗰𝗰𝗲𝘀𝗼𝗿𝗶𝗼𝘀, 𝗝𝗼𝘆𝗮𝘀 𝘆 𝗺𝗮́𝘀',
+  title: 'FlorBelle | Productos de belleza, floreria y más',
   meta: [
-    { name: 'description', content: '𝗦𝘂𝗻𝘀𝗵𝗶𝗻𝗲 | 𝗔𝗰𝗰𝗲𝘀𝗼𝗿𝗶𝗼𝘀, 𝗝𝗼𝘆𝗮𝘀 𝘆 𝗺𝗮́𝘀' }
+    { name: 'description', content: 'FlorBelle | Productos de belleza, floreria y más' }
   ],
   bodyAttrs: {
     class: 'test'

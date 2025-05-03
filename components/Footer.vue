@@ -6,16 +6,16 @@
                 <div class="grid gap-10 row-gap-6 mb-8 sm:grid-cols-2 lg:grid-cols-4">
                     <div class="sm:col-span-2">
                         <NuxtLink to="/" class="flex items-center gap-2" @click="isMobileMenuOpen = false">
-                            <img src="/logo-ligh.png" alt="Logo Claro" class="h-8 block dark:hidden">
-                            <img src="/logo-dark.png" alt="Logo Oscuro" class="h-8 hidden dark:block">
+                            FlorBelle
+                            <!-- <img src="/logo-ligh.png" alt="Logo Claro" class="h-8 block dark:hidden">
+                            <img src="/logo-dark.png" alt="Logo Oscuro" class="h-8 hidden dark:block"> -->
                         </NuxtLink>
                         <div class="mt-6 lg:max-w-sm">
                             <p class="text-sm text-slate-600 dark:text-slate-300">
-                                Descubre lo mejor en moda y accesorios con nuestros productos exclusivos.
+                                Cuidado personal, frescura natural y detalles únicos. Encuentra elegancia y bienestar en
+                                un solo lugar.
                             </p>
-                            <p class="mt-4 text-sm text-slate-600 dark:text-slate-300">
-                                Estilo, calidad y elegancia en un solo lugar.
-                            </p>
+
                         </div>
                     </div>
                     <div class="space-y-2 text-sm">
@@ -24,29 +24,29 @@
                             <p class="mr-1 text-slate-600 dark:text-slate-300">Teléfono:</p>
                             <a href="tel:850-123-5021"
                                 class="transition-colors duration-300 hover:text-pink-600 dark:hover:text-pink-400">+51
-                                919753974 - +51 922869225</a>
+                                942269610</a>
                         </div>
                         <div class="flex">
                             <p class="mr-1 text-slate-600 dark:text-slate-300">Email:</p>
                             <a href="mailto:info@lorem.mail"
-                                class="transition-colors duration-300 hover:text-pink-600 dark:hover:text-pink-400">sunshine@gmail.com</a>
+                                class="transition-colors duration-300 hover:text-pink-600 dark:hover:text-pink-400">florbelle@gmail.com</a>
                         </div>
                         <div class="flex">
                             <p class="mr-1 text-slate-600 dark:text-slate-300">Dirección:</p>
                             <a href="https://www.google.com/maps" target="_blank" rel="noopener noreferrer"
                                 class="transition-colors duration-300 hover:text-pink-600 dark:hover:text-pink-400">
-                                Quilmana - Cañete - Lima</a>
+                                Chimbote-Perú</a>
                         </div>
                     </div>
                     <div>
                         <span class="text-base font-bold tracking-wide text-slate-800 dark:text-white">Síguenos</span>
                         <div class="flex items-center mt-2 space-x-4">
 
-                            <a href="https://www.instagram.com/sunshinemadeforyou?igsh=a2FrdHdhbTZiYng1" target="_blank"
+                            <a href="#" target="_blank"
                                 class="text-slate-600 dark:text-slate-300 hover:text-pink-500 dark:hover:text-pink-400 transition-transform transform hover:scale-110">
                                 <i class="ri-instagram-fill ri-xl"></i>
                             </a>
-                            <a href="https://www.facebook.com/share/18p364PybW/" target="_blank"
+                            <a href="#" target="_blank"
                                 class="text-slate-600 dark:text-slate-300 hover:text-pink-500 dark:hover:text-pink-400 transition-transform transform hover:scale-110">
                                 <i class="ri-facebook-fill ri-xl"></i>
                             </a>

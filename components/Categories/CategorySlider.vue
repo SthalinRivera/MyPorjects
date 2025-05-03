@@ -23,41 +23,43 @@
                 :style="{ scrollBehavior: 'smooth' }" @mousedown="startDrag" @mousemove="onDrag" @mouseup="endDrag"
                 @mouseleave="endDrag" @touchstart="startDrag" @touchmove="onDrag" @touchend="endDrag">
                 <div v-for="category in categories" :key="category.id"
-                    class="flex-shrink-0 w-40 sm:w-48 md:w-56 group/card flex flex-col items-center pb-4"
+                    class="flex w-full max-w-3xl mx-auto items-center gap-4 p-4 mb-4 rounded-xl bg-slate-100 dark:bg-slate-800 shadow group/card cursor-pointer transition-all hover:shadow-md"
                     @click="emit('categoryClick', category)">
-                    <!-- Imagen circular con cursor pointer -->
+
+                    <!-- Imagen -->
                     <div
-                        class="h-32 w-32 md:h-40 md:w-40 rounded-full overflow-hidden mt-6 mb-1 relative group-hover/card:scale-105 transition-all duration-300 cursor-pointer">
-                        <!-- Imagen de fondo o icono -->
-                        <div class="h-full w-full flex items-center justify-center bg-gray-100 dark:bg-gray-700" :style="category.imageUrl ? {
+                        class="h-20 w-20 sm:h-24 sm:w-24 flex-shrink-0 rounded-lg overflow-hidden relative transition-all duration-300 group-hover/card:scale-105">
+                        <div class="h-full w-full flex items-center justify-center bg-gray-200 dark:bg-gray-700" :style="category.imageUrl ? {
                             'background-image': `url('${category.imageUrl}')`,
                             'background-size': imageFit,
                             'background-position': 'center'
                         } : ''">
-                            <!-- Icono de respaldo si no hay imagen -->
                             <i v-if="!category.imageUrl"
-                                :class="`${defaultIcon} text-4xl md:text-5xl text-gray-600 dark:text-gray-400 transition-all duration-300 group-hover/card:text-white`"></i>
+                                :class="`${defaultIcon} text-2xl sm:text-3xl text-gray-600 dark:text-gray-300 group-hover/card:text-white transition-all duration-300`"></i>
                         </div>
 
-                        <!-- Overlay hover circular -->
+                        <!-- Overlay con ícono -->
                         <div
-                            class="absolute inset-0 bg-black bg-opacity-0 group-hover/card:bg-opacity-40 transition-all duration-300 flex items-center justify-center rounded-full cursor-pointer">
+                            class="absolute inset-0 bg-black bg-opacity-0 group-hover/card:bg-opacity-40 transition-all duration-300 flex items-center justify-center cursor-pointer rounded-lg">
                             <i v-if="showLinkIcon"
-                                class="ri-external-link-line text-white text-3xl opacity-0 group-hover/card:opacity-100 transition-all duration-300 transform group-hover/card:scale-125"></i>
+                                class="ri-external-link-line text-white text-xl sm:text-2xl opacity-0 group-hover/card:opacity-100 group-hover/card:scale-125 transition-all duration-300"></i>
                         </div>
                     </div>
 
-                    <!-- Texto centrado -->
-                    <div class="p-2 text-center w-full">
-                        <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-1">{{ category.name }}</h3>
+                    <!-- Texto -->
+                    <div class="flex flex-col justify-start flex-1">
+                        <h3 class="text-base sm:text-lg font-semibold text-gray-800 dark:text-gray-100 mb-1">
+                            {{ category.name }}
+                        </h3>
                         <slot name="description" :category="category">
                             <p v-if="category.description"
-                                class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 mx-auto max-w-[90%]">
+                                class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
                                 {{ category.description }}
                             </p>
                         </slot>
                     </div>
                 </div>
+
             </div>
 
             <!-- Navigation buttons - Desktop CORREGIDO (ahora usa handleScrollRight) -->

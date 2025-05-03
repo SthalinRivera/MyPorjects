@@ -290,7 +290,7 @@ const initiateWhatsAppOrder = () => {
 };
 const sendWhatsAppOrder = async () => {
     try {
-        const phoneNumber = '51919753974';
+        const phoneNumber = '51942269610';
         const whatsappBaseUrl = 'https://wa.me';
 
         const userId = user.value?.id || 2;

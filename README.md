@@ -1,77 +1,24 @@
-# Nuxt 3 Minimal Starter
+## 🌸 Catálogo Online de Belleza y Florería
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Este proyecto ha sido desarrollado como parte de un curso práctico con el objetivo de crear un sistema moderno y funcional para la gestión de productos de belleza y florería en línea. Combina tecnologías actuales del desarrollo web para garantizar rendimiento, escalabilidad y una excelente experiencia de usuario.
 
-## Setup
+### 🛠️ Tecnologías Utilizadas
 
-[Tutorial del curso que estamos levando :](https://www.youtube.com/watch?v=jaGxps_D1dw&list=PLxd1RHU8YgYmTKohDs2lTqGvy0eaZJFfK&index=7&ab_channel=PabloCodes)
+- **[Nuxt 3](https://nuxt.com/)** – Framework moderno basado en Vue 3 para SSR y SSG.
+- **[Tailwind CSS](https://tailwindcss.com/)** – Estilos rápidos, personalizables y responsivos.
+- **[Firebase](https://firebase.google.com/)** – Autenticación, base de datos en tiempo real y almacenamiento.
+- **[PostgreSQL](https://www.postgresql.org/)** alojado en **[Neon](https://neon.tech/)** – Base de datos relacional en la nube.
+- **[Pinia](https://pinia.vuejs.org/)** – Manejo del estado global en Vue.
+- **[Vue3 Toastify](https://vue3-toastify.js-bridge.com/)** – Notificaciones amigables para el usuario.
+- **[Nuxt UI](https://ui.nuxt.com/)** – Componentes preconstruidos para interfaces modernas.
+- **[Vercel](https://vercel.com/)** – Plataforma de despliegue instantáneo.
 
- nuxt con Pinia :  https://pinia.vuejs.org/ssr/nuxt.html
+### 👨‍💻 Desarrollado por:
 
-## Development Server
+**Sthalin RIvera**  
+[Tu Sitio Web o Portafolio](https://sthalin.vercel.app)  
+[Tu Correo Electrónico](sthalin.11@gmail.com)
 
-https://vue3-toastify.js-bridge.com/get-started/installation.html
-npm install --save vue3-toastify
-Start the development server on `http://localhost:3000`:
+---
 
-
-### instalar NuxtUI
-```bash
-npx nuxi@latest module add ui
-```
-### crear archivo  tailwind.config.js
-touch tailwind.config.js
-
-```bash
-# npm
- import type { Config } from "tailwindcss";
-export default <Partial<Config>>{
-content: ["docs/content/**/*.md"],
-};
-```
-# crear un archivo en ./assets/tailwind.css
-
-```bash
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-```
-## Production
-
-Build the application for production:
-## API de cllientes  list users etc..
-```bash
-https://reqres.in/
-```
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+✨ Gracias por visitar nuestro sistema de catálogo online. ¡Esperamos que encuentres justo lo que buscas!

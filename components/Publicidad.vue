@@ -1,8 +1,10 @@
 <script setup lang="ts">
 const items = [
-    { src: '/ban1.webp', link: '/category/1' },
-    { src: '/ban2.webp', link: '/category/2' },
-    { src: '/ban3.webp', link: '/category/3' }
+    { src: '/img-1.jpg', link: '/category/1' },
+    { src: '/img-2.jpg', link: '/category/2' },
+    { src: '/img-3.jpg', link: '/category/3' },
+    { src: '/img-4.jpg', link: '/category/3' },
+    { src: '/img-5.jpg', link: '/category/3' },
 ]
 </script>
 

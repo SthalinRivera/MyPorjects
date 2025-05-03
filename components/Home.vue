@@ -5,11 +5,8 @@
       <div class="lg:col-span-1">
         <CategorySidebar />
       </div>
-      <div class="lg:col-span-2">
-        <MainContent />
-      </div>
-      <div class="lg:col-span-1">
-        <FlashSaleSidebar />
+      <div class="lg:col-span-3">
+        <UICarouselPortadaSlider></UICarouselPortadaSlider>
       </div>
     </div>
     <Categories></Categories>

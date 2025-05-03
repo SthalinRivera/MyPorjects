@@ -6,7 +6,7 @@
       <!-- Imagen de fondo de joyería (con overlay) -->
       <div class="absolute inset-0 w-full h-full">
         <div class="absolute inset-0 bg-black/40 dark:bg-black/60 z-10"></div>
-        <img src="/banner-5.webp" alt="Joyería de lujo" class="w-full h-full object-cover" />
+        <img src="/banner-2.jpg" alt="Joyería de lujo" class="w-full h-full object-cover" />
       </div>
 
       <!-- Patrón decorativo -->
@@ -29,10 +29,11 @@
               </div>
               <!-- Texto -->
               <h3 class="text-2xl font-bold text-white dark:text-white mb-2">
-                Descubre nuestras colecciones exclusivas
+                Descubre nuestras colecciones de belleza y flores
               </h3>
               <p class="text-gray-100 dark:text-gray-200 mb-6">
-                Sé el primero en conocer nuestras nuevas joyas y accede a ofertas especiales
+                Sé el primero en conocer nuestros productos de cuidado personal y arreglos florales únicos, con acceso a
+                promociones especiales
               </p>
             </div>
             <div class="w-full md:w-auto flex flex-col sm:flex-row gap-3">

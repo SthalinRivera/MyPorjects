@@ -21,7 +21,7 @@
         <CategorySlider v-else title="Nuestras Categorías" :categories="categories" default-icon="ri-store-line"
             @category-click="navigateToCategory">
             <template #description="{ category }">
-                <div class="text-xs text-gray-500 dark:text-gray-400 flex justify-center items-center">
+                <div class="text-xs text-gray-500 dark:text-gray-400 flex  items-center">
                     <i class="ri-boxing-line mr-1"></i>
                     {{ category._count?.products || 0 }} productos
                 </div>
