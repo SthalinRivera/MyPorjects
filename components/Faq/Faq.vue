@@ -43,11 +43,13 @@
             </div>
           </div>
         </div>
-
         <!-- Imagen decorativa -->
-        <div class="lg:w-1/2 hidden lg:block">
-          <img src="/questios.jpeg" alt="Persona revisando preguntas frecuentes"
-            class="w-full h-auto rounded-xl object-cover shadow-lg">
+        <div class="relative lg:w-1/2 hidden lg:flex justify-center items-center">
+          <img src="/questios.png" alt="Persona revisando preguntas frecuentes" class="w-96 h-auto">
+          <!-- Degradado adaptable al modo claro y oscuro -->
+          <div class="absolute bottom-0 w-full h-20 
+              bg-gradient-to-b from-transparent to-white dark:to-gray-900">
+          </div>
         </div>
       </div>
     </div>

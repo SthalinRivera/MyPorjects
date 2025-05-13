@@ -50,7 +50,7 @@
                 <div>
                     <h3 class="font-medium text-red-800 dark:text-red-200">Error al cargar categorías</h3>
                     <p class="text-sm text-red-600 dark:text-red-300">{{ error.message || 'Ocurrió un error desconocido'
-                        }}</p>
+                    }}</p>
                 </div>
             </div>
         </div>
@@ -509,12 +509,12 @@ const fetchCategories = async () => {
 // Funciones CRUD
 const createCategory = async () => {
     if (!newCategory.value.name.trim()) {
-        $toast.error("El nombre de la categoría es requerido");
+        $toast.warning("El nombre de la categoría es requerido");
         return;
     }
 
     if (!newCategory.value.imageUrl) {
-        $toast.error("Por favor, sube una imagen para la categoría");
+        $toast.warning("Por favor, sube una imagen para la categoría");
         return;
     }
 
@@ -531,10 +531,7 @@ const createCategory = async () => {
 
         const { error: createError } = await useFetch('/api/v1/addCategory', {
             method: "POST",
-            body: newCategory.value,
-            headers: {
-                'Authorization': `Bearer ${user.value?.token}`
-            }
+            body: newCategory.value
         });
 
         if (createError.value) {
@@ -560,9 +557,6 @@ const deleteCategory = async (id: number) => {
         loading.value = true;
         const { error: deleteError } = await useFetch(`/api/v1/deleteCategory/${id}`, {
             method: "DELETE",
-            headers: {
-                'Authorization': `Bearer ${user.value?.token}`
-            }
         });
 
         if (deleteError.value) {
@@ -581,7 +575,7 @@ const deleteCategory = async (id: number) => {
 
 const updateCategory = async () => {
     if (!editingCategory.value?.name?.trim()) {
-        $toast.error("El nombre de la categoría es requerido");
+        $toast.warning("El nombre de la categoría es requerido");
         return;
     }
 
@@ -597,9 +591,6 @@ const updateCategory = async () => {
         const { error: updateError } = await useFetch(`/api/v1/updateCategory/${editingCategory.value.id}`, {
             method: "PUT",
             body: editingCategory.value,
-            headers: {
-                'Authorization': `Bearer ${user.value?.token}`
-            }
         });
 
         if (updateError.value) {

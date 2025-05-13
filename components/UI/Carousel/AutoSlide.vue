@@ -32,7 +32,7 @@ import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 
 // Configuración ÚNICA para todos los dispositivos
 const AUTO_ROTATE_INTERVAL = 5000
-const SLIDE_WIDTH = 65 // Mismo ancho para todos los dispositivos
+const SLIDE_WIDTH = 95 // Mismo ancho para todos los dispositivos
 const SLIDE_OFFSET = 1 // Espacio fijo entre slides
 
 const originalSlides = [

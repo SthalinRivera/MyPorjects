@@ -3,6 +3,23 @@ import { PrismaClient } from "@prisma/client";
 import { Product } from "~/interfaces/product";
 
 const prisma = new PrismaClient();
+type ProductWithPromotion = {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  stock: number;
+  imageUrl: string;
+  categoryId: number;
+  promotions?: {
+    title: string;
+    description: string;
+    discount: number;
+    isPercentage: boolean;
+    startDate: string; // o Date si ya viene como objeto Date
+    endDate: string;   // o Date si ya viene como objeto Date
+  };
+};
 
 export const allProduct = async () => {
   return await prisma.product.findMany({
@@ -11,6 +28,7 @@ export const allProduct = async () => {
     },
     include: {
       category: true,
+      promotions: true, // Aquí agregamos la inclusión de promociones
     },
   });
 }
@@ -179,31 +197,7 @@ function calculateDiscountedPrice(price: number, promotion: any) {
 }
 
 
-export const addProduct = async (event: H3Event): Promise<string> => {
-  try {
-    const request = await readBody<Product>(event);
 
-    await prisma.product.create({
-      data: {
-        name: request.name,
-        description: request.description,
-        price: request.price,
-        stock: request.stock,
-        imageUrl: request.imageUrl,
-        categoryId: request.categoryId,
-      },
-    });
-
-    return "Project added!";
-  } catch (error) {
-    console.error("Error adding project:", error);
-    throw createError({
-      statusCode: 500,
-      name: "Error creating project",
-      message: error instanceof Error ? error.message : "Unknown error",
-    });
-  }
-};
 export const productByCategoryId = async (event: H3Event) => {
   const request = getRouterParams(event);  // Extracts parameters from the event object
 
@@ -232,52 +226,110 @@ export const productByCategoryId = async (event: H3Event) => {
     });
 
     return products;
-  } catch (error) {
+  } catch (error: any) {
+    console.error("Error al obtener productos por categoría:", error);
     throw createError({
       statusCode: 500,
-      name: "Error Fetching Projects",
+      name: "Error Fetching Category Products",
       message: error.message,
     });
   }
 };
-
-
-export const updateProduct = async (event: H3Event): Promise<string> => {
+export const addProduct = async (event: H3Event): Promise<string> => {
   try {
-    const request = await readBody<Product>(event);
+    const body = await readBody<ProductWithPromotion>(event);
 
-    if (!request.id || !request.categoryId) {
-      throw createError({
-        statusCode: 400,
-        name: "Invalid request",
-        message: "Project ID and Category ID are required",
-      });
-    }
-
-    await prisma.product.update({
-      where: {
-        id: +request.id,
-      },
+    const product = await prisma.product.create({
       data: {
-        name: request.name,
-        description: request.description,
-        price: request.price,
-        stock: request.stock,
-        image_url: request.image_url,
-        categoryId: request.categoryId,
+        name: body.name,
+        description: body.description,
+        price: body.price,
+        stock: body.stock,
+        imageUrl: body.imageUrl,
+        categoryId: body.categoryId,
+        promotions: body.promotions ? {
+          create: {
+            title: body.promotions.title,
+            description: body.promotions.description,
+            discount: body.promotions.discount,
+            isPercentage: body.promotions.isPercentage,
+            startDate: new Date(body.promotions.startDate),
+            endDate: new Date(body.promotions.endDate),
+          }
+        } : undefined,
       },
     });
 
-    return "Project updated!";
+    return "Producto y promoción creados con éxito.";
   } catch (error) {
-    console.error("Error updating project:", error);
+    console.error("Error al crear producto:", error);
     throw createError({
       statusCode: 500,
-      name: "Error updating project",
-      message: error instanceof Error ? error.message : "Unknown error",
+      message: error instanceof Error ? error.message : "Error desconocido"
     });
   }
 };
+
+export const updateProduct = async (event: H3Event): Promise<string> => {
+  try {
+    const request = await readBody<ProductWithPromotion>(event);
+    console.log("Request received:", JSON.stringify(request, null, 2)); // Log completo
+
+    const requestid = getRouterParams(event);  // Extracts parameters from the event object
+
+    const productId = Number(requestid.id); // Ensure categoryId is a number
+
+    if (isNaN(productId)) {
+      throw createError({
+        statusCode: 400,
+        name: "Invalid Category ID",
+        message: "El ID de categoría debe ser un número válido.",
+      });
+    }
+
+
+
+    const isValidDate = (date: any) => {
+      const d = new Date(date);
+      return d instanceof Date && !isNaN(d.getTime());
+    };
+    // Actualizar el producto
+    const updatedProduct = await prisma.product.update({
+      where: { id: productId },
+      data: {
+        name: request.name,
+        description: request.description,
+        price: Number(request.price),
+        stock: Number(request.stock),
+        imageUrl: request.imageUrl,
+        categoryId: Number(request.categoryId),
+        promotions: request.promotions ? {
+          deleteMany: {},
+          create: isValidDate(request.promotions.startDate) && isValidDate(request.promotions.endDate) ? {
+            title: request.promotions.title,
+            description: request.promotions.description,
+            discount: Number(request.promotions.discount),
+            isPercentage: Boolean(request.promotions.isPercentage),
+            startDate: new Date(request.promotions.startDate),
+            endDate: new Date(request.promotions.endDate),
+          } : undefined
+        } : undefined
+      },
+    });
+
+    console.log("Product updated successfully:", updatedProduct);
+    return "Producto actualizado con éxito.";
+  } catch (error: any) {
+    console.error("Error al actualizar producto:", error);
+    throw createError({
+      statusCode: error.statusCode || 500,
+      name: error.name || "Error actualizando producto",
+      message: error.message || "Error desconocido",
+    });
+  }
+};
+
+
 
 export const deleteProduct = async (event: H3Event) => {
   try {

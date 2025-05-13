@@ -1,3 +1,4 @@
+import type { Promotion } from './promotion';
 export interface Product {
     id: number;
     name: string;
@@ -10,5 +11,5 @@ export interface Product {
     likes: number;
     categoryId: number;
     userId: number;
-
+    promotions: Promotion[];
 }

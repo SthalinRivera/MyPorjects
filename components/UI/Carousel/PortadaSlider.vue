@@ -1,14 +1,14 @@
 <template>
-    <div class="relative h-[800px] overflow-hidden">
+    <div class="relative h-[800px] overflow-hidden rounded-lg">
         <!-- Carrusel -->
-        <div class="relative h-full w-full">
+        <div class="relative h-full w-full ">
             <!-- Slides -->
             <div v-for="(slide, index) in slides" :key="index"
-                class="absolute inset-0 transition-opacity duration-1000 ease-in-out"
+                class="absolute inset-0 transition-opacity duration-1000 ease-in-out "
                 :class="{ 'opacity-100 z-10': currentSlide === index, 'opacity-0 z-0': currentSlide !== index }">
                 <!-- Imagen de fondo -->
                 <div class="absolute inset-0 bg-black/20"></div>
-                <img :src="slide.image" :alt="slide.title" class="w-full h-full object-cover object-center" />
+                <img :src="slide.image" :alt="slide.title" class="w-full h-full object-cover object-center " />
 
                 <!-- Contenido del slide -->
                 <div class="absolute inset-0 flex items-center justify-center">

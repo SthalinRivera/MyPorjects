@@ -6,9 +6,8 @@
             <div class="max-w-screen-xl flex items-center justify-between mx-auto px-4 py-3">
                 <!-- Logo -->
                 <NuxtLink to="/" class=" pl-4 md:pl-0 flex items-center gap-2" @click="isMobileMenuOpen = false">
-                    FlorBelle
-                    <!-- <img src="/logo-ligh.png" alt="Logo Claro" class="h-8 block dark:hidden">
-                    <img src="/logo-dark.png" alt="Logo Oscuro" class="h-8 hidden dark:block"> -->
+                    <img src="/logo-ligh.png" alt="Logo Claro" class="h-8 block dark:hidden">
+                    <img src="/logo-dark.png" alt="Logo Oscuro" class="h-8 hidden dark:block">
                 </NuxtLink>
 
                 <!-- Botón para menú móvil -->

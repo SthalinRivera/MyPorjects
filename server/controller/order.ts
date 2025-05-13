@@ -150,8 +150,7 @@ export const getOrderStats = async (event: H3Event) => {
     });
   }
 };
-
-
+// Agregar una orden desde WhatsApp
 
 export const addWhatsAppOrder = async (event: H3Event): Promise<string> => {
   try {
@@ -316,8 +315,6 @@ export const getOrdersByUser = async (event: H3Event) => {
     });
   }
 };
-
-
 
 
 export const updateOrderStatus = async (event: H3Event) => {

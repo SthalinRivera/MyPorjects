@@ -59,7 +59,7 @@
                                     <div
                                         class="flex justify-between text-base font-medium text-gray-900 dark:text-white">
                                         <h3 class="line-clamp-1">{{ product.name }}</h3>
-                                        <p class="ml-4">S/. {{ product.price }}</p>
+                                        <p class="ml-4">S/. {{ product.price.toFixed(2) }}</p>
                                     </div>
                                     <p v-if="product.description"
                                         class="mt-1 text-sm text-gray-500 dark:text-gray-400 line-clamp-1">

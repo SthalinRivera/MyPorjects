@@ -90,8 +90,9 @@
                                 class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center">
-                                        <div class="flex-shrink-0 h-10 w-10">
-                                            <img class="h-10 w-10 rounded-md object-cover"
+                                        <div class="flex-shrink-0 h-10 w-10 cursor-pointer"
+                                            @click="openImageModal(product.imageUrl || 'https://via.placeholder.com/40')">
+                                            <img class="h-10 w-10 rounded-md object-cover hover:opacity-80 transition-opacity"
                                                 :src="product.imageUrl || 'https://via.placeholder.com/40'"
                                                 alt="Product image">
                                         </div>
@@ -111,21 +112,14 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div v-if="product.hasPromotion"
-                                        class="promotion-badge bg-red-500 text-white p-2 rounded-lg">
-                                        <div class="flex items-center gap-2">
-                                            <span class="font-bold text-lg">
-                                                {{ promotionText }}
-                                            </span>
-                                            <span class="text-sm">
-                                                Válido hasta {{ formatDate(product.promotions[0].endDate) }}
-                                            </span>
-                                        </div>
-                                        <div class="flex items-center mt-1">
-                                            <span class="line-through mr-2">S/ {{ product.originalPrice }}</span>
-                                            <span class="font-bold text-xl">S/ {{ product.currentPrice }}</span>
-                                        </div>
-                                    </div>
+                                    <span v-if="product.promotions.length > 0"
+                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">
+                                        {{ product.promotions[0].discount }}% de descuento
+                                    </span>
+                                    <span v-else
+                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-400">
+                                        Sin promoción
+                                    </span>
                                 </td>
                                 <td
                                     class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
@@ -142,10 +136,6 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                     <div class="flex justify-end gap-2">
-                                        <!-- <button @click="openViewModal(product)"
-                                            class="text-green-600 dark:text-green-400 hover:text-green-900 dark:hover:text-green-300 transition-colors">
-                                            <i class="ri-eye-line"></i>
-                                        </button> -->
                                         <button @click="openModal(product)"
                                             class="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 transition-colors">
                                             <i class="ri-pencil-line"></i>
@@ -219,7 +209,7 @@
                     <div class="p-6">
                         <div class="flex justify-between items-center mb-4">
                             <h2 class="text-xl font-bold text-gray-800 dark:text-white">
-                                {{ editingProduct ? "Edit Product" : "Add Product" }}
+                                {{ editingProduct ? "Editar Producto" : "Agregar Producto" }}
                             </h2>
                             <button @click="showModal = false"
                                 class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
@@ -227,18 +217,18 @@
                             </button>
                         </div>
 
-                        <form @submit.prevent="saveProduct" class="space-y-4">
+                        <form @submit.prevent="saveProduct" class="space-y-4" novalidate>
                             <div>
                                 <label
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nombre</label>
-                                <input v-model="formState.name" type="text" required
+                                <input v-model="formState.name" type="text" required placeholder="Nombre del producto"
                                     class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
                             </div>
 
                             <div>
                                 <label
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Descripción</label>
-                                <textarea v-model="formState.description" rows="3"
+                                <textarea v-model="formState.description" rows="3" placeholder="Descripción breve"
                                     class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"></textarea>
                             </div>
 
@@ -250,6 +240,7 @@
                                         <span
                                             class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500 dark:text-gray-400">S/.</span>
                                         <input v-model="formState.price" type="number" min="0" step="0.01" required
+                                            placeholder="0.00"
                                             class="w-full pl-8 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
                                     </div>
                                 </div>
@@ -258,6 +249,7 @@
                                     <label
                                         class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Stock</label>
                                     <input v-model="formState.stock" type="number" min="0" required
+                                        placeholder="Cantidad disponible"
                                         class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
                                 </div>
                             </div>
@@ -267,7 +259,7 @@
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Categoría</label>
                                 <select v-model="formState.categoryId" required
                                     class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
-                                    <option value="">Select Category</option>
+                                    <option value="">Selecciona una categoría</option>
                                     <option v-for="category in categories" :key="category.id" :value="category.id">
                                         {{ category.name }}
                                     </option>
@@ -275,46 +267,139 @@
                             </div>
 
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Imagen de
-                                    producto</label>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Imagen
+                                    del producto</label>
                                 <div class="mt-1 flex items-center gap-4">
-                                    <label class="cursor-pointer">
-                                        <span
-                                            class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
-                                            <i class="ri-upload-line mr-2"></i>
-                                            Subir Imagen
-                                        </span>
-                                        <input type="file" @change="handleFileUpload" class="hidden">
-                                    </label>
+                                    <!-- Contenedor principal de carga -->
+                                    <div class="mx-auto">
+                                        <!-- Estado inicial (antes de subir) -->
+                                        <label v-if="!imageUrl" class="flex flex-col items-center justify-center w-64 h-40 border-2 border-dashed rounded-xl cursor-pointer transition-all duration-300 
+                        border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-blue-400
+                        bg-gray-50/50 dark:bg-gray-800/50 hover:bg-blue-50/30 dark:hover:bg-blue-900/20
+                        group relative overflow-hidden">
+
+                                            <!-- Efecto de fondo sutil -->
+                                            <div
+                                                class="absolute inset-0 bg-[radial-gradient(circle_at_center,#e0f2fe_0%,transparent_70%)] opacity-0 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_center,#1e3a8a_0%,transparent_70%)] transition-opacity duration-500">
+                                            </div>
+
+                                            <div
+                                                class="flex flex-col items-center justify-center pt-5 pb-6 text-center relative z-10">
+                                                <!-- Icono animado -->
+                                                <svg class="w-12 h-12 mb-4 text-blue-500 dark:text-blue-400 group-hover:scale-110 transition-transform"
+                                                    fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="1.5"
+                                                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12">
+                                                    </path>
+                                                </svg>
+                                                <p class="text-sm text-gray-600 dark:text-gray-300">Haz clic o arrastra
+                                                    una imagen</p>
+                                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Formatos: JPG,
+                                                    PNG, WEBP</p>
+                                            </div>
+
+                                            <input type="file" class="hidden" @change="handleFileUpload"
+                                                accept="image/*">
+                                        </label>
+
+                                        <!-- Estado cuando la imagen está cargada -->
+                                        <div v-else class="relative group">
+                                            <img :src="imageUrl"
+                                                class="w-64 h-40 rounded-xl object-cover border border-gray-200 dark:border-gray-700">
+                                            <!-- Botón para cambiar imagen -->
+                                            <button @click="resetImage"
+                                                class="absolute top-2 right-2 p-2 bg-white/90 dark:bg-gray-800/90 rounded-full shadow-md hover:bg-white dark:hover:bg-gray-700 transition-all">
+                                                <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                    </path>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Barra de progreso -->
                                     <div v-if="uploadProgress > 0 && uploadProgress < 100" class="flex-1">
-                                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                                            <div class="bg-blue-600 h-2 rounded-full"
+                                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                                            <div class="bg-blue-600 h-2.5 rounded-full transition-all duration-300 ease-out"
                                                 :style="{ width: uploadProgress + '%' }"></div>
                                         </div>
-                                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Subiendo : {{
-                                            uploadProgress }}%</p>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Subiendo: {{
+                                            uploadProgress.toFixed(2) }}%</p>
+
                                     </div>
                                 </div>
-                                <img v-if="imageUrl" :src="imageUrl"
-                                    class="mt-2 h-20 rounded-md object-cover border border-gray-200 dark:border-gray-700">
+                            </div>
+                            <div>
+                                <label
+                                    class="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+                                    <input type="checkbox" v-model="formState.promo" @change="onPromoToggle"
+                                        class="rounded border-gray-300 text-blue-600 shadow-sm focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600">
+                                    ¿Este producto está en promoción?
+                                </label>
                             </div>
 
+                            <!-- Campos que se muestran solo si el producto está en promoción -->
+                            <div v-if="formState.promo" class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                        Descuento (%)
+                                    </label>
+                                    <input v-model.number="formState.promotions.discount" type="number" min="1"
+                                        max="100" required placeholder="Ej: 20"
+                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
+                                    <p v-if="formState.promotions.discount < 1 || formState.promotions.discount > 100"
+                                        class="text-xs text-red-500 mt-1">
+                                        El descuento debe ser entre 1% y 100%
+                                    </p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                        Válido hasta
+                                    </label>
+                                    <input v-model="formState.promotions.endDate" type="date" required
+                                        :min="format(new Date(), 'yyyy-MM-dd')"
+                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
+                                    <p v-if="formState.promotions.endDate && new Date(formState.promotions.endDate) <= new Date()"
+                                        class="text-xs text-red-500 mt-1">
+                                        La fecha debe ser futura
+                                    </p>
+                                </div>
+                            </div>
                             <div class="flex justify-end gap-3 pt-4">
                                 <button type="button" @click="showModal = false"
                                     class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
-                                    Cancel
+                                    Cancelar
                                 </button>
-                                <button type="submit"
-                                    class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
-                                    {{ editingProduct ? "Update Product" : "Add Product" }}
+                                <button type="submit" :disabled="!isFormValid" :class="{
+                                    'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500': isFormValid,
+                                    'bg-gray-400 cursor-not-allowed': !isFormValid
+                                }"
+                                    class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors">
+                                    {{ editingProduct ? "Actualizar Producto" : "Agregar Producto" }}
                                 </button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
-        </div>
+            <!-- Modal para imagen completa usando UModal -->
+            <UModal v-model="showImageModal">
+                <div class="relative ">
+                    <button @click="closeImageModal"
+                        class="absolute top-2 right-2 p-1 rounded-full bg-gray-800/50 hover:bg-gray-700/75 text-white transition-colors">
+                        <i class="ri-close-line text-xl"></i>
+                    </button>
 
+                    <img :src="selectedImage ?? undefined" class="max-w-full max-h-[80vh] object-contain rounded-lg"
+                        alt="Imagen completa" v-if="selectedImage !== null">
+                </div>
+            </UModal>
+        </div>
     </template>
 
 <script setup lang="ts">
@@ -325,6 +410,7 @@ import * as XLSX from 'xlsx'; // Importar librería para exportar a Excel
 import { useNuxtApp } from "#app";
 import { useFirebaseUpload } from '~/composables/useFirebaseUpload';
 import SkeletonTableProducts from "~/components/UI/Skeleton/SkeletonTableProducts.vue";
+import type { Product } from "~/interfaces/product";
 
 const { $toast } = useNuxtApp();
 const products = ref<any[]>([]);
@@ -391,8 +477,11 @@ const exportToExcel = () => {
 const fetchProducts = async () => {
     loading.value = true;
     try {
+
         const { data } = await useFetch("/api/v1/product");
         products.value = data.value || [];
+        console.log("productos", products);
+
         filteredProducts.value = [...products.value];
     } catch (err) {
         error.value = "Failed to load products.";
@@ -424,44 +513,33 @@ const formState = reactive({
     stock: 0,
     imageUrl: "",
     categoryId: "",
-});
-const showViewProductModal = ref<boolean>(false);
-const selectedProduct = ref<Product | null>(null);
-const props = defineProps({
-    product: {
-        type: Object,
-        required: true
+    promo: false,
+    promotions: {
+        title: "", // Puedes hacer esto dinámico si quieres
+        description: "",
+        discount: 0,
+        isPercentage: true, // O hazlo controlable desde el formulario si es necesario
+        startDate: "", // o puedes pedirlo desde el formulario
+        endDate: ""
     }
 });
 
-const promotionText = computed(() => {
-    const promo = props.product.promotions[0];
-    return promo.isPercentage
-        ? `${promo.discount}% DE DESCUENTO`
-        : `S/ ${promo.discount} DE DESCUENTO`;
+
+
+const resetImage = () => {
+    imageUrl.value = null;
+    formState.imageUrl = "";
+};
+const isFormValid = computed(() => {
+    return formState.name.trim() !== '' &&
+        formState.description.trim() !== '' &&
+        formState.price > 0 &&
+        formState.stock >= 0 &&
+        formState.categoryId !== '' &&
+        (imageUrl.value || formState.imageUrl !== '');
 });
 
-const formatDate = (dateString) => {
-    return format(new Date(dateString), 'dd/MM/yyyy');
-};
 
-// Define Product interface (add this at the top of your script)
-interface Product {
-    id: number;
-    name: string;
-    description: string;
-    price: number;
-    stock: number;
-    imageUrl: string;
-    categoryId: number;
-    createdAt?: string;
-}
-
-// Add this method to open the view modal
-const openViewModal = (product: Product) => {
-    selectedProduct.value = product;
-    showViewProductModal.value = true;
-};
 
 // Obtener categorías
 const fetchCategories = async () => {
@@ -472,24 +550,80 @@ const fetchCategories = async () => {
         error.value = "Failed to load categories.";
     }
 };
-
+const onPromoToggle = () => {
+    if (!formState.promo) {
+        // Limpiar datos de promoción si se desactiva el checkbox
+        formState.promotions = {
+            title: "",
+            description: "",
+            discount: 0,
+            isPercentage: true,
+            startDate: "",
+            endDate: ""
+        };
+        console.log("🔁 Promoción desactivada y campos limpiados");
+    }
+};
 // Abrir modal
-const openModal = async (product = null) => {
+const openModal = async (product: Product | null = null) => {
     editingProduct.value = product;
+
     if (product) {
-        Object.assign(formState, product);
-        imageUrl.value = product.imageUrl;
+        // Cargamos los datos del producto en el formulario
+        Object.assign(formState, {
+            name: product.name || "",
+            description: product.description || "",
+            price: product.price || 0,
+            stock: product.stock || 0,
+            categoryId: product.categoryId || "",
+            imageUrl: product.imageUrl || "",
+            // Cambiar esta parte para manejar correctamente las promociones
+            promo: product.promotions && product.promotions.length > 0
+        });
+
+
+        // Llenar promoción si existe
+        if (product.promotions && product.promotions.length > 0) {
+
+            const firstPromo = product.promotions[0];
+            formState.promotions = {
+                title: firstPromo.title || "Promoción especial",
+                description: firstPromo.description || "Descuento por tiempo limitado",
+                discount: firstPromo.discount || 0,
+                isPercentage: firstPromo.isPercentage !== undefined ? firstPromo.isPercentage : true,
+                startDate: firstPromo.startDate || format(new Date(), 'yyyy-MM-dd'),
+                endDate: firstPromo.endDate ? format(new Date(firstPromo.endDate), 'yyyy-MM-dd') : ""
+            };
+        } else {
+            formState.promotions = {
+                title: "Promoción especial",
+                description: "Descuento por tiempo limitado",
+                discount: 0,
+                isPercentage: true,
+                startDate: format(new Date(), 'yyyy-MM-dd'),
+                endDate: ""
+            };
+        }
+
+        imageUrl.value = product.imageUrl || null;
     } else {
+        // Reiniciamos el formulario si no hay producto
         Object.assign(formState, {
             name: "",
             description: "",
             price: 0,
             stock: 0,
             categoryId: "",
-            imageUrl: ""
+            imageUrl: "",
+            promo: false,
+            promotions: {
+                discount: 0,
+                endDate: ""
+            }
         });
         imageUrl.value = null;
     }
+
     showModal.value = false;
     await nextTick();
     showModal.value = true;
@@ -498,29 +632,41 @@ const openModal = async (product = null) => {
 // Guardar producto
 const saveProduct = async () => {
     try {
+
         const productData = {
             ...formState,
-            imageUrl: imageUrl.value || formState.imageUrl
+            imageUrl: imageUrl.value || formState.imageUrl,
         };
 
         if (editingProduct.value) {
-            await useFetch(`/api/v1/updateProduct/${editingProduct.value.id}`, {
+            console.log("antede de actulizar", productData);
+
+
+            const { data, error } = await useFetch(`/api/v1/updateProduct/${editingProduct.value.id}`, {
                 method: "PUT",
                 body: productData
             });
-            $toast.success("Product updated successfully");
+            if (error.value) {
+                console.error("Update error:", error.value);
+                $toast.error(error.value.data?.message || "Error al actualizar el producto");
+                return;
+            }
+
+
+            $toast.success("Producto actualizado correctamente");
         } else {
             await useFetch("/api/v1/addProduct", {
                 method: "POST",
                 body: productData
             });
-            $toast.success("Product added successfully");
+            $toast.success("Producto agregado correctamente");
         }
 
         showModal.value = false;
         fetchProducts();
     } catch (error) {
-        $toast.error("Failed to save product.");
+        $toast.error("Error al guardar el producto");
+        console.error("Error saving product:", error);
     }
 };
 
@@ -553,5 +699,36 @@ watchEffect(async () => {
     fetchCategories();
 });
 
+
+const showImageModal = ref(false);
+const selectedImage = ref<string | undefined>(undefined)
+
+const openImageModal = (imageUrl: string | undefined) => {
+    selectedImage.value = imageUrl
+    showImageModal.value = true
+}
+
+const closeImageModal = () => {
+    showImageModal.value = false
+    selectedImage.value = undefined
+}
+
+const handleEscapeKey = (event: KeyboardEvent) => {
+    if (event.key === 'Escape') {
+        closeImageModal();
+    }
+};
+
+
 </script>
 
+<style scoped>
+/* Agrega esto en tu componente */
+.modal-overlay {
+    cursor: pointer;
+}
+
+.modal-content {
+    cursor: auto;
+}
+</style>

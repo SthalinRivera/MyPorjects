@@ -11,266 +11,172 @@
                 <h1 class="text-3xl font-bold text-gray-800 dark:text-white">Gestión de Promociones</h1>
                 <p class="text-gray-500 dark:text-gray-400 mt-1">Gestiona tu promociones de productos</p>
             </div>
-            <button @click="openModal()"
-                class="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-lg hover:from-blue-700 hover:to-blue-600 transition-all">
-                <i class="ri-add-line"></i>
-                <span>Nueva Promoción</span>
-            </button>
+            <UButton @click="openModal()" icon="i-heroicons-plus" color="primary" variant="solid"
+                label="Nueva Promoción" />
         </div>
 
         <!-- Loading State -->
         <div v-if="loading" class="flex flex-col items-center justify-center py-12">
-            <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
+            <UIcon name="i-heroicons-arrow-path-20-solid" class="animate-spin h-12 w-12 text-primary-500 mb-4" />
             <p class="text-gray-600 dark:text-gray-400">Cargando productos...</p>
         </div>
 
         <!-- Error State -->
-        <div v-else-if="error"
-            class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 text-center">
-            <p class="text-red-600 dark:text-red-400 font-medium">{{ error }}</p>
-        </div>
+        <UAlert v-else-if="error" icon="i-heroicons-exclamation-triangle" color="red" variant="outline" :title="error"
+            class="mb-4" />
 
         <!-- Empty State -->
-        <div v-else-if="products.length === 0"
-            class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-8 text-center">
-            <div
-                class="mx-auto w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mb-4">
-                <i class="ri-box-2-line text-3xl text-gray-400 dark:text-gray-500"></i>
-            </div>
-            <h3 class="text-lg font-medium text-gray-800 dark:text-white mb-2">No se encontraron productos.</h3>
-            <p class="text-gray-500 dark:text-gray-400 mb-4">Comienza agregando tu primer producto.</p>
-            <button @click="openModal()"
-                class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                Agregar Producto.
-            </button>
-        </div>
-        <!-- Tabla (desktop) -->
-        <div v-else
-            class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
-            <div class="hidden md:block overflow-x-auto">
+        <UCard v-else-if="products.length === 0" class="text-center">
+            <template #header>
+                <div
+                    class="mx-auto w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mb-4">
+                    <UIcon name="i-heroicons-shopping-bag" class="text-3xl text-gray-400 dark:text-gray-500" />
+                </div>
+                <h3 class="text-lg font-medium text-gray-800 dark:text-white mb-2">No se encontraron productos.</h3>
+                <p class="text-gray-500 dark:text-gray-400 mb-4">Comienza agregando tu primer producto.</p>
+            </template>
 
-                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                    <thead class="bg-gray-50 dark:bg-gray-700">
-                        <tr>
-                            <th
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
-                                Producto</th>
-                            <th
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
-                                Descuento</th>
-                            <th
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
-                                Vigencia</th>
-                            <th
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
-                                Estado</th>
-                            <th
-                                class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
-                                Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                        <tr v-for="promo in promotions" :key="promo.id"
-                            class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <img :src="promo.product.imageUrl || 'https://via.placeholder.com/40'"
-                                        class="h-10 w-10 rounded-md object-cover mr-3">
-                                    <div>
-                                        <div class="font-medium text-gray-900 dark:text-white">{{ promo.product.name }}
-                                        </div>
-                                        <div class="text-sm text-gray-500 dark:text-gray-400">{{
-                                            promo.product.category?.name }}</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 py-1 rounded-full text-sm font-medium"
-                                    :class="promo.isPercentage ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' : 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'">
-                                    {{ promo.isPercentage ? `${promo.discount}%` : `S/. ${promo.discount}` }}
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-900 dark:text-white">{{ formatDate(promo.startDate) }}
-                                </div>
-                                <div class="text-sm text-gray-500 dark:text-gray-400">al {{ formatDate(promo.endDate) }}
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 py-1 rounded-full text-xs font-medium"
-                                    :class="isPromoActive(promo) ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'">
-                                    {{ isPromoActive(promo) ? 'Activa' : 'Inactiva' }}
-                                </span>
-                                <div v-if="!isPromoActive(promo)" class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                    {{ getPromoStatusText(promo) }}
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <div class="flex justify-end space-x-2">
-                                    <button @click="openEditModal(promo)"
-                                        class="text-blue-600 hover:text-blue-900 dark:hover:text-blue-300">
-                                        <i class="ri-pencil-line"></i>
-                                    </button>
-                                    <button @click="confirmDelete(promo)"
-                                        class="text-red-600 hover:text-red-900 dark:hover:text-red-300">
-                                        <i class="ri-delete-bin-line"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <UButton @click="openModal()" icon="i-heroicons-plus" color="primary" variant="solid"
+                label="Agregar Producto" />
+        </UCard>
 
-            </div>
-        </div>
-        <!-- Cards (mobile) -->
-        <div class="md:hidden space-y-3">
-            <div v-for="promo in promotions" :key="promo.id" class="p-4 border rounded-lg dark:border-gray-700">
-                <div class="flex justify-between items-start">
-                    <div class="flex items-center space-x-3">
-                        <img :src="promo.product.imageUrl || 'https://via.placeholder.com/40'"
-                            class="h-12 w-12 rounded-md object-cover">
+
+
+        <!-- Tabla con Nuxt UI -->
+        <div v-else>
+            <UTable :rows="promotions" :columns="columns" :loading="loading" class="w-full">
+                <!-- Custom cell for Product -->
+                <template #product-data="{ row }">
+                    <div class="flex items-center">
+                        <UAvatar :src="row.product.imageUrl || 'https://via.placeholder.com/40'" size="sm"
+                            class="mr-3" />
                         <div>
-                            <h3 class="font-medium">{{ promo.product.name }}</h3>
-                            <p class="text-sm text-gray-500 dark:text-gray-400">{{ promo.product.category?.name }}</p>
+                            <div class="font-medium">{{ row.product.name }}</div>
+                            <div class="text-sm text-gray-500 dark:text-gray-400">
+                                {{ row.product.category?.name }}
+                            </div>
                         </div>
                     </div>
-                    <div class="flex flex-col items-end">
-                        <span class="px-2 py-1 rounded-full text-xs mb-1"
-                            :class="promo.isPercentage ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' : 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'">
-                            {{ promo.isPercentage ? `${promo.discount}%` : `S/. ${promo.discount}` }}
-                        </span>
-                        <span class="px-2 py-1 rounded-full text-xs"
-                            :class="isPromoActive(promo) ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'">
-                            {{ isPromoActive(promo) ? 'Activa' : 'Inactiva' }}
-                        </span>
-                    </div>
-                </div>
+                </template>
 
-                <div class="mt-3 grid grid-cols-2 gap-2 text-sm">
+                <!-- Custom cell for Discount -->
+                <template #discount-data="{ row }">
+                    <UBadge :label="row.isPercentage ? `${row.discount}%` : `S/. ${row.discount}`"
+                        :color="row.isPercentage ? 'blue' : 'green'" variant="subtle" />
+                </template>
+
+                <!-- Custom cell for Date Range -->
+                <template #dateRange-data="{ row }">
                     <div>
-                        <p class="text-gray-500 dark:text-gray-400">Inicio</p>
-                        <p>{{ formatDate(promo.startDate) }}</p>
+                        <div class="text-sm">{{ formatDate(row.startDate) }}</div>
+                        <div class="text-sm text-gray-500 dark:text-gray-400">
+                            al {{ formatDate(row.endDate) }}
+                        </div>
                     </div>
+                </template>
+
+                <!-- Custom cell for Status -->
+                <template #status-data="{ row }">
                     <div>
-                        <p class="text-gray-500 dark:text-gray-400">Fin</p>
-                        <p>{{ formatDate(promo.endDate) }}</p>
+                        <UBadge :label="isPromoActive(row) ? 'Activa' : 'Inactiva'"
+                            :color="isPromoActive(row) ? 'green' : 'red'" variant="subtle" />
+                        <div v-if="!isPromoActive(row)" class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                            {{ getPromoStatusText(row) }}
+                        </div>
                     </div>
-                </div>
+                </template>
 
-                <div v-if="!isPromoActive(promo)" class="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                    {{ getPromoStatusText(promo) }}
-                </div>
+                <!-- Custom cell for Actions -->
+                <template #actions-data="{ row }">
+                    <div class="flex justify-end space-x-2">
+                        <UButton @click="openEditModal(row)" icon="i-heroicons-pencil" color="gray" variant="ghost" />
+                        <UButton @click="confirmDelete(row)" icon="i-heroicons-trash" color="red" variant="ghost" />
+                    </div>
+                </template>
+            </UTable>
 
-                <div class="mt-3 flex justify-end space-x-2">
-                    <button @click="openEditModal(promo)" class="text-blue-600">
-                        <i class="ri-pencil-line"></i>
-                    </button>
-                    <button @click="confirmDelete(promo)" class="text-red-600">
-                        <i class="ri-delete-bin-line"></i>
-                    </button>
-                </div>
+            <!-- Paginación si es necesaria -->
+            <div class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700">
+                <UPagination v-if="promotions.length > 0" v-model="page" :page-count="pageCount"
+                    :total="promotions.length" />
             </div>
         </div>
-
         <!-- Modal para crear/editar promoción -->
-        <div v-if="showModal"
-            class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50 backdrop-blur-sm">
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-md overflow-hidden">
+        <UModal v-model="showModal">
+            <UCard>
+                <template #header>
+                    <h2 class="text-xl font-bold">{{ editing ? 'Editar Promoción' : 'Nueva Promoción' }}</h2>
+                </template>
                 <div class="p-6">
-                    <h2 class="text-xl font-bold mb-4">{{ editing ? 'Editar Promoción' : 'Nueva Promoción' }}</h2>
 
                     <form @submit.prevent="submitPromotion" class="space-y-4">
-                        <div>
-                            <label class="block mb-1 font-medium">Producto</label>
-                            <select v-model="form.productId" required
-                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
-                                <option v-for="product in products" :key="product.id" :value="product.id">
-                                    {{ product.name }} (S/. {{ product.price }})
-                                </option>
-                            </select>
-                        </div>
+                        <UFormGroup label="Producto" required>
+                            <USelect v-model="form.productId"
+                                :options="products.map(p => ({ value: p.id, label: `${p.name} (S/. ${p.price})` }))"
+                                placeholder="Selecciona un producto" required />
+                        </UFormGroup>
 
-                        <div>
-                            <label class="block mb-1 font-medium">Título (opcional)</label>
-                            <input v-model="form.title"
-                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
+                        <UFormGroup label="Título (opcional)">
+                            <UInput v-model="form.title" />
+                        </UFormGroup>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <UFormGroup label="Descuento" required>
+                                <UInput v-model="form.discount" type="number" min="0" required />
+                            </UFormGroup>
+
+                            <UFormGroup label="¿Es porcentaje?">
+                                <UToggle v-model="form.isPercentage" />
+                            </UFormGroup>
                         </div>
 
                         <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block mb-1 font-medium">Descuento</label>
-                                <input v-model="form.discount" type="number" min="0" required
-                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
-                            </div>
-                            <div class="flex items-end">
-                                <label class="flex items-center space-x-2">
-                                    <input v-model="form.isPercentage" type="checkbox"
-                                        class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600">
-                                    <span>¿Es porcentaje?</span>
-                                </label>
-                            </div>
+                            <UFormGroup label="Fecha inicio" required>
+                                <UInput v-model="form.startDate" type="date" required />
+                            </UFormGroup>
+
+                            <UFormGroup label="Fecha fin" required>
+                                <UInput v-model="form.endDate" type="date" required />
+                            </UFormGroup>
                         </div>
 
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block mb-1 font-medium">Fecha inicio</label>
-                                <input v-model="form.startDate" type="date" required
-                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
-                            </div>
-                            <div>
-                                <label class="block mb-1 font-medium">Fecha fin</label>
-                                <input v-model="form.endDate" type="date" required
-                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="block mb-1 font-medium">Descripción (opcional)</label>
-                            <textarea v-model="form.description" rows="3"
-                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"></textarea>
-                        </div>
+                        <UFormGroup label="Descripción (opcional)">
+                            <UTextarea v-model="form.description" rows="3" />
+                        </UFormGroup>
 
                         <div class="flex justify-end space-x-3 pt-4">
-                            <button type="button" @click="showModal = false"
-                                class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                Cancelar
-                            </button>
-                            <button type="submit"
-                                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
-                                {{ editing ? 'Actualizar' : 'Crear' }}
-                            </button>
+                            <UButton type="button" @click="showModal = false" color="gray" variant="ghost"
+                                label="Cancelar" />
+                            <UButton type="submit" color="primary" variant="solid"
+                                :label="editing ? 'Actualizar' : 'Crear'" />
                         </div>
                     </form>
                 </div>
-            </div>
-        </div>
+            </UCard>
+        </UModal>
 
         <!-- Modal de confirmación para eliminar -->
-        <div v-if="showDeleteDialog"
-            class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 max-w-sm w-full">
-                <h3 class="text-lg font-bold mb-4">Confirmar Eliminación</h3>
-                <p class="mb-6">¿Estás seguro de que deseas eliminar esta promoción?</p>
-                <div class="flex justify-end space-x-3">
-                    <button @click="showDeleteDialog = false"
-                        class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md">
-                        Cancelar
-                    </button>
-                    <button @click="deletePromotion"
-                        class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">
-                        Eliminar
-                    </button>
-                </div>
-            </div>
-        </div>
+        <UModal v-model="showDeleteDialog">
+            <UCard>
+                <template #header>
+                    <h3 class="text-lg font-bold">Confirmar Eliminación</h3>
+                </template>
+                <p>¿Estás seguro de que deseas eliminar esta promoción?</p>
+                <template #footer>
+                    <div class="flex justify-end space-x-3">
+                        <UButton @click="showDeleteDialog = false" color="gray" variant="ghost" label="Cancelar" />
+                        <UButton @click="deletePromotion" color="red" variant="solid" label="Eliminar" />
+                    </div>
+                </template>
+            </UCard>
+        </UModal>
     </div>
 </template>
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue';
 import { format, isAfter, isBefore } from 'date-fns';
-
+const { $toast } = useNuxtApp();
 // Estado reactivo
 const promotions = ref([]);
 const products = ref([]);
@@ -290,6 +196,24 @@ const form = reactive({
     endDate: ''
 });
 
+
+// Columnas para la tabla
+const columns = [{
+    key: 'product',
+    label: 'Producto'
+}, {
+    key: 'discount',
+    label: 'Descuento'
+}, {
+    key: 'dateRange',
+    label: 'Vigencia'
+}, {
+    key: 'status',
+    label: 'Estado'
+}, {
+    key: 'actions',
+    label: 'Acciones'
+}];
 // Configuración de página (Nuxt.js)
 definePageMeta({
     middleware: ['auth'],
@@ -300,8 +224,7 @@ definePageMeta({
 const loadInitialData = async () => {
     try {
         loading.value = true;
-
-        // Simulación de llamadas API - reemplaza con tus llamadas reales
+        // Cargar promociones y productos
         const [promotionsRes, productsRes] = await Promise.all([
             $fetch('/api/v1/promotions').catch(() => []),
             $fetch('/api/v1/product').catch(() => [])
@@ -311,7 +234,7 @@ const loadInitialData = async () => {
         products.value = productsRes || [];
     } catch (error) {
         console.error('Error cargando datos iniciales:', error);
-        // useToast().error('Error al cargar datos');
+        $toast.success("Error al cargar datos");
     } finally {
         loading.value = false;
     }
@@ -345,7 +268,7 @@ const openEditModal = (promo) => {
 const resetForm = () => {
     Object.assign(form, {
         productId: null,
-        title: '',
+        title: 'Oferta Especial',
         description: '',
         discount: 0,
         isPercentage: true,
@@ -384,8 +307,6 @@ const submitPromotion = async () => {
             : '/api/v1/promotions';
 
         const method = editing.value ? 'PUT' : 'POST';
-
-        // Simulación de llamada API - reemplaza con tu llamada real
         const response = await $fetch(url, {
             method,
             body: {
@@ -396,9 +317,9 @@ const submitPromotion = async () => {
 
         showModal.value = false;
         await loadInitialData(); // Recargar datos
-        // useToast().success(`Promoción ${editing.value ? 'actualizada' : 'creada'} con éxito`);
+        $toast.success(`Promoción ${editing.value ? 'actualizada' : 'creada'} con éxito`);
     } catch (error) {
-        // useToast().error('Error al guardar la promoción');
+        $toast.error("Error al guardar la promoción");
         console.error(error);
     }
 };
@@ -410,14 +331,13 @@ const confirmDelete = (promo) => {
 
 const deletePromotion = async () => {
     try {
-        // Simulación de llamada API - reemplaza con tu llamada real
         await $fetch(`/api/v1/promotions/${currentPromoId.value}`, {
             method: 'DELETE'
         });
-        await loadInitialData(); // Recargar datos
-        // useToast().success('Promoción eliminada con éxito');
+        await loadInitialData();
+        $toast.success("Promoción eliminada con éxito");
     } catch (error) {
-        // useToast().error('Error al eliminar la promoción');
+        $toast.success("Error al eliminar la promoción");
         console.error(error);
     } finally {
         showDeleteDialog.value = false;
@@ -428,20 +348,3 @@ const formatDate = (dateString) => {
     return format(new Date(dateString), 'dd/MM/yyyy');
 };
 </script>
-
-<style scoped>
-/* Estilos personalizados */
-.animate-spin {
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    from {
-        transform: rotate(0deg);
-    }
-
-    to {
-        transform: rotate(360deg);
-    }
-}
-</style>

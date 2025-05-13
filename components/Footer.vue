@@ -5,10 +5,9 @@
             <div class="px-4 pt-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8">
                 <div class="grid gap-10 row-gap-6 mb-8 sm:grid-cols-2 lg:grid-cols-4">
                     <div class="sm:col-span-2">
-                        <NuxtLink to="/" class="flex items-center gap-2" @click="isMobileMenuOpen = false">
-                            FlorBelle
-                            <!-- <img src="/logo-ligh.png" alt="Logo Claro" class="h-8 block dark:hidden">
-                            <img src="/logo-dark.png" alt="Logo Oscuro" class="h-8 hidden dark:block"> -->
+                        <NuxtLink to="/" class="flex items-center gap-2">
+                            <img src="/logo-ligh.png" alt="Logo Claro" class="h-8 block dark:hidden">
+                            <img src="/logo-dark.png" alt="Logo Oscuro" class="h-8 hidden dark:block">
                         </NuxtLink>
                         <div class="mt-6 lg:max-w-sm">
                             <p class="text-sm text-slate-600 dark:text-slate-300">
@@ -29,7 +28,7 @@
                         <div class="flex">
                             <p class="mr-1 text-slate-600 dark:text-slate-300">Email:</p>
                             <a href="mailto:info@lorem.mail"
-                                class="transition-colors duration-300 hover:text-pink-600 dark:hover:text-pink-400">florbelle@gmail.com</a>
+                                class="transition-colors duration-300 hover:text-pink-600 dark:hover:text-pink-400">florbelle.com@gmail.com</a>
                         </div>
                         <div class="flex">
                             <p class="mr-1 text-slate-600 dark:text-slate-300">Dirección:</p>
@@ -46,7 +45,7 @@
                                 class="text-slate-600 dark:text-slate-300 hover:text-pink-500 dark:hover:text-pink-400 transition-transform transform hover:scale-110">
                                 <i class="ri-instagram-fill ri-xl"></i>
                             </a>
-                            <a href="#" target="_blank"
+                            <a href="https://web.facebook.com/profile.php?id=61576045855744" target="_blank"
                                 class="text-slate-600 dark:text-slate-300 hover:text-pink-500 dark:hover:text-pink-400 transition-transform transform hover:scale-110">
                                 <i class="ri-facebook-fill ri-xl"></i>
                             </a>
@@ -59,7 +58,7 @@
                 <div
                     class="flex flex-col-reverse justify-between pt-5 pb-10 border-t border-gray-200 dark:border-slate-700 lg:flex-row">
                     <p class="text-sm text-slate-600 dark:text-slate-400">
-                        © 2025 Sunshine. Todos los derechos reservados.
+                        © 2025 FlorBelle. Todos los derechos reservados.
                     </p>
                     <ul class="flex flex-col mb-3 space-y-2 lg:mb-0 sm:space-y-0 sm:space-x-5 sm:flex-row">
                         <li>

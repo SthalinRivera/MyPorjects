@@ -2,7 +2,7 @@
   <div class="">
     <!-- Sección Parallax con fondo de joyería -->
     <div
-      class="relative overflow-hidden rounded-xl my-8 flex items-center justify-center group border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900/90 h-96 ">
+      class="relative overflow-hidden rounded-lg my-8 flex items-center justify-center group  bg-white dark:bg-slate-900/90 h-96 ">
       <!-- Imagen de fondo de joyería (con overlay) -->
       <div class="absolute inset-0 w-full h-full">
         <div class="absolute inset-0 bg-black/40 dark:bg-black/60 z-10"></div>
@@ -22,11 +22,7 @@
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
           <div class="flex flex-col md:flex-row items-center justify-between gap-8 ">
             <div class="text-center md:text-left">
-              <!-- Icono -->
-              <div
-                class="mb-5 inline-flex p-3 rounded-full bg-amber-50 dark:bg-amber-900/30 shadow-inner border border-amber-200 dark:border-amber-800/50">
-                <UIcon name="i-heroicons-sparkles" class="w-8 h-8 text-amber-500 dark:text-amber-300" />
-              </div>
+
               <!-- Texto -->
               <h3 class="text-2xl font-bold text-white dark:text-white mb-2">
                 Descubre nuestras colecciones de belleza y flores
@@ -38,7 +34,7 @@
             </div>
             <div class="w-full md:w-auto flex flex-col sm:flex-row gap-3">
               <div class="relative flex-grow">
-                <input type="email" v-model="email" placeholder="tu@email.com" :disabled="isSubmitting" class="w-full px-5 py-3 pr-12 rounded-lg border border-gray-200 dark:border-gray-600
+                <input type="email" v-model="email" placeholder="tucorreo@gmail.com" :disabled="isSubmitting" class="w-full px-5 py-3 pr-12 rounded-lg border border-gray-200 dark:border-gray-600
                   focus:ring-2 focus:ring-purple-500 focus:border-transparent
                   shadow-sm transition-all duration-200
                   bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200

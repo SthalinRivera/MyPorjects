@@ -134,7 +134,7 @@
                             class="w-full bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white py-3 px-6 rounded-lg font-medium transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-pink-500/20 flex items-center justify-center disabled:from-gray-400 disabled:to-gray-500 disabled:hover:from-gray-400 disabled:hover:to-gray-500 disabled:cursor-not-allowed">
                             <UIcon name="i-heroicons-shopping-cart-solid" class="w-5 h-5 mr-2" />
                             {{ product.stock > 0 ? `Añadir al carrito - S/ ${(product.hasPromotion ?
-                                product.currentPrice : product.price) * quantity}` : 'Producto agotado' }}
+                                product.currentPrice.toFixed(2) : product.price) * quantity}` : 'Producto agotado' }}
                         </button>
 
 

@@ -11,7 +11,7 @@
     </div>
     <Categories></Categories>
     <PromotionPromotionsGrid></PromotionPromotionsGrid>
-    <PersonalizedProducts></PersonalizedProducts>
+
     <Publicidad></Publicidad>
     <CardProductsHome></CardProductsHome>
     <ParallaxSection></ParallaxSection>
