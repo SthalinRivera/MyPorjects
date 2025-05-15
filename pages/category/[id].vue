@@ -45,8 +45,6 @@
       <div class="flex gap-3 w-full sm:w-auto">
         <select v-model="sortBy"
           class="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-pink-500 focus:border-pink-500">
-          <option value="price-asc">Precio: Menor a Mayor</option>
-          <option value="price-desc">Precio: Mayor a Menor</option>
           <option value="name-asc">Nombre: A-Z</option>
           <option value="name-desc">Nombre: Z-A</option>
         </select>
@@ -75,66 +73,15 @@
     </div>
 
     <!-- Grid de Productos -->
-    <div v-else class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
-      <div v-for="product in sortedProducts" :key="product.id"
-        class="bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl overflow-hidden shadow-sm sm:shadow-md hover:shadow-xl transition-shadow duration-300 group">
-        <div class="relative">
-          <NuxtLink :to="`/product/${product.id}`">
-            <img class="w-full h-36 sm:h-48 object-cover transition-transform duration-500 group-hover:scale-105"
-              :src="product.imageUrl || '/placeholder-product.jpg'" :alt="product.name" />
-          </NuxtLink>
-          <UButton @click="toggleFavorite(product)" :class="[
-            'absolute top-2 right-2 backdrop-blur-sm rounded-full p-1 sm:p-2 transition-all duration-300 shadow-sm sm:shadow-md',
-            isFavorite(product.id)
-              ? 'bg-pink-500 hover:bg-pink-600 text-white'
-              : 'bg-white/80 dark:bg-slate-900/80 hover:bg-pink-500 dark:hover:bg-pink-500'
-          ]">
-            <UIcon name="i-heroicons-heart" class="w-4 h-4 sm:w-5 sm:h-5" :class="{
-              'text-pink-500 dark:text-pink-400 hover:text-white dark:hover:text-white': !isFavorite(product.id),
-              'text-slate-100': isFavorite(product.id)
-            }" dynamic />
-          </UButton>
-          <span v-if="product.stock < 5"
-            class="absolute top-2 sm:top-3 left-2 sm:left-3 bg-pink-500 text-white text-xs font-bold px-1.5 sm:px-2 py-0.5 sm:py-1 rounded truncate max-w-[80px] sm:max-w-none">
-            ¡Últimas<span class="hidden sm:inline"> unidades</span>!
-          </span>
-        </div>
 
-        <div class="p-3 sm:p-4">
-          <NuxtLink :to="`/product/${product.id}`">
-            <h3 class="font-semibold text-sm sm:text-lg text-gray-900 dark:text-white mb-1 sm:mb-2 line-clamp-1">
-              {{ product.name }}
-            </h3>
-          </NuxtLink>
-
-          <p class="text-gray-600 dark:text-gray-400 text-xs sm:text-sm mb-2 sm:mb-3 line-clamp-2">
-            {{ product.description || 'Descripción no disponible' }}
-          </p>
-
-          <div class="flex justify-between items-center">
-            <div>
-              <span class="font-bold text-sm sm:text-base text-pink-500 dark:text-pink-400">
-                S/ {{ product.price }}
-              </span>
-            </div>
-            <NuxtLink :to="`/product/${product.id}`">
-              <UButton
-                class="bg-gradient-to-r from-pink-500 to-pink-600 dark:from-pink-600 dark:to-pink-700 dark:text-white border-none py-1.5 sm:py-2 px-2 sm:px-3 rounded-md sm:rounded-lg hover:from-pink-600 hover:to-pink-700 dark:hover:from-pink-500 dark:hover:to-pink-600 transition-all duration-300 shadow-sm sm:shadow-md hover:shadow-lg">
-                <span class="text-xs sm:text-sm">Ver</span>
-                <template #trailing>
-                  <UIcon name="i-heroicons-arrow-right-20-solid" class="w-3 h-3 sm:w-4 sm:h-4 ml-0.5 sm:ml-1" />
-                </template>
-              </UButton>
-            </NuxtLink>
-          </div>
-        </div>
-      </div>
+    <div v-else class="grid gap-2 md:gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+      <ProductCardReusable v-for="product in sortedProducts" :key="product.id" :product="product" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { Product } from '~/interfaces/product';
+import type { Project } from '~/interfaces/project';
 
 const route = useRoute();
 const { id } = route.params;
@@ -142,10 +89,10 @@ const { $toast } = useNuxtApp();
 const productStore = useProductStore();
 
 // Datos y estado
-const products = ref<Product[]>([]);
+const products = ref<Project[]>([]);
 const categoryName = ref('');
 const loading = ref(true);
-const sortBy = ref('price-asc');
+const sortBy = ref('name-asc');
 
 // Obtener productos por categoría
 const fetchProductsByCategory = async () => {
@@ -153,7 +100,7 @@ const fetchProductsByCategory = async () => {
     loading.value = true;
 
     // Obtener productos
-    const { data: productsData } = await useFetch<Product[]>(
+    const { data: productsData } = await useFetch<Project[]>(
       `/api/v1/productByCategoryId/${id}`,
       { default: () => [] }
     );
@@ -186,33 +133,17 @@ const fetchProductsByCategory = async () => {
   }
 };
 
-// Verificar si un producto está en favoritos
-const isFavorite = (productId: number) => {
-  return productStore.favorites.some(item => item.id === productId);
-};
 
-// Manejar favoritos
-const toggleFavorite = (product: Product) => {
-  if (isFavorite(product.id)) {
-    productStore.deleteFavorites(product.id);
-    $toast.success("Eliminado de favoritos");
-  } else {
-    productStore.addToFavorites(product);
-    $toast.success("Agregado a favoritos");
-  }
-};
 
 // Productos ordenados
 const sortedProducts = computed(() => {
   return [...products.value].sort((a, b) => {
     const [key, order] = sortBy.value.split('-');
 
-    if (key === 'price') {
-      return order === 'asc' ? a.price - b.price : b.price - a.price;
-    } else if (key === 'name') {
+    if (key === 'name') {
       return order === 'asc'
-        ? a.name.localeCompare(b.name)
-        : b.name.localeCompare(a.name);
+        ? a.title.localeCompare(b.title)
+        : b.title.localeCompare(a.title);
     }
     return 0;
   });

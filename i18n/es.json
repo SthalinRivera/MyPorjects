@@ -1,5 +1,17 @@
 {
-    "titulo": "Mis videos",
-    "titulo_favoritos": "Mis favoritos",
-    "actulizar_video":" Actulizar video"
+    "title_favorites": "Mis favoritos",
+    "i_develop_solutions": "Desarrollo soluciones",
+    "and_share": "y comparto",
+    "knowledge": "conocimiento",
+    "category": "Categoría",
+    "category_product": "Categoría de producto",
+    "details_product": " Detalles de proyecto",
+    "details_product_description": "Descripción del proyecto",
+    "home_decription": "Apasionado por crear código elegante y enseñar a otros a través de ",
+    "and": "y",
+    "contenido_interactivo": "contenido interactivo",
+    "practical_examples": "ejemplos prácticos",
+    "tech_stack": "Stack de tecnología",
+    "our_categories": "Nuestras categorías",
+    "our_projects": "Nuestros proyectos"
 }

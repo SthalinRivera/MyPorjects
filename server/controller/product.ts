@@ -1,35 +1,18 @@
 import { H3Event } from "h3";
 import { PrismaClient } from "@prisma/client";
-import { Product } from "~/interfaces/product";
+import { Project } from "~/interfaces/project";
+
 
 const prisma = new PrismaClient();
-type ProductWithPromotion = {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  stock: number;
-  imageUrl: string;
-  categoryId: number;
-  promotions?: {
-    title: string;
-    description: string;
-    discount: number;
-    isPercentage: boolean;
-    startDate: string; // o Date si ya viene como objeto Date
-    endDate: string;   // o Date si ya viene como objeto Date
-  };
-};
 
-export const allProduct = async () => {
-  return await prisma.product.findMany({
+export const allProject = async () => {
+  return await prisma.project.findMany({
     orderBy: {
       id: "asc"
     },
     include: {
-      category: true,
-      promotions: true, // Aquí agregamos la inclusión de promociones
-    },
+      Category: true,
+    }
   });
 }
 
@@ -41,8 +24,8 @@ export const paginatedProducts = async (event: H3Event) => {
   const skip = (page - 1) * limit;
 
   const [products, totalItems] = await Promise.all([
-    prisma.product.findMany({ skip, take: limit /* ... */ }),
-    prisma.product.count()
+    prisma.project.findMany({ skip, take: limit /* ... */ }),
+    prisma.project.count()
   ]);
 
   // Estructura de respuesta CORRECTA
@@ -58,101 +41,16 @@ export const paginatedProducts = async (event: H3Event) => {
 }
 
 
-// export const productById = async (event: H3Event) => {
-//   const request = getRouterParams(event);
-//   if (!request.id) {
-//     throw createError({
-//       statusCode: 400,
-//       name: "Product invalid",
-//       message: "Product ID is required",
-//     });
-//   }
-
-//   const product = await prisma.product.findFirst({
-//     where: {
-//       id: +request.id,
-//     },
-//     include: {
-//       category: {
-//         select: {
-//           name: true,
-//         },
-//       },
-//     },
-//   });
-
-//   if (!product) {
-//     throw createError({
-//       statusCode: 404,
-//       name: "Product not found",
-//       message: "No product found with the given ID",
-//     });
-//   }
-
-//   return product;
-// };
-// export const productById = async (event: H3Event) => {
-//   const request = getRouterParams(event);
-//   if (!request.id) {
-//     throw createError({
-//       statusCode: 400,
-//       name: "Product invalid",
-//       message: "Product ID is required",
-//     });
-//   }
-
-//   const now = new Date();
-//   const product = await prisma.product.findUnique({
-//     where: { id: +request.id },
-//     include: {
-//       category: { select: { name: true } },
-//       promotions: {
-//         where: {
-//           startDate: { lte: now },
-//           endDate: { gte: now }
-//         },
-//         orderBy: { discount: 'desc' },
-//         take: 1
-//       }
-//     },
-//   });
-
-//   if (!product) {
-//     throw createError({
-//       statusCode: 404,
-//       name: "Product not found",
-//       message: "No product found with the given ID",
-//     });
-//   }
-
-//   // Calcular precio con descuento
-//   const currentPrice = product.promotions.length > 0
-//     ? calculateDiscountedPrice(product.price, product.promotions[0])
-//     : product.price;
-
-//   return {
-//     ...product,
-//     currentPrice,
-//     originalPrice: product.price,
-//     hasPromotion: product.promotions.length > 0
-//   };
-// };
 export const productById = async (event: H3Event) => {
   const { id } = getRouterParams(event);
   const now = new Date();
 
   // 1. Obtener el producto con promociones activas
-  const product = await prisma.product.findUnique({
+  const product = await prisma.project.findUnique({
     where: { id: Number(id) },
     include: {
-      category: true,
-      promotions: {
-        where: {
-          startDate: { lte: now },
-          endDate: { gte: now }
-        },
-        orderBy: { discount: 'desc' }
-      }
+      Category: true,
+
     }
   });
 
@@ -163,24 +61,10 @@ export const productById = async (event: H3Event) => {
     });
   }
 
-  // 2. Convertir precios a números (evitar strings como "23")
-  const price = parseFloat(product.price.toString()); // Asegura que sea número
-  const hasPromotion = product.promotions.length > 0;
-  const currentPromotion = hasPromotion ? product.promotions[0] : null;
-
-  // 3. Calcular precio con descuento (manejo seguro de tipos)
-  const currentPrice = currentPromotion
-    ? calculateDiscountedPrice(price, currentPromotion)
-    : price;
 
   // 4. Retornar datos consistentes (todos los precios como números)
   return {
-    ...product,
-    price: price,          // Número (ej: 23)
-    currentPrice,          // Número (ej: 11.5 si hay 50% de descuento)
-    originalPrice: price,  // Número (igual que price, pero útil para el frontend)
-    hasPromotion,
-    currentPromotion: currentPromotion
+    ...product
   };
 };
 
@@ -212,12 +96,12 @@ export const productByCategoryId = async (event: H3Event) => {
   }
 
   try {
-    const products = await prisma.product.findMany({
+    const products = await prisma.project.findMany({
       where: {
         categoryId: categoryId,
       },
       include: {
-        category: true,
+        Category: true,
       },
       orderBy: {
         id: "asc",
@@ -235,34 +119,33 @@ export const productByCategoryId = async (event: H3Event) => {
     });
   }
 };
-export const addProduct = async (event: H3Event): Promise<string> => {
+export const addProject = async (event: H3Event): Promise<string> => {
   try {
-    const body = await readBody<ProductWithPromotion>(event);
+    const body = await readBody<Project>(event);
 
-    const product = await prisma.product.create({
+    const slug = body.title.toLowerCase().replace(/\s+/g, '-');
+
+    await prisma.project.create({
       data: {
-        name: body.name,
+        title: body.title,
+        slug,
         description: body.description,
-        price: body.price,
-        stock: body.stock,
-        imageUrl: body.imageUrl,
+        image_url: body.image_url,
+        project_url: body.project_url,
+        code_url: body.code_url,
+        video_url: body.video_url,
+        tags: body.tags,
+        technologies: body.technologies,
         categoryId: body.categoryId,
-        promotions: body.promotions ? {
-          create: {
-            title: body.promotions.title,
-            description: body.promotions.description,
-            discount: body.promotions.discount,
-            isPercentage: body.promotions.isPercentage,
-            startDate: new Date(body.promotions.startDate),
-            endDate: new Date(body.promotions.endDate),
-          }
-        } : undefined,
+        userId: body.userId,
+        startDate: body.startDate,
+        endDate: body.endDate,
       },
     });
 
-    return "Producto y promoción creados con éxito.";
+    return "Proyecto creado con éxito.";
   } catch (error) {
-    console.error("Error al crear producto:", error);
+    console.error("Error al crear proyecto:", error);
     throw createError({
       statusCode: 500,
       message: error instanceof Error ? error.message : "Error desconocido"
@@ -270,65 +153,51 @@ export const addProduct = async (event: H3Event): Promise<string> => {
   }
 };
 
-export const updateProduct = async (event: H3Event): Promise<string> => {
+export const updateProject = async (event: H3Event): Promise<string> => {
   try {
-    const request = await readBody<ProductWithPromotion>(event);
-    console.log("Request received:", JSON.stringify(request, null, 2)); // Log completo
+    const body = await readBody<Project>(event);
+    const { id } = getRouterParams(event); // Asegúrate de pasar `id` en la URL
+    const projectId = Number(id);
 
-    const requestid = getRouterParams(event);  // Extracts parameters from the event object
-
-    const productId = Number(requestid.id); // Ensure categoryId is a number
-
-    if (isNaN(productId)) {
+    if (isNaN(projectId)) {
       throw createError({
         statusCode: 400,
-        name: "Invalid Category ID",
-        message: "El ID de categoría debe ser un número válido.",
+        name: "Invalid Project ID",
+        message: "El ID del proyecto debe ser un número válido.",
       });
     }
 
+    const slug = body.title.toLowerCase().replace(/\s+/g, '-');
 
-
-    const isValidDate = (date: any) => {
-      const d = new Date(date);
-      return d instanceof Date && !isNaN(d.getTime());
-    };
-    // Actualizar el producto
-    const updatedProduct = await prisma.product.update({
-      where: { id: productId },
+    await prisma.project.update({
+      where: { id: projectId },
       data: {
-        name: request.name,
-        description: request.description,
-        price: Number(request.price),
-        stock: Number(request.stock),
-        imageUrl: request.imageUrl,
-        categoryId: Number(request.categoryId),
-        promotions: request.promotions ? {
-          deleteMany: {},
-          create: isValidDate(request.promotions.startDate) && isValidDate(request.promotions.endDate) ? {
-            title: request.promotions.title,
-            description: request.promotions.description,
-            discount: Number(request.promotions.discount),
-            isPercentage: Boolean(request.promotions.isPercentage),
-            startDate: new Date(request.promotions.startDate),
-            endDate: new Date(request.promotions.endDate),
-          } : undefined
-        } : undefined
+        title: body.title,
+        slug,
+        description: body.description,
+        image_url: body.image_url,
+        project_url: body.project_url,
+        code_url: body.code_url,
+        video_url: body.video_url,
+        tags: body.tags,
+        technologies: body.technologies,
+        categoryId: body.categoryId,
+        userId: body.userId,
+        startDate: body.startDate,
+        endDate: body.endDate,
       },
     });
 
-    console.log("Product updated successfully:", updatedProduct);
-    return "Producto actualizado con éxito.";
+    return "Proyecto actualizado con éxito.";
   } catch (error: any) {
-    console.error("Error al actualizar producto:", error);
+    console.error("Error al actualizar proyecto:", error);
     throw createError({
       statusCode: error.statusCode || 500,
-      name: error.name || "Error actualizando producto",
+      name: error.name || "Error actualizando proyecto",
       message: error.message || "Error desconocido",
     });
   }
 };
-
 
 
 export const deleteProduct = async (event: H3Event) => {

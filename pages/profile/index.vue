@@ -194,10 +194,9 @@
                                 </div>
                                 <h4 class="text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">No tienes órdenes
                                     recientes</h4>
-                                <p class="text-gray-500 dark:text-gray-400 mb-4">Parece que aún no has realizado compras
-                                    en nuestra tienda</p>
+                                <p class="text-gray-500 dark:text-gray-400 mb-4">Proximamennte mas novedades</p>
                                 <UButton icon="i-heroicons-arrow-right" trailing color="primary" variant="solid"
-                                    label="Explorar productos" to="/product" />
+                                    label="Explorar proyectos" to="/product" />
                             </div>
                         </div>
                     </div>

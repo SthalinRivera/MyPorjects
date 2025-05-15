@@ -6,8 +6,13 @@
             <div class="max-w-screen-xl flex items-center justify-between mx-auto px-4 py-3">
                 <!-- Logo -->
                 <NuxtLink to="/" class=" pl-4 md:pl-0 flex items-center gap-2" @click="isMobileMenuOpen = false">
-                    <img src="/logo-ligh.png" alt="Logo Claro" class="h-8 block dark:hidden">
-                    <img src="/logo-dark.png" alt="Logo Oscuro" class="h-8 hidden dark:block">
+                    <span class="font-semibold text-xl tracking-tight mr2 text-slate-900 dark:text-slate-200">Sthalin
+                        Rivera</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="size-6 text-blue-400 dark:text-blue-300">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z" />
+                    </svg>
                 </NuxtLink>
 
                 <!-- Botón para menú móvil -->
@@ -111,19 +116,6 @@
                             </span>
                         </NuxtLink>
 
-                        <!-- Carrito -->
-                        <button type="button" @click="openCart"
-                            class="relative p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                            </svg>
-                            <span v-if="totalItems > 0"
-                                class="absolute -top-1 -right-1 h-5 w-5 bg-red-500 text-white text-xs flex items-center justify-center rounded-full font-medium">
-                                {{ totalItems }}
-                            </span>
-                        </button>
                     </div>
                 </div>
             </div>

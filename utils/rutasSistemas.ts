@@ -6,7 +6,7 @@ interface Rutas {
 export default () => {
     const rutas: Rutas[] = [
         { name: 'Inicio', path: '/' },
-        { name: 'Productos', path: '/product' },
+        { name: 'Proyectos', path: '/product' },
 
     ]
     return rutas;

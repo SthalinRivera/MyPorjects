@@ -31,21 +31,6 @@
         <span class="text-xs mt-1">Favoritos</span>
       </NuxtLink>
 
-      <!-- Carrito (con contador) -->
-      <button @click="isCartOpen = true"
-        class="flex flex-col items-center justify-center p-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors relative">
-        <div class="relative">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-          </svg>
-          <span v-if="totalItems > 0"
-            class="absolute -top-1 -right-1 h-4 w-4 bg-red-500 text-white text-xs flex items-center justify-center rounded-full font-medium">
-            {{ totalItems }}
-          </span>
-        </div>
-        <span class="text-xs mt-1">Carrito</span>
-      </button>
 
       <!-- Cuenta/Login -->
       <NuxtLink to="/profile"

@@ -50,7 +50,7 @@
                 <div>
                     <h3 class="font-medium text-red-800 dark:text-red-200">Error al cargar categorías</h3>
                     <p class="text-sm text-red-600 dark:text-red-300">{{ error.message || 'Ocurrió un error desconocido'
-                    }}</p>
+                        }}</p>
                 </div>
             </div>
         </div>
@@ -496,6 +496,8 @@ const fetchCategories = async () => {
     try {
         const { data } = await useFetch('/api/v1/category');
         categories.value = data.value || [];
+        console.log("Categorías cargadas:", categories.value);
+
     } catch (err) {
         console.error("Error al cargar categorías:", err);
         error.value = err;

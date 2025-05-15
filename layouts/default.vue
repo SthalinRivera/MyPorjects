@@ -6,7 +6,7 @@
         <!-- Main content with proper spacing and max-width constraints -->
         <main class="flex-1">
 
-            <div class="m-2 ">
+            <div class="m-2 relative overflow-hidden py-8 max-w-5xl mx-auto ">
                 <slot />
             </div>
 

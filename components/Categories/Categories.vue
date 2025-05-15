@@ -23,7 +23,7 @@
             <template #description="{ category }">
                 <div class="text-xs text-gray-500 dark:text-gray-400 flex  items-center">
                     <i class="ri-boxing-line mr-1"></i>
-                    {{ category._count?.products || 0 }} productos
+                    {{ category._count?.projects || 0 }} proyectos
                 </div>
             </template>
         </CategorySlider>

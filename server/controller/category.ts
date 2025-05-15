@@ -11,7 +11,7 @@ export const allCategory = async () => {
     orderBy: { id: "asc" },
     include: {
       _count: {
-        select: { products: true }
+        select: { projects: true }
       }
     }
   })
@@ -49,7 +49,7 @@ export const categoryById = async (event: H3Event) => {
 
 export const addCategory = async (event: H3Event): Promise<string> => {
   try {
-    const request = await readBody<CategoryInput>(event);
+    const request = await readBody<Category>(event);
 
     // Validación básica
     if (!request.name || !request.imageUrl) {
@@ -68,10 +68,6 @@ export const addCategory = async (event: H3Event): Promise<string> => {
 
     if (!isValidUrl(request.imageUrl)) {
       throw new Error("La URL de la imagen no es válida");
-    }
-
-    if (request.bannerUrl && !isValidUrl(request.bannerUrl)) {
-      throw new Error("La URL del banner no es válida");
     }
 
     // Generar slug automáticamente
@@ -102,7 +98,6 @@ export const addCategory = async (event: H3Event): Promise<string> => {
         name: request.name,
         slug,
         imageUrl: request.imageUrl,
-        bannerUrl: request.bannerUrl || null, // Usar null si no viene bannerUrl
         description: request.description || null,
       },
     });
@@ -158,13 +153,6 @@ export const updateCategory = async (event: H3Event): Promise<string> => {
       });
     }
 
-    if (request.bannerUrl && !isValidUrl(request.bannerUrl)) {
-      throw createError({
-        statusCode: 400,
-        name: "INVALID_BANNER_URL",
-        message: "La URL del banner no es válida",
-      });
-    }
 
     const generateSlug = (name: string) => {
       return name

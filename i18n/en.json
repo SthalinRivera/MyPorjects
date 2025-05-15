@@ -1,5 +1,16 @@
 {
-    "titulo": "My vidios",
-    "titulo_favoritos": "My favourites",
-    "actulizar_video":" Update video"
+    "title_favorites": "My Favorites",
+    "i_develop_solutions": "I develop solutions",
+    "and_share": "and share",
+    "knowledge": "knowledge",
+    "experiences": "experiences",
+    "details_product": " Details Project",
+    "home_decription": "Passionate about creating elegant code and teaching others through",
+    "practical_exampl": "Practical Examples",
+    "and": "and",
+    "contenido_interactivo": "interactive content",
+    "practical_examples": "practical examples",
+    "tech_stack": "Tech Stack",
+    "our_categories": "Our Categories",
+    "our_projects": "Our Projects"
 }

@@ -1,7 +1,7 @@
 <template>
     <div class="max-w-7xl mx-auto px-4 py-8">
         <h1 class="text-3xl font-bold text-center mb-8 text-slate-900 dark:text-white relative">
-            {{ $t("titulo_favoritos") }}
+            {{ $t("title_favorites") }}
             <span
                 class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-20 h-1 bg-pink-500 rounded-full"></span>
         </h1>
@@ -14,7 +14,7 @@
                 <!-- Imagen con botón de favoritos -->
                 <div class="relative group">
                     <img class="w-full h-40 sm:h-48 object-cover transition-transform duration-500 group-hover:scale-110"
-                        :src="`${product.imageUrl}`" :alt="product.name" />
+                        :src="`${product.image_url}`" :alt="product.title" />
                     <button @click="removeFavorite(product.id)"
                         class="absolute top-2 right-2 p-2 bg-white/80 dark:bg-slate-900/80 rounded-full shadow-md hover:bg-red-500 transition-all">
                         <UIcon name="i-heroicons-heart-solid"
@@ -26,10 +26,10 @@
                 <div class="p-3 sm:p-4 flex-grow">
                     <div class="flex justify-between items-start mb-1 sm:mb-2">
                         <h3 class="text-sm sm:text-base font-bold text-gray-900 dark:text-white line-clamp-1">{{
-                            product.name }}</h3>
+                            product.title }}</h3>
                         <span
                             class="text-xs sm:text-sm bg-pink-100 dark:bg-pink-900/40 text-pink-600 dark:text-pink-300 py-0.5 sm:py-1 px-2 sm:px-3 rounded-full">
-                            {{ product.category?.name || 'Sin categoría' }}
+                            {{ product.Category?.name || 'Sin categoría' }}
                         </span>
                     </div>
 
@@ -37,8 +37,7 @@
                         product.description }}</p>
 
                     <div class="mt-3 sm:mt-4 flex justify-between items-center">
-                        <span class="text-sm sm:text-base font-bold text-pink-600 dark:text-pink-400">S/. {{
-                            product.price }}</span>
+
                         <div class="flex gap-2">
                             <NuxtLink :to="`/product/${product.id}`">
                                 <button
@@ -63,12 +62,12 @@
                 <path stroke-linecap="round" stroke-linejoin="round"
                     d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
             </svg>
-            <p class="text-xl font-medium text-gray-600 dark:text-gray-300">No tienes productos en favoritos.</p>
-            <p class="text-gray-500 dark:text-gray-400 mt-2">Explora nuestra tienda y guarda tus productos favoritos
+            <p class="text-xl font-medium text-gray-600 dark:text-gray-300">No tienes proyectos en favoritos.</p>
+            <p class="text-gray-500 dark:text-gray-400 mt-2">Explora nuestros proyectos y agrega a favoritos
                 aquí.</p>
             <NuxtLink to="/product"
                 class="mt-6 bg-pink-500 dark:bg-pink-600 hover:bg-pink-600 dark:hover:bg-pink-700 text-white font-medium px-5 py-2.5 rounded-lg shadow-md transition-all duration-200">
-                Explorar productos
+                Explorar proyectos
             </NuxtLink>
         </div>
     </div>

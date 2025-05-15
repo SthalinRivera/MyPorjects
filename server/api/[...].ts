@@ -13,12 +13,12 @@ import { createRouter, defineEventHandler } from 'h3';
 const router = createRouter();
 
 // 📦 PRODUCTOS
-router.post('/addProduct', defineEventHandler(productController.addProduct));
+router.post('/addProduct', defineEventHandler(productController.addProject));
 router.get('/product/paginated', defineEventHandler(productController.paginatedProducts)); // Nueva ruta
 
-router.get('/product', defineEventHandler(productController.allProduct));
+router.get('/product', defineEventHandler(productController.allProject));
 router.get('/product/:id', defineEventHandler(productController.productById));
-router.put('/updateProduct/:id', defineEventHandler(productController.updateProduct));
+router.put('/updateProduct/:id', defineEventHandler(productController.updateProject));
 router.delete('/deleteProduct/:id', defineEventHandler(productController.deleteProduct));
 router.get('/productByCategoryId/:id', defineEventHandler(productController.productByCategoryId));
 router.get('/productByCategoryIdCount/:id', defineEventHandler(categoryController.productByCategoryIdCount));

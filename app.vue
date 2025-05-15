@@ -8,9 +8,9 @@
 
 <script setup lang="ts">
 useHead({
-  title: 'FlorBelle | Productos de belleza, floreria y más',
+  title: 'Sthalin Rivera | Portafolio y proyectos',
   meta: [
-    { name: 'description', content: 'FlorBelle | Productos de belleza, floreria y más' }
+    { name: 'description', content: 'Sthalin Rivera | Portafolio y proyectos' }
   ],
   bodyAttrs: {
     class: 'test'
