@@ -23,10 +23,10 @@
                 </div>
 
                 <!-- Título y descripción -->
-                <h3 class="text-lg font-bold text-gray-900 dark:text-white line-clamp-1 mb-1">
+                <h3 class=" text-sm md:text-md font-bold text-gray-900 dark:text-white line-clamp-3 mb-1">
                     {{ product.title }}
                 </h3>
-                <p class="text-gray-600 dark:text-gray-400 text-sm line-clamp-2 mb-3 flex-grow">
+                <p class="text-gray-600 dark:text-gray-400 text-sm line-clamp-3  mb-3 flex-grow">
                     {{ product.description }}
                 </p>
 

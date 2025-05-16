@@ -22,16 +22,16 @@
                 <span class="font-semibold dark:text-pink-300 text-pink-600"> {{ $t("practical_examples") }} </span>.
             </p>
 
-            <!-- Botones de acción -->
+            <!-- Botones de acción con enlaces Nuxt -->
             <div class="relative flex flex-wrap justify-center gap-4 mt-12">
-                <button
+                <NuxtLink to="/product"
                     class="px-8 py-3 rounded-full bg-gradient-to-r from-[#8000FF] to-[#FF8660] text-white font-medium shadow-lg hover:shadow-xl hover:shadow-purple-500/30 transition-all duration-300 transform hover:scale-105">
                     View My Work
-                </button>
-                <button
+                </NuxtLink>
+                <NuxtLink to="/product"
                     class="px-8 py-3 rounded-full dark:bg-white/10 bg-gray-800/5 dark:text-white text-gray-800 font-medium border dark:border-white/20 border-gray-300 shadow-sm hover:shadow-md transition-all duration-300 transform hover:scale-105">
                     Explore Content
-                </button>
+                </NuxtLink>
             </div>
 
             <!-- Elemento decorativo flotante -->
