@@ -1,14 +1,15 @@
 <template>
-    <div class=" my-2  px-4 sm:px-6 lg:px-8">
-        <!-- Encabezado -->
+    <div class="my-2 px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
         <h3
             class="text-center text-3xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent mb-8">
-            <span class="inline-block animate-float">🚀</span> {{ $t("details_product") }}
+            <span class="">Detalles de Producto</span>
         </h3>
-        <!-- Contenedor principal -->
+
+        <!-- Main Container -->
         <div class="max-w-6xl mx-auto overflow-hidden rounded-2xl shadow-xl dark:shadow-pink-900/30">
             <div class="flex flex-col lg:flex-row bg-white dark:bg-gray-800">
-                <!-- Galería de imágenes -->
+                <!-- Image Gallery -->
                 <div class="lg:w-1/2 p-2 md:p-6 bg-gray-50 dark:bg-gray-700">
                     <div class="relative h-96 rounded-lg overflow-hidden">
                         <img class="w-full h-full object-cover transition-all duration-300 hover:scale-105 cursor-zoom-in"
@@ -21,16 +22,16 @@
                     </div>
                     <div class="flex mt-0 md:mt-4 space-x-2 overflow-x-auto py-1 md:py-2">
                         <div v-for="(img, index) in productImages" :key="index"
-                            class="w-16 h-16 rounded-lg border-2 overflow-hidden cursor-pointer flex-shrink-0"
-                            :class="{ 'border-pink-400': currentImageIndex === index, 'border-transparent': currentImageIndex !== index }"
-                            @click="changeImage(index)">
+                            class="w-16 h-16 rounded-lg border-2 overflow-hidden cursor-pointer flex-shrink-0" :class="{
+                                'border-pink-400': currentImageIndex === index,
+                                'border-transparent': currentImageIndex !== index
+                            }" @click="changeImage(index)">
                             <img class="w-full h-full object-cover" :src="img" :alt="`Vista previa ${index + 1}`" />
                         </div>
                     </div>
                 </div>
 
-                <!-- Detalles del proyecto -->
-                <!-- Detalles del proyecto -->
+                <!-- Project Details -->
                 <div class="lg:w-1/2 p-2 md:p-8 flex flex-col justify-between">
                     <div>
                         <div class="flex items-center mb-2">
@@ -86,11 +87,10 @@
                         </button>
                     </div>
                 </div>
-
             </div>
         </div>
 
-        <!-- Modal de imagen -->
+        <!-- Image Modal -->
         <Transition name="fade">
             <div v-if="isImageModalOpen"
                 class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-90 p-4"
@@ -117,16 +117,16 @@
 
                     <div class="absolute bottom-4 left-0 right-0 flex justify-center space-x-2">
                         <span v-for="(img, index) in productImages" :key="index"
-                            class="w-2 h-2 rounded-full transition-colors"
-                            :class="{ 'bg-pink-500': currentImageIndex === index, 'bg-white/50': currentImageIndex !== index }">
-                        </span>
+                            class="w-2 h-2 rounded-full transition-colors" :class="{
+                                'bg-pink-500': currentImageIndex === index,
+                                'bg-white/50': currentImageIndex !== index
+                            }"></span>
                     </div>
                 </div>
             </div>
         </Transition>
 
-
-        <!-- Productos relacionados -->
+        <!-- Related Products -->
         <div class="max-w-6xl mx-auto mt-16">
             <div class="flex items-center justify-between mb-8">
                 <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Proyectos relacionados</h2>
@@ -140,24 +140,140 @@
             </div>
         </div>
 
+        <!-- Sección de Reseñas -->
+        <div class="max-w-6xl mx-auto mt-16">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Reseñas de Clientes</h2>
+
+            <!-- Calificación Promedio -->
+            <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-6 mb-8">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">Calificación General</h3>
+                        <div class="flex items-center mt-2">
+                            <div class="flex">
+                                <UIcon v-for="i in 5" :key="i"
+                                    :name="i <= Math.round(averageRating) ? 'i-heroicons-star-solid' : 'i-heroicons-star'"
+                                    class="w-6 h-6 text-yellow-400" />
+                            </div>
+                            <span class="ml-2 text-gray-600 dark:text-gray-300">
+                                {{ averageRating.toFixed(1) }} de 5
+                            </span>
+                        </div>
+                        <p class="text-gray-600 dark:text-gray-300 mt-1">
+                            {{ totalReviews }} {{ totalReviews === 1 ? 'reseña' : 'reseñas' }}
+                        </p>
+                    </div>
+
+
+                </div>
+            </div>
+
+            <!-- Formulario de Reseña (se muestra condicionalmente) -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-8">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Escribe tu Reseña</h3>
+                <form @submit.prevent="submitReview">
+                    <!-- Campos para usuarios no logueados -->
+                    <div v-if="!loggedIn" class="mb-4 space-y-4">
+                        <div>
+                            <label class="block text-gray-700 dark:text-gray-300 mb-2" for="name">Nombre</label>
+                            <input id="name" v-model="guestUser.name" type="text" placeholder="Ingresa tu nombre"
+                                required
+                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 dark:bg-gray-700 dark:text-white" />
+                        </div>
+
+                        <div>
+                            <label class="block text-gray-700 dark:text-gray-300 mb-2" for="email">Email</label>
+                            <input id="email" v-model="guestUser.email" type="email" placeholder="correo@ejemplo.com"
+                                required
+                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 dark:bg-gray-700 dark:text-white" />
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-gray-700 dark:text-gray-300 mb-2">Calificación</label>
+                        <div class="flex">
+                            <button type="button" v-for="i in 5" :key="i" @click="newReview.rating = i"
+                                class="focus:outline-none">
+                                <UIcon :name="i <= newReview.rating ? 'i-heroicons-star-solid' : 'i-heroicons-star'"
+                                    class="w-8 h-8 text-yellow-400" />
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-gray-700 dark:text-gray-300 mb-2">Comentario</label>
+                        <textarea v-model="newReview.comment" required
+                            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 dark:bg-gray-700 dark:text-white"
+                            rows="4"></textarea>
+                    </div>
+
+                    <button type="submit"
+                        class="bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-lg transition-colors">
+                        Enviar Reseña
+                    </button>
+                </form>
+            </div>
+
+            <!-- Lista de Reseñas -->
+            <div class="space-y-6">
+                <div v-for="review in reviews" :key="review.id" class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h4 class="font-semibold text-gray-900 dark:text-white">{{ review.user?.name || 'Anónimo' }}
+                            </h4>
+                            <div class="flex items-center mt-1">
+                                <div class="flex">
+                                    <UIcon v-for="i in 5" :key="i"
+                                        :name="i <= review.rating ? 'i-heroicons-star-solid' : 'i-heroicons-star'"
+                                        class="w-5 h-5 text-yellow-400" />
+                                </div>
+                                <span class="text-sm text-gray-500 dark:text-gray-400 ml-2">
+                                    {{ formatDate(review.createdAt) }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Botones de Editar/Eliminar (si el usuario es el autor) -->
+                        <div v-if="user && user.id === review.userId" class="flex space-x-2">
+                            <button @click="editReview(review)"
+                                class="text-gray-500 hover:text-pink-500 transition-colors">
+                                <UIcon name="i-heroicons-pencil-square" class="w-5 h-5" />
+                            </button>
+                            <button @click="deleteReview(review.id)"
+                                class="text-gray-500 hover:text-red-500 transition-colors">
+                                <UIcon name="i-heroicons-trash" class="w-5 h-5" />
+                            </button>
+                        </div>
+                    </div>
+
+                    <p class="mt-3 text-gray-600 dark:text-gray-300">{{ review.comment }}</p>
+                </div>
+
+                <p v-if="reviews.length === 0" class="text-gray-500 dark:text-gray-400 text-center py-8">
+                    Aún no hay reseñas. ¡Sé el primero en dejar una!
+                </p>
+            </div>
+        </div>
+
     </div>
 </template>
 
 <script setup lang="ts">
-import type { Product } from '~/interfaces/product';
+import { format } from 'date-fns';
 import type { Project } from '~/interfaces/project';
 import { useProductShoppingCartStore } from '~/stores/productShoppingCart';
+const { loggedIn, user } = useUserSession();
 const productStore = useProductStore();
 const { $toast } = useNuxtApp();
 const route = useRoute();
 const { id } = route.params;
-const { addToFavorites } = useProductStore();
-// Verificar si un producto está en favoritos
+
+// Check if a product is in favorites
 const isFavorite = (productId: number) => {
     return productStore.favorites.some(item => item.id === productId);
 };
 
-// Manejar favoritos
+// Handle favorites
 const toggleFavorite = (product: Project) => {
     if (isFavorite(product.id)) {
         productStore.deleteFavorites(product.id);
@@ -169,17 +285,14 @@ const toggleFavorite = (product: Project) => {
 };
 
 
-const { addProductShoppingCart } = useProductShoppingCartStore();
-
-// Estado para la galería de imágenes
+// State for image gallery
 const productImages = ref<string[]>([]);
 const currentImageIndex = ref(0);
 const isImageModalOpen = ref(false);
 const currentImage = ref('');
 
-// Obtener datos del producto
+// Get product data
 const { data: productData, error } = await useFetch<Project>(`/api/v1/product/${id}`);
-
 
 if (error.value) {
     throw createError({
@@ -188,8 +301,7 @@ if (error.value) {
     });
 }
 
-
-// Producto reactivo
+// Reactive product
 const product = computed(() => productData.value || {
     id: '',
     name: 'Cargando...',
@@ -202,24 +314,23 @@ const product = computed(() => productData.value || {
     Category: {
         name: ''
     },
-
 });
 
-// Inicializar imágenes del producto
+// Initialize product images
 productImages.value = [
     product.value.image_url,
 ];
 
 const currentDisplayImage = computed(() => productImages.value[currentImageIndex.value]);
 
-// Obtener productos relacionados
+// Get related products
 const { data: relatedProductsData } = await useFetch<Project[]>(`/api/v1/productByCategoryId/${product.value.categoryId}`,
     { default: () => [] }
 );
 
 const relatedProducts = computed(() => relatedProductsData.value || []);
 
-// Funciones de la galería
+// Gallery functions
 const changeImage = (index: number) => {
     currentImageIndex.value = index;
 };
@@ -247,7 +358,153 @@ const prevImage = () => {
 };
 
 
-// Manejar teclado para navegación
+const showReviewForm = ref(false);
+const reviews = ref([]);
+const averageRating = ref(0);
+const totalReviews = ref(0);
+const editingReviewId = ref(null);
+
+
+const newReview = reactive({
+    rating: 0,
+    comment: '',
+    projectId: Number(id),
+    userId: user.value?.id || null
+});
+
+// Fetch reviews
+const fetchReviews = async () => {
+    try {
+        const { data } = await useFetch(`/api/v1/getReviewByProductId/${id}`);
+        if (data.value) {
+            reviews.value = data.value.reviews;
+            averageRating.value = data.value.averageRating;
+            totalReviews.value = data.value.totalReviews;
+        }
+    } catch (error) {
+        console.error('Error fetching reviews:', error);
+    }
+};
+
+// Format date
+const formatDate = (dateString: string) => {
+    return format(new Date(dateString), 'MMMM d, yyyy');
+};
+const guestUser = reactive({
+    name: '',
+    email: ''
+});
+// Submit review
+const submitReview = async () => {
+    if (!newReview.rating) {
+        $toast.error('Por favor selecciona un rating');
+        return;
+    }
+
+    try {
+        let userId = user.value?.id;
+
+        // Si el usuario no está logueado, creamos un usuario temporal
+        if (!loggedIn.value) {
+            if (!guestUser.name || !guestUser.email) {
+                $toast.error('Por favor completa tu nombre y email');
+                return;
+            }
+
+            // Crear usuario invitado (roleId 2 para usuarios guest)
+            const { data: userData, error: userError } = await useFetch('/api/v1/addUser', {
+                method: 'POST',
+                body: {
+                    name: guestUser.name,
+                    email: guestUser.email,
+                    roleId: 2, // ID para usuarios guest/invitados
+                    password: 'temppassword' // Contraseña temporal
+                }
+            });
+
+            if (userError.value) {
+                throw userError.value;
+            }
+
+            if (userData.value?.userId) {
+                userId = userData.value.userId;
+            } else {
+                throw new Error('No se pudo crear el usuario temporal');
+            }
+        }
+
+        // Ahora procedemos con la creación de la reseña
+        if (editingReviewId.value) {
+            const res = await $fetch(`/api/v1/updateReviews/${editingReviewId.value}`, {
+                method: 'PUT',
+                body: {
+                    rating: newReview.rating,
+                    comment: newReview.comment,
+                    userId: userId
+                }
+            });
+            $toast.success(res.message);
+        } else {
+            const res = await $fetch('/api/v1/addReviews', {
+                method: 'POST',
+                body: {
+                    ...newReview,
+                    userId: userId,
+                    projectId: Number(id)
+                }
+            });
+            if (res?.message) {
+                $toast.success(res.message);
+            }
+        }
+
+        resetReviewForm();
+        await fetchReviews();
+
+    } catch (error: any) {
+        const msg = error?.data?.statusMessage || error?.data?.message || error.message;
+        $toast.error(msg || 'Ocurrió un error inesperado');
+        console.error('Review error:', error);
+    }
+};
+
+// Edit review
+const editReview = (review: any) => {
+    editingReviewId.value = review.id;
+    newReview.rating = review.rating;
+    newReview.comment = review.comment;
+    showReviewForm.value = true;
+};
+
+// Delete review
+const deleteReview = async (reviewId: number) => {
+    if (!confirm('¿Estás seguro de eliminar esta reseña?')) return;
+    try {
+        const res = await $fetch(`/api/v1/deleteReviews/${reviewId}`, {
+            method: 'DELETE'
+        });
+
+        const message = res?.message;
+        $toast.success(message);
+        await fetchReviews();
+
+    } catch (error: any) {
+        const msg = error?.data?.message || error?.message;
+        $toast.error(msg);
+        console.error('Delete review error:', error);
+    }
+};
+// Reset review form
+const resetReviewForm = () => {
+    editingReviewId.value = null;
+    newReview.rating = 0;
+    newReview.comment = '';
+    guestUser.name = '';
+    guestUser.email = '';
+    showReviewForm.value = false;
+};
+
+// Handle keyboard for navigation
 const handleKeyDown = (e: KeyboardEvent) => {
     if (!isImageModalOpen.value) return;
 
@@ -260,10 +517,8 @@ const handleKeyDown = (e: KeyboardEvent) => {
     }
 };
 
-
-
-
-onMounted(() => {
+onMounted(async () => {
+    await fetchReviews();
     window.addEventListener('keydown', handleKeyDown);
 });
 
@@ -273,7 +528,4 @@ onBeforeUnmount(() => {
 });
 
 const shoppingCartStore = useProductShoppingCartStore();
-
-
-
 </script>

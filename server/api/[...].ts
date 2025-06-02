@@ -9,12 +9,20 @@ import * as promotionController from "../controller/promotion";
 
 import * as dashboardController from "../controller/dashboard";
 import * as visitController from "../controller/visit";
+import * as reviewController from "../controller/review";
 import { createRouter, defineEventHandler } from 'h3';
 const router = createRouter();
 
+router.get('/allReviews', defineEventHandler(reviewController.allReviews));
+router.post('/addReviews', defineEventHandler(reviewController.addReviews));
+router.get('/getReviewByProductId/:id', defineEventHandler(reviewController.getReviewByProductId));
+router.put('/updateReviews/:id', defineEventHandler(reviewController.updateReviews));
+router.delete('/deleteReviews/:id', defineEventHandler(reviewController.deleteReviews));
+
+
 // 📦 PRODUCTOS
 router.post('/addProduct', defineEventHandler(productController.addProject));
-router.get('/product/paginated', defineEventHandler(productController.paginatedProducts)); // Nueva ruta
+router.get('/product/paginated', defineEventHandler(productController.paginatedProducts));
 
 router.get('/product', defineEventHandler(productController.allProject));
 router.get('/product/:id', defineEventHandler(productController.productById));
