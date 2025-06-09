@@ -2,7 +2,8 @@
   <div class="w-full ">
     <HomeInit />
     <Skills />
-    <Servicios></Servicios>
+    <Services />
+
     <Categories />
     <ProductCardProductsHome />
     <WhatsApp />
@@ -10,7 +11,8 @@
 </template>
 
 <script setup lang="ts">
-import Servicios from './Servicios/Servicios.vue';
+
+import Services from './Servicios/Services.vue';
 import WhatsApp from './WhatsApp .vue';
 
 

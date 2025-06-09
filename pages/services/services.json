@@ -1,0 +1,91 @@
+[
+    {
+        "id": "web-design",
+        "category": "digital",
+        "name": "Diseño Web",
+        "icon": "🌐",
+        "subtitle": "Sitios personalizados y funcionales",
+        "color": "blue",
+        "gradient": "from-blue-500 to-indigo-600",
+        "features": [
+            "Diseño completamente personalizado",
+            "Desarrollo responsive (móvil, tablet, desktop)",
+            "Optimización SEO básica",
+            "Integración con redes sociales"
+        ],
+        "description": "Creación de sitios web a medida que se adaptan a las necesidades específicas de tu negocio o proyecto.",
+        "additionalDetails": "Incluye hasta 3 revisiones de diseño y capacitación básica para administrar el contenido.",
+        "price": "Desde S/.500 ",
+        "priceNote": "Precio varía según complejidad y requerimientos"
+    },
+    {
+        "id": "ecommerce",
+        "category": "digital",
+        "name": "Ecommerce",
+        "icon": "🛒",
+        "subtitle": "Tiendas online listas para vender",
+        "color": "purple",
+        "gradient": "from-purple-500 to-fuchsia-600",
+        "features": [
+            "Diseño de tienda online completa",
+            "Integración de pasarelas de pago",
+            "Gestión de inventario",
+            "Carrito de compras optimizado"
+        ],
+        "description": "Soluciones completas de comercio electrónico para vender tus productos o servicios en línea.",
+        "additionalDetails": "Configuración inicial de hasta 50 productos incluida. Soporte para múltiples métodos de pago.",
+        "price": "Desde S/. 800"
+    },
+    {
+        "id": "landing-pages",
+        "category": "digital",
+        "name": "Landing Pages",
+        "icon": "🚀",
+        "subtitle": "Conversión de visitantes en clientes",
+        "color": "teal",
+        "gradient": "from-green-500 to-teal-600",
+        "features": [
+            "Diseño de alta conversión",
+            "Optimización para campañas",
+            "Formularios de contacto efectivos",
+            "Integración con herramientas de marketing"
+        ],
+        "description": "Páginas de aterrizaje diseñadas para maximizar la conversión de visitantes en leads o clientes.",
+        "additionalDetails": "Incluye pruebas A/B básicas y análisis de comportamiento del usuario.",
+        "price": "Desde S/. 300"
+    },
+    {
+        "id": "thesis-advice",
+        "category": "academic",
+        "name": "Asesoría en Tesis",
+        "icon": "📚",
+        "subtitle": "Apoyo especializado para tu investigación",
+        "color": "amber",
+        "gradient": "from-orange-400 to-amber-500",
+        "features": [
+            "Estructuración de proyectos",
+            "Redacción y corrección",
+            "Formato según normas"
+        ],
+        "description": "Asesoramiento profesional para el desarrollo de tu trabajo de investigación académica.",
+        "additionalDetails": "Sesiones personalizadas según tu disponibilidad. Soporte para normas APA, Vancouver, etc.",
+        "price": "Desde S/. 20 / hora"
+    },
+    {
+        "id": "statistical-analysis/statistical",
+        "category": "academic",
+        "name": "Análisis Estadístico",
+        "icon": "📊",
+        "subtitle": "Procesamiento de datos científicos",
+        "color": "amber",
+        "gradient": "from-orange-400 to-amber-500",
+        "features": [
+            "Estadística descriptiva",
+            "Análisis inferencial",
+            "Interpretación de resultados"
+        ],
+        "description": "Análisis profesional de datos para proyectos de investigación académica o empresarial.",
+        "additionalDetails": "Incluye informe detallado con gráficos y explicaciones técnicas.",
+        "price": "Desde S/. 150 / proyecto"
+    }
+]

@@ -7,6 +7,7 @@ export default () => {
     const rutas: Rutas[] = [
         { name: 'Inicio', path: '/' },
         { name: 'Proyectos', path: '/product' },
+        { name: 'Servicios', path: '/services' },
 
     ]
     return rutas;
