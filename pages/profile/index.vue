@@ -594,7 +594,7 @@ const currentUser = ref<User>({
     urlFoto: '',
     addresses: []
 });
-console.log("daos asiganados a user ", currentUser);
+
 
 // Datos de formulario para edición
 const formData = ref({
