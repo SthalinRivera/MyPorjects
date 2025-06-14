@@ -19,7 +19,27 @@
                     Genera una matriz de consistencia completa para tu investigación
                 </p>
             </div>
-
+            <!-- Contenido -->
+            <div
+                class="p-3 rounded-lg border-l-4 bg-yellow-50 dark:bg-yellow-900 border-yellow-400 dark:border-yellow-500 shadow-sm">
+                <p class="text-sm text-yellow-800 dark:text-yellow-100 text-center font-medium">
+                    <span v-if="remainingGenerations > 0">
+                        ✨ <span class="font-bold">{{ remainingGenerations }} GENERACIÓN{{ remainingGenerations > 1 ?
+                            'ES' : '' }} GRATIS</span> ✨
+                        <br>
+                        <span class="text-xs font-normal block mt-1">¡Úsala{{ remainingGenerations > 1 ? 's' : '' }}
+                            antes que se agote!</span>
+                    </span>
+                    <span v-else>
+                        ⚡ <span class="font-bold">LÍMITE ALCANZADO</span> ⚡
+                        <br>
+                        <NuxtLink to="/login"
+                            class="text-xs underline text-yellow-700 dark:text-yellow-200 hover:text-yellow-900 dark:hover:text-white mt-1 inline-block">
+                            Iniciar sesión
+                        </NuxtLink>
+                    </span>
+                </p>
+            </div>
 
             <!-- Modal de Nuxt UI -->
             <UModal v-model="showLoginMessage">
@@ -42,7 +62,7 @@
                                 </div>
                                 <h3 class="text-xl font-bold text-white">
                                     {{ remainingGenerations <= 0 ? '¡Límite alcanzado!' : '¡Generaciones disponibles!'
-                                    }} </h3>
+                                        }} </h3>
                             </div>
                             <button @click="showLoginMessage = false"
                                 class="text-white/80 hover:text-white transition-colors">
@@ -91,9 +111,11 @@
                                         <UIcon name="i-heroicons-check-badge"
                                             class="w-5 h-5 text-cyan-500 dark:text-cyan-400 flex-shrink-0 mt-0.5" />
                                         <div>
-                                            <p class="font-medium text-gray-800 dark:text-gray-200">Generación ilimitada
+                                            <p class="font-medium text-gray-800 dark:text-gray-200">Generación
+                                                ilimitada
                                             </p>
-                                            <p class="text-sm text-gray-600 dark:text-gray-400">Crea todas las matrices
+                                            <p class="text-sm text-gray-600 dark:text-gray-400">Crea todas las
+                                                matrices
                                                 que necesites</p>
                                         </div>
                                     </li>
@@ -101,9 +123,11 @@
                                         <UIcon name="i-heroicons-check-badge"
                                             class="w-5 h-5 text-cyan-500 dark:text-cyan-400 flex-shrink-0 mt-0.5" />
                                         <div>
-                                            <p class="font-medium text-gray-800 dark:text-gray-200">Resultados mejorados
+                                            <p class="font-medium text-gray-800 dark:text-gray-200">Resultados
+                                                mejorados
                                             </p>
-                                            <p class="text-sm text-gray-600 dark:text-gray-400">Calidad profesional en
+                                            <p class="text-sm text-gray-600 dark:text-gray-400">Calidad profesional
+                                                en
                                                 cada generación</p>
                                         </div>
                                     </li>
@@ -111,9 +135,11 @@
                                         <UIcon name="i-heroicons-check-badge"
                                             class="w-5 h-5 text-cyan-500 dark:text-cyan-400 flex-shrink-0 mt-0.5" />
                                         <div>
-                                            <p class="font-medium text-gray-800 dark:text-gray-200">Soporte prioritario
+                                            <p class="font-medium text-gray-800 dark:text-gray-200">Soporte
+                                                prioritario
                                             </p>
-                                            <p class="text-sm text-gray-600 dark:text-gray-400">Ayuda rápida cuando la
+                                            <p class="text-sm text-gray-600 dark:text-gray-400">Ayuda rápida cuando
+                                                la
                                                 necesites</p>
                                         </div>
                                     </li>
@@ -335,6 +361,7 @@ import SkeletonTableMatriz from '~/components/UI/Skeleton/SkeletonTableMatriz.vu
 import { PROMPT_MATRIZ_CONSISTENCIA } from './PROMPT_MATRIZ_CONSISTENCIA';
 import { PROMPT_TITLE } from './PROMPT_TITLE';
 import MatrizConsistenciaTable from './MatrizConsistenciaTable.vue';
+
 const { loggedIn, user, clear } = useUserSession()
 const { $toast } = useNuxtApp();
 const route = useRoute()

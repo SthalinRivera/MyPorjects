@@ -253,7 +253,7 @@ const goBack = () => {
               class="justify-center w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white shadow-lg hover:shadow-cyan-500/30 transition-all transform hover:-translate-y-0.5"
               icon="i-heroicons-lock-open" label="Iniciar sesión para desbloquear" @click="showLoginModal = false" />
 
-            <UButton to="/register" color="gray" variant="outline" size="lg"
+            <UButton to="/login" color="gray" variant="outline" size="lg"
               class="justify-center w-full border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800/50"
               icon="i-heroicons-user-plus" label="Registrarse gratis" @click="showLoginModal = false" />
           </div>
