@@ -19,6 +19,158 @@
                     Genera una operalización de variables completa para tu investigación académica.
                 </p>
             </div>
+            <!-- Contenido -->
+            <div
+                class="p-3 rounded-lg border-l-4 bg-yellow-50 dark:bg-yellow-900 border-yellow-400 dark:border-yellow-500 shadow-sm">
+                <p class="text-sm text-yellow-800 dark:text-yellow-100 text-center font-medium">
+                    <span v-if="remainingGenerations > 0">
+                        ✨ <span class="font-bold">{{ remainingGenerations }} GENERACIÓN{{ remainingGenerations > 1 ?
+                            'ES' : '' }} GRATIS</span> ✨
+                        <br>
+                        <span class="text-xs font-normal block mt-1">¡Úsala{{ remainingGenerations > 1 ? 's' : '' }}
+                            antes que se agote!</span>
+                    </span>
+                    <span v-else>
+                        ⚡ <span class="font-bold">LÍMITE ALCANZADO</span> ⚡
+                        <br>
+                        <NuxtLink to="/login"
+                            class="text-xs underline text-yellow-700 dark:text-yellow-200 hover:text-yellow-900 dark:hover:text-white mt-1 inline-block">
+                            Iniciar sesión
+                        </NuxtLink>
+                    </span>
+                </p>
+            </div>
+
+            <!-- Modal de Nuxt UI -->
+            <UModal v-model="showLoginMessage">
+                <div
+                    class="relative bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 rounded-2xl overflow-hidden border border-gray-200 dark:border-cyan-400/30 shadow-2xl">
+                    <!-- Efecto de partículas futuristas -->
+                    <div class="absolute inset-0 opacity-10 pointer-events-none">
+                        <div class="absolute top-20 left-20 w-2 h-2 rounded-full bg-cyan-400 animate-pulse"
+                            style="animation-delay: 0.3s"></div>
+                        <div class="absolute bottom-1/3 right-1/4 w-3 h-3 rounded-full bg-blue-400 animate-pulse"
+                            style="animation-delay: 0.7s"></div>
+                    </div>
+
+                    <!-- Header con gradiente -->
+                    <div class="bg-gradient-to-r from-cyan-500 to-blue-600 dark:from-cyan-700 dark:to-blue-800 p-5">
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center gap-3">
+                                <div class="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+                                    <UIcon name="i-heroicons-rocket-launch" class="w-6 h-6 text-white" />
+                                </div>
+                                <h3 class="text-xl font-bold text-white">
+                                    {{ remainingGenerations <= 0 ? '¡Límite alcanzado!' : '¡Generaciones disponibles!'
+                                    }} </h3>
+                            </div>
+                            <button @click="showLoginMessage = false"
+                                class="text-white/80 hover:text-white transition-colors">
+                                <UIcon name="i-heroicons-x-mark-20-solid" class="w-5 h-5" />
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Contenido principal -->
+                    <div class="p-6">
+                        <!-- Mensaje destacado -->
+                        <div
+                            class="mb-6 p-4 bg-white dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
+                            <div class="flex items-start gap-3">
+                                <div class="flex-shrink-0 mt-0.5">
+                                    <div
+                                        class="w-8 h-8 rounded-full bg-cyan-100 dark:bg-cyan-900/50 flex items-center justify-center">
+                                        <UIcon name="i-heroicons-exclamation-circle"
+                                            class="w-5 h-5 text-cyan-600 dark:text-cyan-400" />
+                                    </div>
+                                </div>
+                                <div>
+                                    <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+                                        {{ remainingGenerations <= 0 ? 'Has agotado tus generaciones' : `Tienes
+                                            ${remainingGenerations} generaciones` }} </h4>
+                                            <p class="text-gray-600 dark:text-gray-300">
+                                                {{ remainingGenerations <= 0
+                                                    ? 'Regístrate para obtener acceso ilimitado y características premium'
+                                                    : 'Inicia sesión para no perder tus generaciones restantes' }} </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tarjeta de beneficios -->
+                        <div
+                            class="mb-6 bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 rounded-xl overflow-hidden border border-cyan-100 dark:border-cyan-400/20">
+                            <div class="p-4">
+                                <h4
+                                    class="text-center text-lg font-bold text-cyan-700 dark:text-cyan-300 mb-3 flex items-center justify-center gap-2">
+                                    <UIcon name="i-heroicons-sparkles" class="w-5 h-5" />
+                                    Beneficios Premium
+                                </h4>
+
+                                <ul class="space-y-3">
+                                    <li class="flex items-start gap-3">
+                                        <UIcon name="i-heroicons-check-badge"
+                                            class="w-5 h-5 text-cyan-500 dark:text-cyan-400 flex-shrink-0 mt-0.5" />
+                                        <div>
+                                            <p class="font-medium text-gray-800 dark:text-gray-200">Generación
+                                                ilimitada
+                                            </p>
+                                            <p class="text-sm text-gray-600 dark:text-gray-400">Crea todas las
+                                                matrices
+                                                que necesites</p>
+                                        </div>
+                                    </li>
+                                    <li class="flex items-start gap-3">
+                                        <UIcon name="i-heroicons-check-badge"
+                                            class="w-5 h-5 text-cyan-500 dark:text-cyan-400 flex-shrink-0 mt-0.5" />
+                                        <div>
+                                            <p class="font-medium text-gray-800 dark:text-gray-200">Resultados
+                                                mejorados
+                                            </p>
+                                            <p class="text-sm text-gray-600 dark:text-gray-400">Calidad profesional
+                                                en
+                                                cada generación</p>
+                                        </div>
+                                    </li>
+                                    <li class="flex items-start gap-3">
+                                        <UIcon name="i-heroicons-check-badge"
+                                            class="w-5 h-5 text-cyan-500 dark:text-cyan-400 flex-shrink-0 mt-0.5" />
+                                        <div>
+                                            <p class="font-medium text-gray-800 dark:text-gray-200">Soporte
+                                                prioritario
+                                            </p>
+                                            <p class="text-sm text-gray-600 dark:text-gray-400">Ayuda rápida cuando
+                                                la
+                                                necesites</p>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Botones de acción -->
+                        <div class="grid grid-cols-1 gap-3">
+                            <UButton to="/login" color="cyan" variant="solid" size="lg"
+                                class="justify-center shadow-lg hover:shadow-cyan-500/20 transition-all"
+                                icon="i-heroicons-arrow-right-on-rectangle"
+                                :label="remainingGenerations <= 0 ? 'Iniciar sesión para desbloquear' : 'Iniciar sesión para guardar tus generaciones'" />
+
+                            <UButton to="/login" color="white" variant="outline" size="lg"
+                                class="justify-center border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800/50"
+                                icon="i-heroicons-user-plus" label="Crear cuenta gratuita" />
+                        </div>
+
+                        <!-- Mensaje adicional -->
+                        <p class="mt-4 text-center text-xs text-gray-500 dark:text-gray-400">
+                            Sin compromisos, cancela cuando quieras
+                        </p>
+                    </div>
+
+                    <!-- Efecto de gradiente inferior -->
+                    <div
+                        class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-500">
+                    </div>
+                </div>
+            </UModal>
 
 
             <!-- Futuristic AI Research Generator - Dual Theme -->
@@ -205,13 +357,14 @@ import log from '~/server/middleware/log';
 
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
-
+import { PROMPT_TITLE } from './PROMPT_TITLE';
+import { PROMPT_OPERALIZACION_VARIABLES } from './PROMPT_OPERALIZACION_VARIABLES';
 import { saveAs } from 'file-saver';
 import MatrixTable from './MatrixTable.vue';
 import SkeletonTableOperalizacion from '~/components/UI/Skeleton/SkeletonTableOperalizacion.vue';
 const route = useRoute()
 const router = useRouter()
-
+const { loggedIn, user, clear } = useUserSession()
 const { $toast } = useNuxtApp();
 // Función para regresar
 const goBack = () => {
@@ -244,207 +397,38 @@ const nivelesInvestigacion = [
     'Exploratoria'
 ]
 
-// Prompts
-const PROMPT_TITLE = `
-Eres un experto en metodología de la investigación. Tu tarea es descomponer la variable proporcionada en dos variables principales, siguiendo estas pautas:
 
-1. Cada variable debe ser clara, concisa y específica.  
-2. Deben reflejar adecuadamente el contenido de la investigación.  
-3. Utiliza un lenguaje académico y formal.  
 
-Ejemplo de entrada: "Comercio Electrónico  y proceso de ventas en la empresa Mass sac"  
-Ejemplo de salida:  
-- Comercio Electrónico  
-- proceso de ventas en la empresa Mass sac
+// Estado para contar generaciones
+const generationCount = ref(0);
+const maxFreeGenerations = 2;
 
-IMPORTANTE:  
-- Devuelve ÚNICAMENTE dos variables.  
-- No incluyas explicaciones, comentarios ni texto adicional.  
-- El formato debe ser exclusivamente dos nombres de variables en texto plano.  
+// Computar generaciones restantes
+const remainingGenerations = computed(() => {
+    return loggedIn.value ? Infinity : maxFreeGenerations - generationCount.value;
+});
+// Verificar generaciones guardadas al cargar el componente
+onMounted(() => {
+    const savedCount = localStorage.getItem('freeGenerationCountOoperationVariable');
+    generationCount.value = savedCount ? parseInt(savedCount) : 0;
+});
 
-Ahora, por favor descompón la siguiente variable en dos principales:
-
-`;
-
-const PROMPT_OPERALIZACION_VARIABLES = `
-Eres un asistente que genera datos en formato JSON estricto para operacionalización de variables. Usa EXACTAMENTE esta estructura:
- Mínimo 2 variables, cada una con 3 dimensiones, y cada dimensión con al menos 3 indicadores
-
-Ejemplo: 
-{
-    "variables": [
-        {
-            "nombre": "Satisfacción Laboral",
-            "definicion_operacional": "Grado en que los empleados se sienten satisfechos con su trabajo.",
-            "dimensiones": [
-                {
-                    "nombre": "Satisfacción Intrínseca",
-                    "indicadores": [
-                        {
-                            "nombre": "Nivel de satisfacción con tareas del puesto",
-                            "items_formula": "Preguntas sobre disfrute de tareas y realización personal (1-5)",
-                            "instrumento_escala": "Cuestionario de satisfacción laboral. Escala Likert (1-5)"
-                        }
-                    ]
-                },
-                {
-                    "nombre": "Satisfacción Extrínseca",
-                    "indicadores": [
-                        {
-                            "nombre": "Satisfacción con el salario y condiciones",
-                            "items_formula": "Preguntas sobre satisfacción con salario, ambiente y beneficios (1-5)",
-                            "instrumento_escala": "Cuestionario de satisfacción laboral. Escala Likert (1-5)"
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "nombre": "Productividad",
-            "definicion_operacional": "Rendimiento del empleado en la realización de tareas laborales.",
-            "dimensiones": [
-                {
-                    "nombre": "Eficiencia",
-                    "indicadores": [
-                        {
-                            "nombre": "Tareas realizadas en tiempo y forma",
-                            "items_formula": "Medición de cantidad de tareas completadas por semana.",
-                            "instrumento_escala": "Registro de tareas completadas. Escala numérica"
-                        }
-                    ]
-                },
-                {
-                    "nombre": "Eficacia",
-                    "indicadores": [
-                        {
-                            "nombre": "Calidad del trabajo realizado",
-                            "items_formula": "Evaluación del supervisor sobre la calidad de trabajo (1-5)",
-                            "instrumento_escala": "Evaluación del desempeño del supervisor. Escala Likert (1-5)"
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "nombre": "Motivación Laboral",
-            "definicion_operacional": "Nivel de compromiso y energía con la que un empleado desempeña sus funciones.",
-            "dimensiones": [
-                {
-                    "nombre": "Motivación Intrínseca",
-                    "indicadores": [
-                        {
-                            "nombre": "Interés en el desarrollo profesional y personal",
-                            "items_formula": "Preguntas sobre el deseo de crecer en el trabajo (1-5)",
-                            "instrumento_escala": "Cuestionario de motivación laboral. Escala Likert (1-5)"
-                        }
-                    ]
-                },
-                {
-                    "nombre": "Motivación Extrínseca",
-                    "indicadores": [
-                        {
-                            "nombre": "Incentivos económicos y reconocimiento externo",
-                            "items_formula": "Preguntas sobre la importancia del salario y reconocimiento (1-5)",
-                            "instrumento_escala": "Cuestionario de motivación laboral. Escala Likert (1-5)"
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
-}
-
-El formato JSON debe ser exactamente como en este ejemplo:
-{
-    "variables": [
-        {
-            "nombre": "...",
-            "definicion_operacional": "...",
-            "dimensiones": [
-                {
-                    "nombre": "...",
-                    "indicadores": [
-                        {
-                            "nombre": "...",
-                            "items_formula": "...",
-                            "instrumento_escala": "..."
-                        }
-                    ]
-                },
-                {
-                    "nombre": "...",
-                    "indicadores": [
-                        {
-                            "nombre": "...",
-                            "items_formula": "...",
-                            "instrumento_escala": "..."
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "nombre": "...",
-            "definicion_operacional": "...",
-            "dimensiones": [
-                {
-                    "nombre": "...",
-                    "indicadores": [
-                        {
-                            "nombre": "...",
-                            "items_formula": "...",
-                            "instrumento_escala": "..."
-                        }
-                    ]
-                },
-                {
-                    "nombre": "Eficacia",
-                    "indicadores": [
-                        {
-                            "nombre": "...",
-                            "items_formula": "...",
-                            "instrumento_escala": "..."
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "nombre": "...",
-            "definicion_operacional": "...",
-            "dimensiones": [
-                {
-                    "nombre": "...",
-                    "indicadores": [
-                        {
-                            "nombre": "...",
-                            "items_formula": "...",
-                            "instrumento_escala": "..."
-                        }
-                    ]
-                },
-                {
-                    "nombre": "...",
-                    "indicadores": [
-                        {
-                            "nombre": "...",
-                            "items_formula": "...",
-                            "instrumento_escala": "..."
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
-}
-`;
-
-// Métodos actualizados
+// Modificar el método improveTitle para incluir la verificación
 const improveTitle = async () => {
     if (!inputValue.value.trim()) {
         $toast.error("Por favor ingrese un tema de investigación");
         return;
     }
+
+
+
+    // Verificar límite para usuarios no logueados
+    if (!loggedIn.value && generationCount.value >= maxFreeGenerations) {
+        showLoginMessage.value = true; // Mostrar modal cuando se alcance el límite
+        $toast.error("Has alcanzado tu límite de generaciones. Por favor inicia sesión para continuar.");
+        return;
+    }
+
 
     try {
         stage.value = 'improving-title';
@@ -466,6 +450,18 @@ const improveTitle = async () => {
         generationTime.value = endTime - startTime;
 
         improvedTitle.value = response.content;
+
+        // Incrementar contador solo si el usuario no está logueado
+        if (!loggedIn.value) {
+            generationCount.value++;
+            localStorage.setItem('freeGenerationCountOoperationVariable', generationCount.value);
+
+            // Mostrar modal si alcanzó el límite después de esta generación
+            if (generationCount.value >= maxFreeGenerations) {
+                showLoginMessage.value = true;
+            }
+        }
+
         await generateMatrix(improvedTitle.value);
 
     } catch (error) {

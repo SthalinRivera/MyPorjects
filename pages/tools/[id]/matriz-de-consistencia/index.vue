@@ -62,7 +62,7 @@
                                 </div>
                                 <h3 class="text-xl font-bold text-white">
                                     {{ remainingGenerations <= 0 ? '¡Límite alcanzado!' : '¡Generaciones disponibles!'
-                                        }} </h3>
+                                    }} </h3>
                             </div>
                             <button @click="showLoginMessage = false"
                                 class="text-white/80 hover:text-white transition-colors">
@@ -347,6 +347,24 @@
 
             </div>
         </div>
+        <!-- Encabezado -->
+
+        <div class="py-10 px-4 sm:px-6 lg:px-8 ">
+            <div class="text-center mb-6">
+                <h2 class="text-4xl font-extrabold text-gray-900 dark:text-white mb-4">
+                    Ejemplos de Matrices de Consistencia
+                </h2>
+                <p class="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+                    Basados en datos reales y estructurados con más de <span
+                        class="font-semibold text-indigo-600 dark:text-indigo-400">4000 parámetros validados</span> para
+                    apoyar
+                    tu investigación académica.
+                </p>
+            </div>
+            <ExamplesMatrizConsistencia />
+        </div>
+
+
     </div>
 </template>
 
@@ -361,6 +379,7 @@ import SkeletonTableMatriz from '~/components/UI/Skeleton/SkeletonTableMatriz.vu
 import { PROMPT_MATRIZ_CONSISTENCIA } from './PROMPT_MATRIZ_CONSISTENCIA';
 import { PROMPT_TITLE } from './PROMPT_TITLE';
 import MatrizConsistenciaTable from './MatrizConsistenciaTable.vue';
+import ExamplesMatrizConsistencia from './ExamplesMatrizConsistencia.vue';
 
 const { loggedIn, user, clear } = useUserSession()
 const { $toast } = useNuxtApp();
