@@ -1,26 +1,23 @@
 <template>
-    <div class=" flex items-center justify-center px-4 py-8  bg-slate-100/50 dark:bg-gray-900/50 rounded-xl  mt-1">
+    <div class=" flex items-center justify-center px-4 py-8   rounded-xl  mt-1">
         <div class="w-full max-w-6xl mx-auto">
             <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
 
                 <!-- Columna izquierda - Información personal -->
                 <div class="space-y-8 order-2 lg:order-1">
                     <div class="space-y-4">
-                        <div
-                            class="inline-block px-4 py-2 rounded-full bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/20 text-purple-600 dark:text-purple-400 text-sm font-medium mb-2">
-                            👋 ¡Hola! Bienvenido a mi portafolio
-                        </div>
+
 
                         <h1
                             class="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white leading-tight">
-                            Soy <span class="gradient-text">Sthalin</span> Rivera
+                            <span class="gradient-text">Sthalin</span> Rivera
                         </h1>
 
                         <div class="flex items-center space-x-2 text-xl md:text-2xl text-gray-700 dark:text-gray-300">
                             <span>Ingeniero de Sistemas</span>
                             <div class="typing-container h-8 overflow-hidden">
                                 <ul class="typing-animation">
-                                    <li><span>PowerBI</span></li>
+                                    <li><span>Power BI</span></li>
                                     <li><span>Nuxt.js</span></li>
                                     <li><span>Laravel</span></li>
                                     <li><span>PostgreSQL</span></li>
